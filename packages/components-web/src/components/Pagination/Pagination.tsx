@@ -89,12 +89,12 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
    */
   pageSizeOptions?: number[];
   /**
-   * 是否显示每页条数切换（Figma: 数量）
+   * 是否显示每页条数切换
    * @default true
    */
   showSizeChanger?: boolean;
   /**
-   * 是否显示快速跳页（Figma: 跳页）
+   * 是否显示快速跳页
    * @default true
    */
   showQuickJumper?: boolean;
@@ -221,27 +221,27 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
     return (
       <nav
         ref={ref}
-        className={clsx('lds-pagination', `lds-pagination--${size}`, className)}
+        className={clsx('xds-pagination', `xds-pagination--${size}`, className)}
         aria-label="Pagination"
         {...props}
       >
-        {showTotal ? <span className="lds-pagination__total">{showTotal(total, pageRange)}</span> : null}
+        {showTotal ? <span className="xds-pagination__total">{showTotal(total, pageRange)}</span> : null}
 
-        <div className="lds-pagination__pages">
+        <div className="xds-pagination__pages">
           <button
             type="button"
-            className="lds-pagination__arrow lds-pagination__arrow--prev"
+            className="xds-pagination__arrow xds-pagination__arrow--prev"
             onClick={() => setPage(effectiveCurrent - 1)}
             disabled={disabled || !canPrev}
             aria-label="Previous Page"
           >
-            <Icon className="lds-pagination__icon" name="ic-arrow-left-line" aria-hidden="true" />
+            <Icon className="xds-pagination__icon" name="ic-arrow-left-line" aria-hidden="true" />
           </button>
 
           {items.map((it, idx) => {
             if (it === 'ellipsis') {
               return (
-                <span key={`ellipsis-${idx}`} className="lds-pagination__ellipsis" aria-hidden="true">
+                <span key={`ellipsis-${idx}`} className="xds-pagination__ellipsis" aria-hidden="true">
                   ...
                 </span>
               );
@@ -253,7 +253,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
               <button
                 key={page}
                 type="button"
-                className={clsx('lds-pagination__item', isActive && 'is-active')}
+                className={clsx('xds-pagination__item', isActive && 'is-active')}
                 onClick={() => setPage(page)}
                 disabled={disabled}
                 aria-current={isActive ? 'page' : undefined}
@@ -266,19 +266,19 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
 
           <button
             type="button"
-            className="lds-pagination__arrow lds-pagination__arrow--next"
+            className="xds-pagination__arrow xds-pagination__arrow--next"
             onClick={() => setPage(effectiveCurrent + 1)}
             disabled={disabled || !canNext}
             aria-label="Next Page"
           >
-            <Icon className="lds-pagination__icon" name="ic-arrow-right-line" aria-hidden="true" />
+            <Icon className="xds-pagination__icon" name="ic-arrow-right-line" aria-hidden="true" />
           </button>
         </div>
 
         {showSizeChanger ? (
-          <div className="lds-pagination__size-changer">
+          <div className="xds-pagination__size-changer">
             <select
-              className="lds-pagination__size-select"
+              className="xds-pagination__size-select"
               value={effectivePageSize}
               onChange={(e) => setSize(Number(e.target.value))}
               disabled={disabled}
@@ -290,15 +290,15 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
                 </option>
               ))}
             </select>
-            <span className="lds-pagination__size-label">{effectivePageSize}条/页</span>
-            <Icon className="lds-pagination__size-icon" name="ic-arrow-down-line" aria-hidden="true" />
+            <span className="xds-pagination__size-label">{effectivePageSize}条/页</span>
+            <Icon className="xds-pagination__size-icon" name="ic-arrow-down-line" aria-hidden="true" />
           </div>
         ) : null}
 
         {showQuickJumper ? (
-          <div className="lds-pagination__quick-jumper">
-            <span className="lds-pagination__quick-text">跳至</span>
-            <span className="lds-pagination__quick-input">
+          <div className="xds-pagination__quick-jumper">
+            <span className="xds-pagination__quick-text">跳至</span>
+            <span className="xds-pagination__quick-input">
               <Input
                 size="small"
                 value={jumpValue}
@@ -314,7 +314,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
                 aria-label="Jump To Page"
               />
             </span>
-            <span className="lds-pagination__quick-text">页</span>
+            <span className="xds-pagination__quick-text">页</span>
           </div>
         ) : null}
       </nav>

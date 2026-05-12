@@ -1,21 +1,21 @@
 {
-  "name": "@life-ds/tokens",
+  "name": "@xiaoyun-ds/tokens",
   "version": "1.0.6",
-  "description": "Life Design System Tokens",
-  "main": "life-ds-tokens.css",
-  "style": "life-ds-tokens.css",
+  "description": "Xiaoyun Design System Tokens",
+  "main": "xiaoyun-ds-tokens.css",
+  "style": "xiaoyun-ds-tokens.css",
   "exports": {
-    ".": "./life-ds-tokens.css",
-    "./tokens.css": "./life-ds-tokens.css"
+    ".": "./xiaoyun-ds-tokens.css",
+    "./tokens.css": "./xiaoyun-ds-tokens.css"
   },
   "files": [
-    "life-ds-tokens.css"
+    "xiaoyun-ds-tokens.css"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "sync-tokens": "node scripts/generate-design-tokens.mjs && node scripts/generate-text-styles.mjs && node scripts/generate-effect-styles.mjs"
+    "sync-tokens": "node scripts/sync-local-tokens.mjs"
   },
   "keywords": [
     "design-system",

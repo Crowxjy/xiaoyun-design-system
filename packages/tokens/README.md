@@ -1,13 +1,13 @@
-# @life-ds/tokens
+# @xiaoyun-ds/tokens
 
-Life Design System 的设计令牌 (Design Tokens) 核心包。
+Xiaoyun Design System 的设计令牌 (Design Tokens) 核心包。
 
-该包通过调用 Figma API 自动提取最新的设计变量，并将其转换为跨端可用的 CSS Variables。它是构建 Life Design System Web 组件和相关界面的基石，确保了设计语言的高度一致性。
+该包提供仓库内维护的 CSS Variables 设计令牌快照，是构建 Xiaoyun Design System Web 组件和相关界面的基石，确保设计语言的一致性。
 
 ## 安装
 
 ```bash
-npm install @life-ds/tokens
+npm install @xiaoyun-ds/tokens
 ```
 
 ## 使用
@@ -16,16 +16,16 @@ npm install @life-ds/tokens
 
 ```javascript
 // 在 JS/TS 中引入
-import '@life-ds/tokens/life-ds-tokens.css';
+import '@xiaoyun-ds/tokens/xiaoyun-ds-tokens.css';
 ```
 
 或者在 HTML 中：
 
 ```html
-<link rel="stylesheet" href="node_modules/@life-ds/tokens/life-ds-tokens.css">
+<link rel="stylesheet" href="node_modules/@xiaoyun-ds/tokens/xiaoyun-ds-tokens.css">
 ```
 
-> **注意：** 推荐通过 `@life-ds/components-web` 的 CLI 工具 (`npx @life-ds/components-web init`) 来自动提取并引入所有的设计资产。
+> **注意：** 推荐通过 `@xiaoyun-ds/components-web` 的 CLI 工具 (`npx @xiaoyun-ds/components-web init`) 来自动提取并引入所有设计资产。
 
 ## 包含的 Token 范围
 
@@ -37,14 +37,13 @@ import '@life-ds/tokens/life-ds-tokens.css';
 
 ## 开发者脚本
 
-如果你是 Life Design System 的维护者，需要从 Figma 更新 Token，请执行以下步骤：
+如果你是 Xiaoyun Design System 的维护者，需要校验当前 Token 产物是否齐全，请执行以下步骤：
 
-1. 在项目根目录创建 `.env.local` 文件，并添加 `FIGMA_TOKEN=你的Figma个人访问令牌`。
-2. 运行同步命令：
+1. 直接运行同步命令：
 
 ```bash
 # 在 monorepo 根目录下运行
 npm run sync-tokens
 ```
 
-这会自动执行位于 `scripts/` 下的 Node.js 脚本，连接 Figma 并生成最新的 `life-ds-tokens.css`。
+这会执行位于 `scripts/` 下的校验脚本，并确认 `packages/tokens/xiaoyun-ds-tokens.css` 作为唯一 Token 源文件存在。

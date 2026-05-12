@@ -135,14 +135,14 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
     const effectiveActiveItemKey = activeItemKey ?? innerActiveItemKey;
 
     return (
-      <div ref={ref} className={clsx('lds-menu', className)} {...props}>
+      <div ref={ref} className={clsx('xds-menu', className)} {...props}>
         {DEFAULT_MENU_GROUPS.map((group) => {
           const collapsed = collapsedMap[group.key] ?? false;
 
           return (
-            <div key={group.key} className={clsx('lds-menu-group', collapsed && 'is-collapsed')}>
+            <div key={group.key} className={clsx('xds-menu-group', collapsed && 'is-collapsed')}>
               <div
-                className="lds-menu-group__header"
+                className="xds-menu-group__header"
                 onClick={() =>
                   setCollapsedMap((prev) => ({
                     ...prev,
@@ -151,16 +151,16 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
                 }
               >
                 <Icon name={group.icon} />
-                <span className="lds-menu-group__title">{group.title}</span>
-                <Icon className="lds-menu-group__action" name={collapsed ? 'ic-arrow-down-line' : 'ic-arrow-up-line'} />
+                <span className="xds-menu-group__title">{group.title}</span>
+                <Icon className="xds-menu-group__action" name={collapsed ? 'ic-arrow-down-line' : 'ic-arrow-up-line'} />
               </div>
 
-              <div className="lds-menu-group__content">
+              <div className="xds-menu-group__content">
                 {group.items.map((item) => (
                   <div
                     key={item.key}
                     className={clsx(
-                      'lds-menu-item',
+                      'xds-menu-item',
                       item.key === effectiveActiveItemKey && 'is-active'
                     )}
                     onClick={() => {

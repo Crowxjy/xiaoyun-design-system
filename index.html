@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Life Design System - Components</title>
+  <title>销运Design System</title>
   
-  <link rel="stylesheet" href="./packages/tokens/life-ds-tokens.css?v=tag-1">
+  <link rel="stylesheet" href="./packages/tokens/xiaoyun-ds-tokens.css?v=tag-1">
   <link rel="stylesheet" href="./packages/components-web/styles/base.css?v=tag-1">
   <link rel="stylesheet" href="./packages/components-web/styles/components.css?v=tag-1">
+
+  <!-- VChart CDN for Charts component (optional; falls back to placeholder if blocked) -->
+  <script src="https://unpkg.com/@visactor/vchart/build/index.min.js" crossorigin="anonymous"></script>
+
+  <!-- marked.js for in-browser markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <!-- React Dependencies via ESM/CDN -->
   <script type="importmap">
@@ -17,7 +23,7 @@
         "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
         "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
         "clsx": "https://esm.sh/clsx@2.1.1",
-        "@life-ds/components-web": "./packages/components-web/dist/index.mjs?v=tag-1"
+        "@xiaoyun-ds/components-web": "./packages/components-web/dist/index.mjs?v=tag-1"
       }
     }
   </script>
@@ -25,210 +31,193 @@
   
   <style>
     /* ---------------------------------------------------
-       Doc Site Styles (Matching Reference UI)
+       Doc Site Styles (统一对齐 xiaoyun-ds 规范 token)
        --------------------------------------------------- */
-    :root {
-      --doc-bg: var(--color-bg-normal);
-      --doc-sidebar-bg: var(--color-bg-sub);
-      --doc-border: var(--color-border-normal);
-      --doc-text-main: var(--color-text-primary);
-      --doc-text-muted: var(--color-text-secondary);
-      --doc-text-light: var(--color-text-caption);
-      --doc-brand: var(--color-primary-normal);
-    }
-    
-    /* We can remove the hardcoded [data-theme="dark"] block here 
-       because the tokens handle dark mode automatically in tokens.css */
-    
+
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      background-color: var(--doc-bg);
-      color: var(--doc-text-main);
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: white;
+      color: var(--text-gray-5);
+      font-family: var(--font-normal, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+      -webkit-font-smoothing: antialiased;
       display: flex;
+      flex-direction: column;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* Sidebar Navigation */
-    .doc-sidebar {
-      width: 200px;
-      background-color: var(--doc-sidebar-bg);
-      border-right: 1px solid var(--doc-border);
-      padding: 32px 0;
+    /* Top Bar (aligned with designsystem) */
+    .top-bar {
+      background: white;
+      height: 72px;
+      border-bottom: 8px solid var(--divider-1);
       flex-shrink: 0;
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
-      box-sizing: border-box;
-    }
-    .doc-logo {
-      padding: 0 20px;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      margin-bottom: 40px;
-      color: var(--doc-text-main);
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .theme-toggle {
-      cursor: pointer;
-      font-size: 16px;
-      background: none;
-      border: none;
-      color: inherit;
-      padding: 0;
+    .top-bar h1 {
+      font-size: var(--font-size-2xl);
+      line-height: var(--line-height-2xl);
+      font-family: 'Douyin Sans', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      color: var(--text-gray-5);
+      font-weight: 600;
+      margin: 0;
     }
-    .nav-group {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--doc-text-light);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 0 20px;
-      margin-bottom: 12px;
+    .top-bar-notice {
+      margin-left: var(--spacing-md);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      color: var(--text-gray-3);
+      font-weight: 400;
+    }
+
+    /* Main wrapper: sidebar + content */
+    .doc-layout {
+      display: flex;
+      flex: 1;
+      background: white;
+    }
+
+    /* Sidebar Navigation (240px, aligned with designsystem) */
+    .doc-sidebar {
+      width: 240px;
+      background-color: white;
+      border-right: 4px solid var(--divider-1);
+      padding: 16px 0;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      align-self: flex-start;
+      height: calc(100vh - 80px);
+      overflow-y: auto;
+    }
+    .nav-section { margin-bottom: var(--spacing-sm); }
+    .nav-section-title {
+      padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-xs);
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      color: var(--text-gray-2);
+      font-weight: 500;
+      letter-spacing: 0.5px;
     }
     .nav-item {
-      display: block;
-      padding: 10px 20px;
-      color: var(--doc-text-muted);
+      display: flex;
+      align-items: center;
+      padding: 10px var(--spacing-lg);
+      color: var(--text-gray-3);
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      font-weight: 400;
+      transition: all 0.2s ease;
       border-left: 3px solid transparent;
+      cursor: pointer;
     }
     .nav-item:hover {
-      color: var(--doc-text-main);
-      background-color: rgba(0,0,0,0.03);
+      background-color: var(--bg-2);
+      color: var(--text-gray-5);
     }
-    [data-theme="dark"] .nav-item:hover { background-color: rgba(255,255,255,0.03); }
     .nav-item.active {
-      color: var(--color-primary-normal);
-      background-color: rgba(57, 100, 255, 0.05);
-      border-left-color: var(--color-primary-normal);
-      font-weight: 600;
+      color: var(--primary-5);
+      background-color: var(--primary-1);
+      border-left-color: var(--primary-5);
+      font-weight: 500;
     }
 
     /* Main Content Area */
     .doc-main {
       flex: 1;
-      margin-left: 200px;
-      padding: 64px 80px;
-      max-width: 1200px;
+      padding: var(--spacing-page-padding-top) var(--spacing-page-padding-right) var(--spacing-page-padding-bottom) var(--spacing-page-padding-left);
       box-sizing: border-box;
+      min-width: 0;
     }
-    .breadcrumb {
-      font-size: 11px;
+    .doc-page-header {
+      margin-bottom: var(--spacing-page-title-to-first-section);
+    }
+    .doc-page-title {
+      font-size: var(--font-size-2xl);
+      line-height: var(--line-height-2xl);
       font-weight: 600;
-      color: var(--doc-text-light);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 32px;
+      color: var(--text-gray-5);
+      margin: 0 0 var(--spacing-sm) 0;
     }
-    .breadcrumb strong {
-      color: var(--doc-text-main);
-    }
-    
-    .component-header {
-      margin-bottom: 80px;
-      position: relative;
-    }
-    .component-title {
-      font-size: 56px;
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      margin: 0 0 16px 0;
-      color: var(--doc-text-main);
-    }
-    .component-desc {
-      font-size: 16px;
-      color: var(--doc-text-muted);
-      line-height: 1.6;
-      max-width: 500px;
+    .doc-page-desc {
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      font-weight: 400;
+      color: var(--text-gray-3);
       margin: 0;
-    }
-    .component-stats {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      gap: 40px;
-    }
-    .stat {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .stat-num {
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--doc-brand);
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .stat-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--doc-text-light);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      max-width: var(--layout-content-max-width);
     }
 
-    /* Variant Section */
+    /* Variant Section（对齐 designsystem .section / .section-title 规范） */
     .variant-section {
-      margin-bottom: 80px;
+      margin-bottom: var(--spacing-between-sections);
+    }
+    .variant-section:last-child {
+      margin-bottom: 0;
     }
     .variant-header {
       display: flex;
       align-items: baseline;
-      border-bottom: 1px solid var(--doc-border);
-      padding-bottom: 16px;
-      margin-bottom: 40px;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-section-content);
     }
     .variant-title {
-      font-size: 24px;
-      font-weight: 700;
-      margin: 0 16px 0 0;
-      letter-spacing: -0.5px;
+      font-size: var(--font-size-xl);
+      line-height: var(--line-height-xl);
+      font-weight: 600;
+      color: var(--text-gray-5);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .variant-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 16px;
+      background: var(--text-gray-5);
+      border-radius: 4px;
+      margin-right: 8px;
+      flex-shrink: 0;
     }
     .variant-desc {
-      font-size: 14px;
-      color: var(--doc-text-muted);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      color: var(--text-gray-3);
       flex: 1;
-    }
-    .variant-count {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--doc-text-light);
-      text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
     /* Matrix Layout Grid */
     .matrix {
       display: grid;
       grid-template-columns: 140px repeat(3, minmax(140px, 1fr));
-      gap: 32px 16px;
-      align-items: center;
+      gap: var(--spacing-lg) var(--spacing-md);
+      align-items: stretch;
     }
     .matrix-row {
       display: contents;
     }
     .matrix-cell {
-      padding: 16px 0;
-      border-bottom: 1px solid var(--doc-border);
+      padding: var(--spacing-md) 0;
+      border-bottom: 1px solid var(--divider-1);
       display: flex;
       align-items: center;
+      justify-content: flex-start;
       height: 100%;
     }
     .matrix-head .matrix-cell {
       border-bottom: none;
-      padding-bottom: 8px;
+      padding-bottom: var(--spacing-sm);
       align-items: flex-end;
+      justify-content: flex-start;
     }
     .size-head {
       display: flex;
@@ -236,84 +225,395 @@
       gap: 4px;
     }
     .size-head strong {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--doc-text-main);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      font-weight: 500;
+      color: var(--text-gray-5);
     }
     .size-head span {
-      font-size: 11px;
-      color: var(--doc-text-light);
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      color: var(--text-gray-2);
     }
     .state-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--doc-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      font-weight: 500;
+      color: var(--text-gray-3);
+      letter-spacing: 0.5px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--spacing-xs);
     }
     .dot {
       width: 6px;
       height: 6px;
-      border-radius: 50%;
+      border-radius: var(--radius-full, 50%);
+      flex-shrink: 0;
     }
-    .dot-normal { background-color: #10B981; }
-    .dot-hover { background-color: #3B82F6; }
-    .dot-active { background-color: #8B5CF6; }
-    .dot-disabled { background-color: #9CA3AF; }
+    .dot-normal { background-color: var(--success-5, #10B981); }
+    .dot-hover { background-color: var(--primary-5); }
+    .dot-active { background-color: var(--primary-6); }
+    .dot-disabled { background-color: var(--text-gray-1); }
 
     /* ---------------------------------------------------
        Force States for Documentation ONLY
        --------------------------------------------------- */
     /* Primary */
-    .lds-btn--primary.is-hover { background-color: var(--color-primary-hover); border-color: var(--color-primary-hover); }
-    .lds-btn--primary.is-active { background-color: var(--color-primary-active); border-color: var(--color-primary-active); }
+    .xds-btn--primary.is-hover { background-color: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+    .xds-btn--primary.is-active { background-color: var(--color-primary-active); border-color: var(--color-primary-active); }
     /* Default */
-    .lds-btn--default.is-hover { color: var(--color-text-primary); background-color: var(--color-fill-hover); border-color: var(--color-border-normal); }
-    .lds-btn--default.is-active { color: var(--color-primary-normal); background-color: var(--color-fill-primary); border-color: var(--color-primary-normal); }
+    .xds-btn--default.is-hover { color: var(--color-text-primary); background-color: var(--color-fill-hover); border-color: var(--color-border-normal); }
+    .xds-btn--default.is-active { color: var(--color-primary-normal); background-color: var(--color-fill-primary); border-color: var(--color-primary-normal); }
     /* Secondary */
-    .lds-btn--secondary.is-hover { background-color: var(--color-primary-light-normal); border-color: var(--color-primary-normal); }
-    .lds-btn--secondary.is-active { background-color: var(--color-fill-primary); border-color: var(--color-primary-normal); }
+    .xds-btn--secondary.is-hover { background-color: var(--color-primary-light-normal); border-color: var(--color-primary-normal); }
+    .xds-btn--secondary.is-active { background-color: var(--color-fill-primary); border-color: var(--color-primary-normal); }
     /* Text */
-    .lds-btn--text.is-hover { background-color: var(--color-fill-hover); }
-    .lds-btn--text.is-active { background-color: var(--color-fill-active); }
+    .xds-btn--text.is-hover { background-color: var(--color-fill-hover); }
+    .xds-btn--text.is-active { background-color: var(--color-fill-active); }
 
     /* Capsule forced wrapper states */
-    .lds-capsule-wrapper.is-hover .lds-capsule { background-color: var(--color-fill-hover); box-shadow: inset 0 0 0 1px var(--color-border-normal); }
+    .xds-capsule-wrapper.is-hover .xds-capsule { background-color: var(--color-fill-hover); box-shadow: inset 0 0 0 1px var(--color-border-normal); }
     
     /* Input forced wrapper states */
-    .lds-input-wrapper.is-hover { box-shadow: inset 0 0 0 1px var(--color-primary-hover); }
+    .xds-input-wrapper.is-hover { box-shadow: inset 0 0 0 1px var(--color-primary-hover); }
 
     /* Tab forced hover states for preview */
-    .lds-tabs--primary .lds-tab.is-hover::before { background-color: var(--color-fill-hover); }
-    .lds-tabs--filter .lds-tab.is-hover { background-color: var(--color-fill-hover); }
+    .xds-tabs--primary .xds-tab.is-hover::before { background-color: var(--color-fill-hover); }
+    .xds-tabs--filter .xds-tab.is-hover { background-color: var(--color-fill-hover); }
+
+    /* ---------------------------------------------------
+       Spec Pages: Color / Typography / Spacing
+       --------------------------------------------------- */
+    .spec-section { margin-bottom: var(--spacing-between-sections); }
+    .spec-section:last-child { margin-bottom: 0; }
+    .spec-section h3 {
+      font-size: var(--font-size-lg);
+      line-height: var(--line-height-lg);
+      font-weight: 600;
+      color: var(--text-gray-5);
+      margin: 0 0 var(--spacing-md);
+    }
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: var(--spacing-sm);
+    }
+    .color-swatch {
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-m);
+      overflow: hidden;
+      background: var(--bg-1);
+    }
+    .color-swatch__preview {
+      height: 72px;
+      width: 100%;
+      display: block;
+    }
+    .color-swatch__meta {
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+    }
+    .color-swatch__meta strong {
+      display: block;
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      color: var(--text-gray-5);
+      font-weight: 500;
+      margin-bottom: 2px;
+      word-break: break-all;
+    }
+    .color-swatch__meta span {
+      color: var(--text-gray-2);
+      font-family: var(--font-number, ui-monospace, "SFMono-Regular", Menlo, monospace);
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+    }
+    .typography-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+    .typography-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      align-items: center;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-md) var(--spacing-lg);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-m);
+      background: var(--bg-1);
+    }
+    .typography-row__meta strong {
+      display: block;
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      color: var(--text-gray-5);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .typography-row__meta span {
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      color: var(--text-gray-2);
+      font-family: var(--font-number, ui-monospace, "SFMono-Regular", Menlo, monospace);
+    }
+    .typography-row__sample {
+      color: var(--text-gray-5);
+    }
+    .spacing-grid {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 160px 80px 1fr;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-m);
+      background: var(--bg-1);
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+    }
+    .spacing-row__name {
+      font-family: var(--font-number, ui-monospace, "SFMono-Regular", Menlo, monospace);
+      color: var(--text-gray-5);
+      font-weight: 500;
+    }
+    .spacing-row__value {
+      font-family: var(--font-number, ui-monospace, "SFMono-Regular", Menlo, monospace);
+      color: var(--text-gray-2);
+    }
+    .spacing-row__bar {
+      height: 16px;
+      background: var(--primary-2);
+      border-radius: var(--radius-s);
+    }
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--spacing-sm);
+    }
+    .radius-card {
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-m);
+      padding: var(--spacing-md);
+      text-align: center;
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      color: var(--text-gray-3);
+      background: var(--bg-1);
+    }
+    .radius-card__demo {
+      width: 64px;
+      height: 64px;
+      background: var(--primary-1);
+      margin: 0 auto var(--spacing-sm);
+      border: 1px solid var(--primary-5);
+    }
+    .shadow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+    }
+    .shadow-card {
+      background: var(--bg-1);
+      border-radius: var(--radius-m);
+      padding: var(--spacing-lg);
+      text-align: center;
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      color: var(--text-gray-3);
+      border: 1px solid transparent;
+    }
+
+    /* ---------------------------------------------------
+       MetricCard Interactive Config Panel
+       --------------------------------------------------- */
+    .config-panel {
+      background: var(--bg-1);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-m);
+      padding: var(--spacing-md) var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-lg);
+    }
+    .config-group { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+    .config-group__label {
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      font-weight: 500;
+      color: var(--text-gray-2);
+      letter-spacing: 0.5px;
+    }
+    .config-options { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); }
+    .config-option {
+      cursor: pointer;
+      padding: 6px 12px;
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-full, 999px);
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-xs);
+      color: var(--text-gray-3);
+      background: var(--bg-1);
+      transition: all 0.15s;
+    }
+    .config-option:hover { color: var(--text-gray-5); }
+    .config-option.active {
+      color: var(--primary-5);
+      border-color: var(--primary-5);
+      background: var(--primary-1);
+      font-weight: 500;
+    }
+
+    /* ---------------------------------------------------
+       Markdown Viewer
+       --------------------------------------------------- */
+    .markdown-body {
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      color: var(--text-gray-5);
+      max-width: var(--layout-content-max-width);
+    }
+    .markdown-body h1 { font-size: var(--font-size-2xl); line-height: var(--line-height-2xl); font-weight: 600; color: var(--text-gray-5); margin: 0 0 var(--spacing-md); }
+    .markdown-body h2 { font-size: var(--font-size-xl); line-height: var(--line-height-xl); font-weight: 600; color: var(--text-gray-5); margin: var(--spacing-between-sections) 0 var(--spacing-md); }
+    .markdown-body h3 { font-size: var(--font-size-lg); line-height: var(--line-height-lg); font-weight: 600; color: var(--text-gray-5); margin: var(--spacing-lg) 0 var(--spacing-sm); }
+    .markdown-body h4 { font-size: var(--font-size-md); line-height: var(--line-height-md); font-weight: 500; color: var(--text-gray-5); margin: var(--spacing-md) 0 var(--spacing-sm); }
+    .markdown-body p { margin: 0 0 var(--spacing-md); color: var(--text-gray-4); }
+    .markdown-body ul, .markdown-body ol { margin: 0 0 var(--spacing-md); padding-left: var(--spacing-lg); color: var(--text-gray-4); }
+    .markdown-body li { margin: 4px 0; }
+    .markdown-body code {
+      font-family: var(--font-number, ui-monospace, "SFMono-Regular", Menlo, monospace);
+      font-size: var(--font-size-sm);
+      padding: 2px 6px;
+      background: var(--bg-2);
+      border-radius: var(--radius-s);
+      color: var(--primary-5);
+    }
+    .markdown-body pre {
+      background: var(--bg-2);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-m);
+      padding: var(--spacing-md);
+      overflow-x: auto;
+      margin: 0 0 var(--spacing-md);
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: var(--text-gray-5);
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-md);
+    }
+    .markdown-body blockquote {
+      margin: 0 0 var(--spacing-md);
+      padding: 0 var(--spacing-md);
+      border-left: 3px solid var(--primary-5);
+      color: var(--text-gray-3);
+    }
+    .markdown-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 var(--spacing-md);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-sm);
+    }
+    .markdown-body th, .markdown-body td {
+      border: 1px solid var(--divider-1);
+      padding: var(--spacing-sm) var(--spacing-md);
+      text-align: left;
+      color: var(--text-gray-4);
+    }
+    .markdown-body th {
+      background: var(--bg-2);
+      color: var(--text-gray-5);
+      font-weight: 500;
+    }
+    .markdown-body a {
+      color: var(--primary-5);
+      text-decoration: none;
+    }
+    .markdown-body a:hover { text-decoration: underline; }
+    .markdown-loading, .markdown-error {
+      padding: var(--spacing-2xl);
+      text-align: center;
+      color: var(--text-gray-3);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+    }
+    .markdown-error { color: var(--danger-5, #FF4D4F); }
   </style>
 </head>
 <body>
 
+<div class="top-bar">
+  <h1>销运Design System</h1>
+  <span class="top-bar-notice">基于 Life-Design-System 强行魔改 · 仅用于内部实验测试与销运规范参考</span>
+</div>
+
 <div class="doc-layout">
   <!-- Sidebar Navigation -->
   <aside class="doc-sidebar">
-    <div class="doc-logo">
-      LIFE DESIGN
-      <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">🌙</button>
+    <div class="nav-section">
+      <div class="nav-section-title">规范</div>
+      <a href="#colors" class="nav-item active" data-target="colors">颜色规范</a>
+      <a href="#typography" class="nav-item" data-target="typography">文字规范</a>
+      <a href="#spacing" class="nav-item" data-target="spacing">间距与圆角</a>
     </div>
-    <div class="nav-group">COMPONENTS</div>
-    <a href="#button" class="nav-item active" data-target="button">Button</a>
-    <a href="#capsule" class="nav-item" data-target="capsule">Capsule</a>
-    <a href="#checkbox" class="nav-item" data-target="checkbox">Checkbox</a>
-    <a href="#input" class="nav-item" data-target="input">Input</a>
-    <a href="#filter" class="nav-item" data-target="filter">Filter</a>
-    <a href="#filtergroup" class="nav-item" data-target="filtergroup">FilterGroup</a>
-    <a href="#tabs" class="nav-item" data-target="tabs">Tabs</a>
-    <a href="#navbar" class="nav-item" data-target="navbar">Navbar</a>
-    <a href="#menu" class="nav-item" data-target="menu">Menu</a>
-    <a href="#pageheader" class="nav-item" data-target="pageheader">PageHeader</a>
-    <a href="#table" class="nav-item" data-target="table">Table</a>
-    <a href="#pagination" class="nav-item" data-target="pagination">Pagination</a>
-    <a href="#tag" class="nav-item" data-target="tag">Tag</a>
+
+    <div class="nav-section">
+      <div class="nav-section-title">给研发&AI看的文档</div>
+      <a href="#doc-color" class="nav-item" data-doc="skills/references/color.md">颜色规范文档</a>
+      <a href="#doc-tokens" class="nav-item" data-doc="skills/references/tokens.md">Tokens 文档</a>
+      <a href="#doc-layout" class="nav-item" data-doc="skills/references/layout.md">布局规范文档</a>
+      <a href="#doc-components" class="nav-item" data-doc="skills/references/components.md">组件总览</a>
+      <a href="#doc-button" class="nav-item" data-doc="skills/references/button.md">Button 规范</a>
+      <a href="#doc-checkbox" class="nav-item" data-doc="skills/references/checkbox.md">Checkbox 规范</a>
+      <a href="#doc-filter" class="nav-item" data-doc="skills/references/filter.md">Filter 规范</a>
+      <a href="#doc-icon" class="nav-item" data-doc="skills/references/icon.md">Icon 规范</a>
+      <a href="#doc-pagination" class="nav-item" data-doc="skills/references/pagination.md">Pagination 规范</a>
+      <a href="#doc-table" class="nav-item" data-doc="skills/references/table.md">Table 规范</a>
+      <a href="#doc-tabs" class="nav-item" data-doc="skills/references/tabs.md">Tabs 规范</a>
+      <a href="#doc-tag" class="nav-item" data-doc="skills/references/tag.md">Tag 规范</a>
+      <a href="#doc-motion" class="nav-item" data-doc="skills/references/motion.md">Motion 规范</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">组件</div>
+      <a href="#button" class="nav-item" data-target="button">按钮 Button</a>
+      <a href="#capsule" class="nav-item" data-target="capsule">胶囊切换 Capsule</a>
+      <a href="#checkbox" class="nav-item" data-target="checkbox">多选框 Checkbox</a>
+      <a href="#input" class="nav-item" data-target="input">输入框 Input</a>
+      <a href="#filter" class="nav-item" data-target="filter">筛选控件 Filter</a>
+      <a href="#filtergroup" class="nav-item" data-target="filtergroup">筛选容器 FilterGroup</a>
+      <a href="#tabs" class="nav-item" data-target="tabs">标签页 Tabs</a>
+      <a href="#pageheader" class="nav-item" data-target="pageheader">页头 PageHeader</a>
+      <a href="#table" class="nav-item" data-target="table">表格 Table</a>
+      <a href="#pagination" class="nav-item" data-target="pagination">分页 Pagination</a>
+      <a href="#tag" class="nav-item" data-target="tag">标签 Tag</a>
+      <a href="#tags" class="nav-item" data-target="tags">标签组 Tags</a>
+      <a href="#tabnav" class="nav-item" data-target="tabnav">主导航标签 TabNav</a>
+      <a href="#select" class="nav-item" data-target="select">选择器 Select</a>
+      <a href="#dropdown" class="nav-item" data-target="dropdown">下拉浮层 Dropdown</a>
+      <a href="#timefilter" class="nav-item" data-target="timefilter">时间筛选 TimeFilter</a>
+      <a href="#metriccard" class="nav-item" data-target="metriccard">指标卡 MetricCard</a>
+      <a href="#loading" class="nav-item" data-target="loading">加载 Loading</a>
+      <a href="#diagnosis" class="nav-item" data-target="diagnosis">诊断卡 Diagnosis</a>
+      <a href="#charts" class="nav-item" data-target="charts">图表 Charts</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">需求录入</div>
+      <a href="#doc-page-request-template" class="nav-item" data-doc="templates/page-request-template.md">页面需求模板</a>
+      <a href="#doc-page-generation-pipeline" class="nav-item" data-doc="skills/references/page-generation-pipeline.md">页面生成流水线</a>
+      <a href="./request-portal/index.html" class="nav-item">需求录入门户</a>
+    </div>
   </aside>
 
   <!-- Main Content Rendered via JS -->
@@ -329,73 +629,91 @@
 <script>
   // 1. Data Definitions
   const COMMON_SIZES = [
-    { id: 'small', label: 'MD', meta: '14px · 6/16px · h36' },
-    { id: 'default-size', label: 'LG', meta: '14px · 8/16px · h40' },
-    { id: 'large', label: 'XL', meta: '16px · 12/20px · h48' }
+    { id: 'small', label: '小', meta: '14px · 6/16 · h36' },
+    { id: 'default-size', label: '默认', meta: '14px · 8/16 · h40' },
+    { id: 'large', label: '大', meta: '16px · 12/20 · h48' }
   ];
 
   const TAB_SIZES = [
-    { id: 'small', label: '小号 (Small)', meta: 'Body Medium · 14px' },
-    { id: 'large', label: '默认 (Default)', meta: 'Title Regular · 20px' }
+    { id: 'small', label: '小', meta: '14px / Body Medium' },
+    { id: 'large', label: '默认', meta: '20px / Title Regular' }
   ];
 
   const TAG_SIZES = [
-    { id: 'small', label: 'S', meta: 'Caption · h20' },
-    { id: 'default-size', label: 'M', meta: 'Body · h28' },
-    { id: 'large', label: 'L', meta: 'Subtitle · h36' }
+    { id: 'small', label: '小', meta: 'h20 · Caption' },
+    { id: 'default-size', label: '默认', meta: 'h28 · Body' },
+    { id: 'large', label: '大', meta: 'h36 · Subtitle' }
   ];
 
   const PAGINATION_SIZES = [
-    { id: 'default-size', label: '默认 (Default)', meta: 'Body Regular · h36' },
-    { id: 'small', label: '小号 (Small)', meta: 'Caption Regular · h28' },
+    { id: 'default-size', label: '默认', meta: 'h36 · Body Regular' },
+    { id: 'small', label: '小', meta: 'h28 · Caption Regular' },
   ];
 
   const FILTER_SIZES = [
-    { id: 'default-size', label: '默认 (Default)', meta: 'Body Regular · 9/12px · h40' },
-    { id: 'small', label: '小号 (Small)', meta: 'Body Regular · 7/12px · h36' },
+    { id: 'default-size', label: '默认', meta: 'h40 · 9/12 · Body Regular' },
+    { id: 'small', label: '小', meta: 'h36 · 7/12 · Body Regular' },
   ];
 
   const STATES = [
-    { id: 'normal', label: 'Default', dot: 'dot-normal', props: '' },
-    { id: 'hover', label: 'Hover', dot: 'dot-hover', props: 'class="is-hover"' },
-    { id: 'active', label: 'Focus / Active', dot: 'dot-active', props: 'class="is-active"' },
-    { id: 'disabled', label: 'Disabled', dot: 'dot-disabled', props: 'disabled' }
+    { id: 'normal', label: '默认', dot: 'dot-normal', props: '' },
+    { id: 'hover', label: '悬浮', dot: 'dot-hover', props: 'class="is-hover"' },
+    { id: 'active', label: '激活', dot: 'dot-active', props: 'class="is-active"' },
+    { id: 'disabled', label: '禁用', dot: 'dot-disabled', props: 'disabled' }
   ];
 
   // We'll collect React components to render after DOM updates
   window.pendingReactRenders = [];
 
   const COMPONENTS = {
+    colors: {
+      kind: 'spec',
+      title: '颜色规范',
+      desc: '基于已对齐 designsystem 的 tokens，覆盖 Primary / Success / Warning / Danger / Text / Background / Divider / Chart 全部色阶。',
+      render: () => renderColorsSpec()
+    },
+    typography: {
+      kind: 'spec',
+      title: '文字规范',
+      desc: 'Display / Headline / Title / Subtitle / Body / Caption × Regular / Medium 共 12 个 token，对应同步至 var(--*-regular|medium)。',
+      render: () => renderTypographySpec()
+    },
+    spacing: {
+      kind: 'spec',
+      title: '间距与圆角',
+      desc: 'Spacing 比例尺、Radius 圆角、Shadow 阴影各组 token 的可视化预览。',
+      render: () => renderSpacingSpec()
+    },
     button: {
-      title: 'Button (React Component)',
+      title: '按钮 Button',
       sizes: COMMON_SIZES,
-      desc: 'Triggers an action or event. Now rendered using the real @life-ds/components-web React component.',
+      desc: '触发动作或事件的基础按钮，覆盖 Primary / Default / Secondary / Text / Icon 五种样式。',
       variants: [
-        { title: 'Primary', desc: 'Solid fill — highest emphasis', render: (size, state) => {
+        { title: 'Primary', desc: '实心填充，最高强调级。', render: (size, state) => {
             const id = `btn-primary-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
-            window.pendingReactRenders.push({ id, variant: 'primary', size: size.id, className, disabled: state.props.includes('disabled'), text: 'Button' });
+            window.pendingReactRenders.push({ id, variant: 'primary', size: size.id, className, disabled: state.props.includes('disabled'), text: '按钮' });
             return `<div id="${id}"></div>`;
         }},
-        { title: 'Default', desc: 'Outlined — medium emphasis', render: (size, state) => {
+        { title: 'Default', desc: '描边样式，中等强调级。', render: (size, state) => {
             const id = `btn-default-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
-            window.pendingReactRenders.push({ id, variant: 'default', size: size.id, className, disabled: state.props.includes('disabled'), text: 'Button' });
+            window.pendingReactRenders.push({ id, variant: 'default', size: size.id, className, disabled: state.props.includes('disabled'), text: '按钮' });
             return `<div id="${id}"></div>`;
         }},
-        { title: 'Secondary', desc: 'Subtle fill — low emphasis', render: (size, state) => {
+        { title: 'Secondary', desc: '浅色填充，弱强调级。', render: (size, state) => {
             const id = `btn-secondary-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
-            window.pendingReactRenders.push({ id, variant: 'secondary', size: size.id, className, disabled: state.props.includes('disabled'), text: 'Button' });
+            window.pendingReactRenders.push({ id, variant: 'secondary', size: size.id, className, disabled: state.props.includes('disabled'), text: '按钮' });
             return `<div id="${id}"></div>`;
         }},
-        { title: 'Text', desc: 'No fill — lowest emphasis', render: (size, state) => {
+        { title: 'Text', desc: '无填充，最弱强调级。', render: (size, state) => {
             const id = `btn-text-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
-            window.pendingReactRenders.push({ id, variant: 'text', size: size.id, className, disabled: state.props.includes('disabled'), text: 'Button' });
+            window.pendingReactRenders.push({ id, variant: 'text', size: size.id, className, disabled: state.props.includes('disabled'), text: '按钮' });
             return `<div id="${id}"></div>`;
         }},
-        { title: 'Icon', desc: 'Icon only variant', render: (size, state) => {
+        { title: 'Icon', desc: '仅图标按钮。', render: (size, state) => {
             const id = `btn-icon-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
             window.pendingReactRenders.push({ id, variant: 'icon', size: size.id, className, disabled: state.props.includes('disabled'), iconName: 'ic-add-round-line' });
@@ -404,16 +722,16 @@
       ]
     },
     capsule: {
-      title: 'Capsule (React Component)',
+      title: '胶囊切换 Capsule',
       sizes: COMMON_SIZES,
-      desc: 'A pill-shaped radio toggle component for mutually exclusive selections within a group.',
+      desc: '胶囊形单选切换组件，用于一组互斥选项。',
       variants: [
-        { title: 'Standard', desc: 'Radio option', render: (size, state) => {
+        { title: '标准', desc: '', render: (size, state) => {
             const id = `cap-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
             window.pendingReactRenders.push({ 
               id, type: 'capsule', size: size.id, className, disabled: state.props.includes('disabled'),
-              checked: state.id === 'active', name: id, label: 'Option'
+              checked: state.id === 'active', name: id, label: '选项'
             });
             return `<div id="${id}"></div>`;
           }
@@ -421,18 +739,18 @@
       ]
     },
     checkbox: {
-      title: 'Checkbox (React Component)',
+      title: '多选框 Checkbox',
       sizes: COMMON_SIZES,
-      desc: 'A standard checkbox: click toggles checked/unchecked. Right-side label is optional and hidden by default.',
+      desc: '基础多选框：点击切换勾选状态，右侧标签可选。',
       layout: 'full',
       variants: [
-        { title: 'Without Label', desc: 'Default style without right-side text.', render: (size, _state) => {
+        { title: '无标签', desc: '', render: (size, _state) => {
             const id = `chk-no-label-${size.id}`;
             window.pendingReactRenders.push({ id, type: 'checkbox-demo', size: size.id, showLabel: false });
             return `<div id="${id}"></div>`;
           }
         },
-        { title: 'With Label', desc: 'Configured with right-side label text.', render: (size, _state) => {
+        { title: '带标签', desc: '', render: (size, _state) => {
             const id = `chk-with-label-${size.id}`;
             window.pendingReactRenders.push({ id, type: 'checkbox-demo', size: size.id, showLabel: true });
             return `<div id="${id}"></div>`;
@@ -441,11 +759,11 @@
       ]
     },
     input: {
-      title: 'Input (React Component)',
+      title: '输入框 Input',
       sizes: COMMON_SIZES,
-      desc: 'A field for users to enter text or data, supporting various states and suffix icons.',
+      desc: '基础文本输入框，支持多种状态与后缀图标。',
       variants: [
-        { title: 'Standard', desc: 'Text input field', render: (size, state) => {
+        { title: '标准', desc: '', render: (size, state) => {
             const id = `inp-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''}`;
             window.pendingReactRenders.push({ 
@@ -453,7 +771,7 @@
               disabled: state.props.includes('disabled'),
               isFocused: state.id === 'active',
               value: state.id === 'active' ? '输入中...' : '',
-              placeholder: 'Placeholder',
+              placeholder: '请输入',
               clearable: state.id === 'active'
             });
             return `<div id="${id}"></div>`;
@@ -462,29 +780,29 @@
       ]
     },
     filter: {
-      title: 'Filter (React Component)',
+      title: '筛选控件 Filter',
       sizes: FILTER_SIZES,
-      desc: 'A compact filter control used in list/table toolbars. Supports input/select/date/time types and two sizes per Figma 3.0.',
+      desc: '用于列表/表格工具栏的紧凑筛选控件，支持文本、选择、日期、时间四种类型。',
       variants: [
-        { title: 'Input', desc: 'Text input filter.', render: (size, state) => {
+        { title: '文本输入', desc: '', render: (size, state) => {
             const id = `filter-input-empty-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
             window.pendingReactRenders.push({ id, type: 'filter', filterType: 'input', size: size.id, className, disabled: state.props.includes('disabled') });
             return `<div id="${id}"></div>`;
         }},
-        { title: 'Select', desc: 'Selection filter (click to open).', render: (size, state) => {
+        { title: '选择框', desc: '', render: (size, state) => {
             const id = `filter-select-empty-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
             window.pendingReactRenders.push({ id, type: 'filter', filterType: 'select', size: size.id, className, disabled: state.props.includes('disabled') });
             return `<div id="${id}"></div>`;
         }},
-        { title: 'Date', desc: 'Date picker trigger.', render: (size, state) => {
+        { title: '日期', desc: '', render: (size, state) => {
             const id = `filter-date-empty-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
             window.pendingReactRenders.push({ id, type: 'filter', filterType: 'date', size: size.id, className, disabled: state.props.includes('disabled') });
             return `<div id="${id}"></div>`;
         }},
-        { title: 'Time', desc: 'Time picker trigger.', render: (size, state) => {
+        { title: '时间', desc: '', render: (size, state) => {
             const id = `filter-time-empty-${size.id}-${state.id}`;
             const className = `${state.id==='hover'?'is-hover':''} ${state.id==='active'?'is-active':''}`;
             window.pendingReactRenders.push({ id, type: 'filter', filterType: 'time', size: size.id, className, disabled: state.props.includes('disabled') });
@@ -493,17 +811,17 @@
       ]
     },
     filtergroup: {
-      title: 'FilterGroup (React Component)',
+      title: '筛选容器 FilterGroup',
       layout: 'full',
       sizes: [
-        { id: 'narrow', label: '窄容器 (≈3列)', meta: 'Auto grid with min 294px' },
-        { id: 'wide', label: '宽容器 (≈4列)', meta: 'Auto grid with min 294px' },
+        { id: 'narrow', label: '窄容器（≈3列）', meta: 'min 294px' },
+        { id: 'wide', label: '宽容器（≈4列）', meta: 'min 294px' },
       ],
-      desc: 'A responsive grid container that composes multiple Filter components, with optional Query/Reset actions.',
+      desc: '响应式筛选容器，组合多个 Filter，并提供查询/重置按钮。',
       variants: [
         {
-          title: 'Single Row / Responsive',
-          desc: 'Same content, different container widths to show 3 vs 4 columns.',
+          title: '单行响应式',
+          desc: '相同内容在不同容器宽度下展示 3 列与 4 列效果。',
           render: (size, _state) => {
             const id = `filtergroup-${size.id}`;
             window.pendingReactRenders.push({ id, type: 'filter-group-demo', mode: size.id });
@@ -511,8 +829,8 @@
           }
         },
         {
-          title: 'Multi Row',
-          desc: 'More filters will wrap into multiple rows automatically.',
+          title: '多行换行',
+          desc: '筛选项数量较多时自动换行。',
           render: (_size, _state) => {
             const id = `filtergroup-multi`;
             window.pendingReactRenders.push({ id, type: 'filter-group-demo', mode: 'multi' });
@@ -522,23 +840,23 @@
       ]
     },
     tabs: {
-      title: 'Tabs (React Component)',
+      title: '标签页 Tabs',
       sizes: TAB_SIZES,
-      desc: 'Organizes content into separate views where only one view can be visible at a time.',
+      desc: '将内容组织为多个视图，同一时间仅显示一个。',
       variants: [
-        { title: 'Primary', desc: 'Underlined — for main navigation', render: (size, state) => {
+        { title: 'Primary', desc: '下划线样式，常用于主导航。', render: (size, state) => {
             const id = `tabs-primary-${size.id}-${state.id}`;
             window.pendingReactRenders.push({ id, type: 'tabs', variant: 'primary', size: size.id, stateId: state.id });
             return `<div id="${id}"></div>`;
           }
         },
-        { title: 'Capsule', desc: 'Segmented control style', render: (size, state) => {
+        { title: '胶囊切换 Capsule', desc: '分段控件样式。', render: (size, state) => {
             const id = `tabs-capsule-${size.id}-${state.id}`;
             window.pendingReactRenders.push({ id, type: 'tabs', variant: 'capsule', size: size.id, stateId: state.id });
             return `<div id="${id}"></div>`;
           }
         },
-        { title: 'Filter', desc: 'Tag-like tabs for quick filtering', render: (size, state) => {
+        { title: '筛选控件 Filter', desc: '标签式快速筛选。', render: (size, state) => {
             const id = `tabs-filter-${size.id}-${state.id}`;
             window.pendingReactRenders.push({ id, type: 'tabs', variant: 'filter', size: size.id, stateId: state.id });
             return `<div id="${id}"></div>`;
@@ -546,49 +864,15 @@
         }
       ]
     },
-    navbar: {
-      title: 'Navbar (React Component)',
-      layout: 'full',
-      sizes: [{ id: 'default', label: 'Default', meta: 'Height: 72px' }],
-      desc: 'Top navigation bar for the application, including logo, search, navigation links, and user profile.',
-      variants: [
-        { 
-          title: 'Standard', 
-          desc: 'The standard horizontal navigation bar.', 
-          render: (size, state) => {
-            const id = `navbar-${size.id}-${state.id}`;
-            window.pendingReactRenders.push({ id, type: 'navbar' });
-            return `<div id="${id}"></div>`;
-          }
-        }
-      ]
-    },
-    menu: {
-      title: 'Menu (React Component)',
-      layout: 'full',
-      sizes: [{ id: 'default', label: 'Default', meta: 'Width: 200px' }],
-      desc: 'Sidebar navigation with grouped items, supporting expand/collapse and selection states.',
-      variants: [
-        { 
-          title: 'Standard Sidebar', 
-          desc: 'Grouped menu with icons and status indicators.', 
-          render: (size, state) => {
-            const id = `menu-${size.id}-${state.id}`;
-            window.pendingReactRenders.push({ id, type: 'menu' });
-            return `<div id="${id}"></div>`;
-          }
-        }
-      ]
-    },
     pageheader: {
-      title: 'PageHeader (React Component)',
+      title: '页头 PageHeader',
       layout: 'full',
-      sizes: [{ id: 'default', label: 'Default', meta: 'Height: Hug, Padding: 32/32/24' }],
-      desc: 'Top section of a page that contains a title and optional primary navigation tabs.',
+      sizes: [{ id: 'default', label: '默认', meta: '32/32/24 · 高度自适应' }],
+      desc: '页面顶部区域，包含标题与可选的主导航 Tabs。',
       variants: [
         { 
-          title: 'Standard', 
-          desc: 'PageHeader with title only.', 
+          title: '仅标题', 
+          desc: '', 
           render: (size, state) => {
             const id = `ph-std-${size.id}-${state.id}`;
             window.pendingReactRenders.push({ id, type: 'pageheader', withTabs: false });
@@ -596,8 +880,8 @@
           }
         },
         { 
-          title: 'With Tabs', 
-          desc: 'PageHeader with a primary tab component below the title.', 
+          title: '带 Tabs', 
+          desc: '', 
           render: (size, state) => {
             const id = `ph-tabs-${size.id}-${state.id}`;
             window.pendingReactRenders.push({ id, type: 'pageheader', withTabs: true });
@@ -607,30 +891,39 @@
       ]
     },
     table: {
-      title: 'Table (React Component)',
+      title: '表格 Table',
       layout: 'full',
-      sizes: [{ id: 'default', label: 'Default', meta: 'Width: 100%' }],
-      desc: 'A flexible table component with built-in styles for product, text, operations, and amounts.',
+      sizes: [{ id: 'default', label: '默认', meta: '宽度 100%' }],
+      desc: '两种用法：① 数据驱动 <Table> 支持多级表头、冻结列、指标列、子指标分组分隔；② 组合式 <NormalTable> 适合自定义单元格渲染。',
       variants: [
-        { 
-          title: 'Standard Table', 
-          desc: 'A table with striped rows and default column types based on the design specs.', 
+        {
+          title: '数据驱动 Table',
+          desc: 'multiLevelHeader + frozenColumnCount + isMetric + groupDividerLeafIndices。',
           render: (size, state) => {
-            const id = `table-${size.id}-${state.id}`;
-            window.pendingReactRenders.push({ id, type: 'table' });
+            const id = `table-data-${size.id}-${state.id}`;
+            window.pendingReactRenders.push({ id, type: 'table-data-driven' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        {
+          title: '组合式 NormalTable',
+          desc: '<NormalTable> + <Thead>/<Tbody>/<Tr>/<Th>/<Td> 自定义单元格。',
+          render: (size, state) => {
+            const id = `table-normal-${size.id}-${state.id}`;
+            window.pendingReactRenders.push({ id, type: 'table-normal' });
             return `<div id="${id}"></div>`;
           }
         }
       ]
     },
     tag: {
-      title: 'Tag (React Component)',
+      title: '标签 Tag',
       sizes: TAG_SIZES,
-      desc: 'A compact label for categorization or status. Supports variants, semantic colors, and optional left/right icons.',
+      desc: '紧凑型标签，用于分类或状态展示，支持多种样式与左右图标。',
       variants: [
         {
           title: 'Fill',
-          desc: 'Solid background (high emphasis).',
+          desc: '实心填充，高强调级。',
           render: (size, state) => {
             const id = `tag-fill-${size.id}-${state.id}`;
             window.pendingReactRenders.push({
@@ -644,7 +937,7 @@
         },
         {
           title: 'Light',
-          desc: 'Light background (default usage).',
+          desc: '浅色填充（默认用法）。',
           render: (size, state) => {
             const id = `tag-light-${size.id}-${state.id}`;
             window.pendingReactRenders.push({
@@ -658,7 +951,7 @@
         },
         {
           title: 'Outline',
-          desc: 'Transparent background with border (low emphasis).',
+          desc: '透明背景描边，弱强调级。',
           render: (size, state) => {
             const id = `tag-outline-${size.id}-${state.id}`;
             window.pendingReactRenders.push({
@@ -671,8 +964,8 @@
           }
         },
         {
-          title: 'Icon Config',
-          desc: 'Left / Right icon are configurable.',
+          title: '左右图标',
+          desc: '左、右图标可独立配置。',
           render: (size, state) => {
             const id = `tag-icon-config-${size.id}-${state.id}`;
             window.pendingReactRenders.push({
@@ -687,14 +980,14 @@
       ]
     },
     pagination: {
-      title: 'Pagination (React Component)',
+      title: '分页 Pagination',
       layout: 'full',
       sizes: PAGINATION_SIZES,
-      desc: 'Splits long lists/tables into pages. Supports page number collapsing, page-size changer, and quick jump (per Figma 3.0).',
+      desc: '将长列表/表格分页展示，支持页码省略、页大小切换与快速跳转。',
       variants: [
         {
-          title: 'Standard',
-          desc: 'Default size shows size changer + quick jumper; small size keeps a compact page-number bar.',
+          title: '标准',
+          desc: '默认尺寸展示页大小切换 + 快速跳转；小号尺寸保持紧凑页码栏。',
           render: (size, _state) => {
             const id = `pagination-${size.id}`;
             window.pendingReactRenders.push({
@@ -712,26 +1005,447 @@
           }
         }
       ]
+    },
+    tags: {
+      title: '标签组 Tags',
+      layout: 'full',
+      sizes: [{ id: 'default-size', label: '默认', meta: '容器 · 宽度自适应' }],
+      desc: '弹性容器，包裹多个 Tag 并保持一致的间距与换行行为。',
+      variants: [
+        { title: '浅色组合', desc: '', render: (size, _state) => {
+            const id = `tags-group-${size.id}`;
+            window.pendingReactRenders.push({ id, type: 'tags-demo', variant: 'light', size: 'default-size' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '实心组合', desc: '', render: (size, _state) => {
+            const id = `tags-fill-${size.id}`;
+            window.pendingReactRenders.push({ id, type: 'tags-demo', variant: 'fill', size: 'default-size' });
+            return `<div id="${id}"></div>`;
+          }
+        }
+      ]
+    },
+    tabnav: {
+      title: '主导航标签 TabNav',
+      sizes: [
+        { id: 'default-size', label: '默认', meta: 'h44 · Body Medium' },
+        { id: 'large', label: '大', meta: 'h56 · Subtitle' }
+      ],
+      desc: '页面顶部主导航 Tab，支持持久化与右侧操作区。',
+      layout: 'full',
+      variants: [
+        { title: '标准', desc: '', render: (size, _state) => {
+            const id = `tabnav-${size.id}`;
+            window.pendingReactRenders.push({ id, type: 'tabnav', size: size.id });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '带右侧操作', desc: '', render: (size, _state) => {
+            const id = `tabnav-right-${size.id}`;
+            window.pendingReactRenders.push({ id, type: 'tabnav', size: size.id, withRight: true });
+            return `<div id="${id}"></div>`;
+          }
+        }
+      ]
+    },
+    select: {
+      title: '选择器 Select',
+      sizes: [{ id: 'default-size', label: '默认', meta: 'h36 · Body Regular' }],
+      desc: '点击触发 Dropdown 进行单选，左侧标签可选。',
+      variants: [
+        { title: '默认', desc: '关闭态显示占位文本。', render: (size, state) => {
+            const id = `select-${size.id}-${state.id}`;
+            window.pendingReactRenders.push({ id, type: 'select', size: size.id, stateId: state.id, label: '字段标题', preset: 'default' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '已选中', desc: '已选择某个值。', render: (size, state) => {
+            const id = `select-selected-${size.id}-${state.id}`;
+            window.pendingReactRenders.push({ id, type: 'select', size: size.id, stateId: state.id, label: '字段标题', preset: 'selected' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '无标签', desc: '不带左侧标签，只展示占位。', render: (size, state) => {
+            const id = `select-nolabel-${size.id}-${state.id}`;
+            window.pendingReactRenders.push({ id, type: 'select', size: size.id, stateId: state.id, preset: 'default' });
+            return `<div id="${id}"></div>`;
+          }
+        }
+      ]
+    },
+    dropdown: {
+      title: '下拉浮层 Dropdown',
+      sizes: [{ id: 'default-size', label: '默认', meta: '宽度自适应 · Body Regular' }],
+      desc: '浮层选项列表，常组合在 Select 内，也可独立使用。',
+      layout: 'full',
+      variants: [
+        { title: '展开列表', desc: '默认展开态，已选项高亮。', render: (size, _state) => {
+            const id = `dropdown-open-${size.id}`;
+            window.pendingReactRenders.push({ id, type: 'dropdown', preset: 'open' });
+            return `<div id="${id}" style="position: relative; min-height: 220px;"></div>`;
+          }
+        },
+        { title: '含禁用项', desc: '列表中含禁用选项。', render: (size, _state) => {
+            const id = `dropdown-disabled-${size.id}`;
+            window.pendingReactRenders.push({ id, type: 'dropdown', preset: 'with-disabled' });
+            return `<div id="${id}" style="position: relative; min-height: 220px;"></div>`;
+          }
+        }
+      ]
+    },
+    timefilter: {
+      title: '时间筛选 TimeFilter',
+      sizes: [{ id: 'default-size', label: '默认', meta: 'h36 · Body Regular' }],
+      desc: '两行式时间筛选：分别选择统计时间范围与对比范围。',
+      layout: 'full',
+      variants: [
+        { title: '默认选项', desc: '初始值：近 7 天 · 临期环比。', render: (_size, _state) => {
+            const id = 'timefilter-default';
+            window.pendingReactRenders.push({ id, type: 'timefilter' });
+            return `<div id="${id}"></div>`;
+          }
+        }
+      ]
+    },
+    metriccard: {
+      title: '指标卡 MetricCard',
+      sizes: [{ id: 'default-size', label: '默认', meta: '~280 × 160' }],
+      desc: '指标卡，支持 7 种主题（color-1~5 / light-purple / gray）、可选状态与底部/右侧箭头方向。',
+      layout: 'full',
+      variants: [
+        { title: '交互配置面板', desc: '颜色 × 是否可选择 × 布局方向，所见即所得。', render: (_size, _state) => {
+            const id = 'metric-interactive';
+            window.pendingReactRenders.push({ id, type: 'metric-interactive' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '七种主题色', desc: '七种主题色并列展示。', render: (_size, _state) => {
+            const id = 'metric-themes';
+            window.pendingReactRenders.push({ id, type: 'metric-card-grid', preset: 'themes' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '默认 vs 选中', desc: '选中态会高亮底部边框与背景。', render: (_size, _state) => {
+            const id = 'metric-selected';
+            window.pendingReactRenders.push({ id, type: 'metric-card-grid', preset: 'selected' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '尺寸：默认 vs 小号', desc: '小号尺寸适合密集列表/侧栏的轻量指标。', render: (_size, _state) => {
+            const id = 'metric-sizes';
+            window.pendingReactRenders.push({ id, type: 'metric-card-grid', preset: 'sizes' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '带子指标', desc: '主指标 + 一行次级指标（成功 / 危险 / 默认）。', render: (_size, _state) => {
+            const id = 'metric-with-sub';
+            window.pendingReactRenders.push({ id, type: 'metric-card-grid', preset: 'with-sub' });
+            return `<div id="${id}"></div>`;
+          }
+        }
+      ]
+    },
+    loading: {
+      title: '加载 Loading',
+      sizes: [
+        { id: 'small', label: '小', meta: '20px 转圈' },
+        { id: 'default-size', label: '默认', meta: '32px 转圈' },
+        { id: 'large', label: '大', meta: '48px 转圈' }
+      ],
+      desc: '居中加载态，包含转圈与可选文字标签。',
+      variants: [
+        { title: '仅图标', desc: '', render: (size, _state) => {
+            const id = `loading-${size.id}`;
+            window.pendingReactRenders.push({ id, type: 'loading', size: size.id });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '带文字', desc: '', render: (size, _state) => {
+            const id = `loading-text-${size.id}`;
+            window.pendingReactRenders.push({ id, type: 'loading', size: size.id, text: '加载中…' });
+            return `<div id="${id}"></div>`;
+          }
+        }
+      ]
+    },
+    diagnosis: {
+      title: '诊断卡 Diagnosis',
+      sizes: [{ id: 'default-size', label: '默认', meta: '宽度自适应' }],
+      desc: 'AI 诊断卡片，对齐 designsystem 三种场景：内容样式 / 单卡片业务示例 / 多卡片布局。',
+      layout: 'full',
+      variants: [
+        { title: '内容样式', desc: '展示 parts 的 bold / color / customColor 等内容样式。', render: (_size, _state) => {
+            const id = 'diagnosis-styles';
+            window.pendingReactRenders.push({ id, type: 'diagnosis', preset: 'styles' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '交互 parts', desc: 'parts 支持 link（链接）、button（行内按钮，可配 type/size/iconRight）、title（段落级标题）。', render: (_size, _state) => {
+            const id = 'diagnosis-interactive';
+            window.pendingReactRenders.push({ id, type: 'diagnosis', preset: 'interactive' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '单卡片多内容', desc: '单卡片承载多 sections 的丰富业务文案与多个全局 CTA 按钮。', render: (_size, _state) => {
+            const id = 'diagnosis-single';
+            window.pendingReactRenders.push({ id, type: 'diagnosis', preset: 'single' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '多卡片布局', desc: 'layout="multiple"，三张并列子卡片，每张独立成段。', render: (_size, _state) => {
+            const id = 'diagnosis-multiple';
+            window.pendingReactRenders.push({ id, type: 'diagnosis', preset: 'multiple' });
+            return `<div id="${id}"></div>`;
+          }
+        }
+      ]
+    },
+    charts: {
+      title: '图表 Charts',
+      sizes: [{ id: 'default-size', label: '默认', meta: 'h400 · 宽度自适应' }],
+      desc: '基于 VChart 的轻量 React 包装；未加载 VChart CDN 时渲染空占位。',
+      layout: 'full',
+      variants: [
+        { title: '柱状图', desc: '未传 spec 时使用内置示例数据。', render: (_size, _state) => {
+            const id = 'charts-bar';
+            window.pendingReactRenders.push({ id, type: 'charts', chartType: 'bar' });
+            return `<div id="${id}"></div>`;
+          }
+        },
+        { title: '饼图', desc: '未传 spec 时使用内置示例数据。', render: (_size, _state) => {
+            const id = 'charts-pie';
+            window.pendingReactRenders.push({ id, type: 'charts', chartType: 'pie' });
+            return `<div id="${id}"></div>`;
+          }
+        }
+      ]
     }
   };
 
   // 2. Renderer Function
   const mainEl = document.getElementById('doc-main');
 
+  // ---- Spec Renderers ----
+  function swatch(name, varName, hex) {
+    return `
+      <div class="color-swatch">
+        <div class="color-swatch__preview" style="background: var(${varName});"></div>
+        <div class="color-swatch__meta">
+          <strong>${name}</strong>
+          <span>${varName}${hex ? ' · ' + hex : ''}</span>
+        </div>
+      </div>`;
+  }
+  function swatchGroup(title, items) {
+    return `
+      <div class="spec-section">
+        <h3>${title}</h3>
+        <div class="color-grid">
+          ${items.map(([n, v, h]) => swatch(n, v, h || '')).join('')}
+        </div>
+      </div>`;
+  }
+
+  function renderColorsSpec() {
+    return [
+      swatchGroup('品牌色 Primary', [
+        ['primary-1', '--primary-1', '#F3F4FF'],
+        ['primary-2', '--primary-2', '#E2E6FF'],
+        ['primary-3', '--primary-3', '#939FFF'],
+        ['primary-4', '--primary-4', '#6879FF'],
+        ['primary-5', '--primary-5', '#5171FF'],
+        ['primary-6', '--primary-6', '#495BE6'],
+        ['primary-0（派生）', '--primary-0', '#F9FAFF'],
+        ['primary-7（派生）', '--primary-7', '#3340A1'],
+      ]),
+      swatchGroup('成功 Success', [
+        ['success-1', '--success-1'], ['success-2', '--success-2'],
+        ['success-3', '--success-3'], ['success-4', '--success-4'],
+        ['success-5', '--success-5'], ['success-6', '--success-6'],
+        ['success-0（派生）', '--success-0'], ['success-7（派生）', '--success-7'],
+      ]),
+      swatchGroup('警示 Warning', [
+        ['warning-1', '--warning-1'], ['warning-2', '--warning-2'],
+        ['warning-3', '--warning-3'], ['warning-4', '--warning-4'],
+        ['warning-5', '--warning-5'], ['warning-6', '--warning-6'],
+        ['warning-0（派生）', '--warning-0'], ['warning-7（派生）', '--warning-7'],
+      ]),
+      swatchGroup('危险 Danger', [
+        ['danger-1', '--danger-1'], ['danger-2', '--danger-2'],
+        ['danger-3', '--danger-3'], ['danger-4', '--danger-4'],
+        ['danger-5', '--danger-5'], ['danger-6', '--danger-6'],
+        ['danger-0（派生）', '--danger-0'], ['danger-7（派生）', '--danger-7'],
+      ]),
+      swatchGroup('文本灰阶 Text', [
+        ['text-gray-5（主）', '--text-gray-5', '#1D2129'],
+        ['text-gray-4（次）', '--text-gray-4', '#4F535C'],
+        ['text-gray-3（辅助）', '--text-gray-3', '#6C737A'],
+        ['text-gray-2（禁用）', '--text-gray-2', '#A8ABB2'],
+        ['text-white', '--text-white', '#FFFFFF'],
+      ]),
+      swatchGroup('背景 Background', [
+        ['bg-1', '--bg-1'], ['bg-2', '--bg-2'], ['bg-3', '--bg-3'],
+        ['bg-4', '--bg-4'], ['bg-5', '--bg-5'],
+        ['bg-6', '--bg-6'], ['bg-7', '--bg-7'],
+      ]),
+      swatchGroup('分割线与边框 Divider', [
+        ['divider-1', '--divider-1'], ['divider-2', '--divider-2'], ['border-1', '--border-1'],
+      ]),
+      swatchGroup('数据图表 Chart', [
+        ['chart-0', '--data-chart-0'], ['chart-1a', '--data-chart-1a'], ['chart-1b', '--data-chart-1b'],
+        ['chart-2', '--data-chart-2'], ['chart-3', '--data-chart-3'], ['chart-4', '--data-chart-4'],
+        ['chart-5', '--data-chart-5'], ['chart-6', '--data-chart-6'], ['chart-7', '--data-chart-7'],
+        ['chart-8', '--data-chart-8'], ['chart-9', '--data-chart-9'],
+      ]),
+      swatchGroup('数据卡片背景 Card BG', [
+        ['card-bg1', '--data-card-bg1'], ['card-bg2', '--data-card-bg2'],
+        ['card-bg3', '--data-card-bg3'], ['card-bg4', '--data-card-bg4'],
+        ['card-bg5', '--data-card-bg5'],
+      ]),
+      swatchGroup('诊断卡专用 Diagnosis', [
+        ['diagnosis-title', '--diagnosis-title-color'],
+        ['diagnosis-index-bg', '--diagnosis-index-bg'],
+        ['diagnosis-index-border', '--diagnosis-index-border-color'],
+      ]),
+    ].join('');
+  }
+
+  function renderTypographySpec() {
+    const tokens = [
+      { name: 'display-medium',   var: '--display-medium',   meta: '500 · 28/38' },
+      { name: 'display-regular',  var: '--display-regular',  meta: '400 · 28/38' },
+      { name: 'headline-medium',  var: '--headline-medium',  meta: '500 · 24/36' },
+      { name: 'headline-regular', var: '--headline-regular', meta: '400 · 24/36' },
+      { name: 'title-medium',     var: '--title-medium',     meta: '500 · 20/30' },
+      { name: 'title-regular',    var: '--title-regular',    meta: '400 · 20/30' },
+      { name: 'subtitle-medium',  var: '--subtitle-medium',  meta: '500 · 16/24' },
+      { name: 'subtitle-regular', var: '--subtitle-regular', meta: '400 · 16/24' },
+      { name: 'body-medium',      var: '--body-medium',      meta: '500 · 14/22' },
+      { name: 'body-regular',     var: '--body-regular',     meta: '400 · 14/22' },
+      { name: 'caption-medium',   var: '--caption-medium',   meta: '500 · 12/18' },
+      { name: 'caption-regular',  var: '--caption-regular',  meta: '400 · 12/18' },
+    ];
+    return `
+      <div class="spec-section">
+        <h3>文字层级 · 共 12 个 token</h3>
+        <div class="typography-list">
+          ${tokens.map(t => `
+            <div class="typography-row">
+              <div class="typography-row__meta">
+                <strong>${t.name}</strong>
+                <span>${t.var} · ${t.meta}</span>
+              </div>
+              <div class="typography-row__sample" style="font: var(${t.var});">销运 Design System · 字号字重示例</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  }
+
+  function renderSpacingSpec() {
+    const spacings = [
+      ['spacing-base', '4px'], ['spacing-2x', '8px'], ['spacing-3x', '12px'],
+      ['spacing-4x', '16px'], ['spacing-5x', '20px'], ['spacing-6x', '24px'],
+      ['spacing-7x', '28px'], ['spacing-8x', '32px'], ['spacing-9x', '36px'],
+      ['spacing-10x', '40px'],
+    ];
+    const semantic = [
+      ['spacing-xs', '4px'], ['spacing-sm', '8px'], ['spacing-md', '16px'],
+      ['spacing-lg', '24px'], ['spacing-xl', '32px'], ['spacing-2xl', '48px'], ['spacing-3xl', '64px'],
+    ];
+    const radii = [
+      ['radius-s', '6px'], ['radius-m', '12px'], ['radius-l', '16px'],
+      ['radius-xl', '20px'], ['radius-xxl', '24px'], ['radius-xxxl', '32px'],
+      ['radius-round', '999px'],
+    ];
+    const shadows = [
+      ['shadow-normal', '常规'], ['shadow-small', '小'], ['shadow-large', '大'],
+      ['shadow-top', '上'], ['shadow-bottom', '下'], ['shadow-left', '左'], ['shadow-right', '右'],
+    ];
+    return `
+      <div class="spec-section">
+        <h3>基础间距 · 4px 基线</h3>
+        <div class="spacing-grid">
+          ${spacings.map(([n, v]) => `
+            <div class="spacing-row">
+              <div class="spacing-row__name">--${n}</div>
+              <div class="spacing-row__value">${v}</div>
+              <div class="spacing-row__bar" style="width: var(--${n});"></div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="spec-section">
+        <h3>语义间距 Semantic</h3>
+        <div class="spacing-grid">
+          ${semantic.map(([n, v]) => `
+            <div class="spacing-row">
+              <div class="spacing-row__name">--${n}</div>
+              <div class="spacing-row__value">${v}</div>
+              <div class="spacing-row__bar" style="width: var(--${n});"></div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="spec-section">
+        <h3>圆角 Radius</h3>
+        <div class="radius-grid">
+          ${radii.map(([n, v]) => `
+            <div class="radius-card">
+              <div class="radius-card__demo" style="border-radius: var(--${n});"></div>
+              <div><strong>--${n}</strong></div>
+              <div>${v}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="spec-section">
+        <h3>阴影 Shadow</h3>
+        <div class="shadow-grid">
+          ${shadows.map(([n, label]) => `
+            <div class="shadow-card" style="box-shadow: var(--${n});">
+              <div><strong>--${n}</strong></div>
+              <div>${label}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  // ---- Markdown Renderer ----
+  async function renderMarkdown(path) {
+    mainEl.innerHTML = `<div class="markdown-loading">正在加载文档：${path} ...</div>`;
+    try {
+      const resp = await fetch(path + '?v=' + Date.now());
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const text = await resp.text();
+      const html = window.marked ? window.marked.parse(text) : '<pre>' + text.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) + '</pre>';
+      mainEl.innerHTML = `
+        <article class="markdown-body">${html}</article>
+      `;
+    } catch (err) {
+      mainEl.innerHTML = `<div class="markdown-error">加载失败：${err.message}</div>`;
+    }
+  }
+
+
   function renderView(compId) {
     const comp = COMPONENTS[compId];
     if (!comp) return;
 
-    let html = `
-      <div class="component-header">
-        <div class="breadcrumb">DESIGN SYSTEM &rsaquo; COMPONENTS &rsaquo; <strong>${comp.title}</strong></div>
-        <h1 class="component-title">${comp.title}</h1>
-        <p class="component-desc">${comp.desc}</p>
-        <div class="component-stats">
-          <div class="stat"><div class="stat-num">${comp.variants.length}</div><div class="stat-label">Variants</div></div>
-          ${compId === 'tabs' ? '' : `<div class="stat"><div class="stat-num">${STATES.length}</div><div class="stat-label">States</div></div>`}
-          <div class="stat"><div class="stat-num">${comp.sizes.length}</div><div class="stat-label">Sizes</div></div>
+    // ---- Spec view (颜色 / 文字 / 间距) ----
+    if (comp.kind === 'spec') {
+      mainEl.innerHTML = `
+        <div class="doc-page-header">
+          <h1 class="doc-page-title">${comp.title}</h1>
+          <p class="doc-page-desc">${comp.desc}</p>
         </div>
+        ${comp.render()}
+      `;
+      return;
+    }
+
+    let html = `
+      <div class="doc-page-header">
+        <h1 class="doc-page-title">${comp.title}</h1>
+        <p class="doc-page-desc">${comp.desc}</p>
       </div>
     `;
 
@@ -744,8 +1458,7 @@
         <div class="variant-section">
           <div class="variant-header">
             <h2 class="variant-title">${variant.title}</h2>
-            <span class="variant-desc">${variant.desc}</span>
-            <span class="variant-count">VARIANT ${vIdx + 1} / ${comp.variants.length}</span>
+            ${variant.desc ? `<span class="variant-desc">${variant.desc}</span>` : ''}
           </div>
       `;
 
@@ -789,7 +1502,7 @@
     mainEl.innerHTML = html;
 
     // Trigger custom event so React script knows to mount
-    if (['button', 'capsule', 'checkbox', 'input', 'filter', 'filtergroup', 'tabs', 'navbar', 'menu', 'pageheader', 'table', 'tag', 'pagination'].includes(compId)) {
+    if (['button', 'capsule', 'checkbox', 'input', 'filter', 'filtergroup', 'tabs', 'pageheader', 'table', 'tag', 'pagination', 'tags', 'tabnav', 'select', 'dropdown', 'timefilter', 'metriccard', 'loading', 'diagnosis', 'charts'].includes(compId)) {
       window.dispatchEvent(new CustomEvent('renderReactButtons'));
     }
   }
@@ -801,6 +1514,15 @@
     e.preventDefault();
     navItems.forEach(n => n.classList.remove('active'));
     this.classList.add('active');
+
+    const docPath = this.getAttribute('data-doc');
+    if (docPath) {
+      const hash = (this.getAttribute('href') || '').replace('#', '');
+      renderMarkdown(docPath);
+      window.location.hash = hash;
+      return;
+    }
+
     const target = this.getAttribute('data-target');
     renderView(target);
     window.location.hash = target;
@@ -808,28 +1530,21 @@
 
   navItems.forEach(item => item.addEventListener('click', handleNavClick));
 
-  // Theme toggle
-  const themeToggle = document.getElementById('theme-toggle');
-  themeToggle.addEventListener('click', () => {
-    const html = document.documentElement;
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', newTheme);
-    themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-  });
-
   // Handle URL hash on load
-  const hash = window.location.hash.replace('#', '') || 'button';
-  const initNav = document.querySelector(`.nav-item[data-target="${hash}"]`);
+  const hash = window.location.hash.replace('#', '') || 'colors';
+  let initNav = document.querySelector(`.nav-item[data-target="${hash}"]`);
+  if (!initNav) {
+    initNav = document.querySelector(`.nav-item[href="#${hash}"]`);
+  }
   if (initNav) {
     initNav.click();
   } else {
-    renderView('button');
+    renderView('colors');
   }
 
-  // Also trigger initial render in case it was already button
+  // Also trigger initial render in case it was already a React component
   setTimeout(() => {
-    if (['button', 'capsule', 'input', 'filter', 'filtergroup', 'tabs', 'navbar', 'menu', 'pageheader', 'table', 'tag', 'pagination'].includes(hash) || !hash) {
+    if (['button', 'capsule', 'input', 'filter', 'filtergroup', 'tabs', 'pageheader', 'table', 'tag', 'pagination', 'tags', 'tabnav', 'select', 'dropdown', 'timefilter', 'metriccard', 'loading', 'diagnosis', 'charts'].includes(hash)) {
       window.dispatchEvent(new CustomEvent('renderReactButtons'));
     }
   }, 200);
@@ -842,13 +1557,20 @@
     Button, Icon, Capsule, Input, Tabs, Tab,
     Filter,
     FilterGroup,
-    Navbar,
-    Menu,
     PageHeader, Checkbox,
-    TableWrapper, Table, Thead, Tbody, Tr, Th, Td, TableCellProduct, TableCellAmount, TableCellOperation, TableCellAction,
+    NormalTableWrapper, NormalTable, Table, Thead, Tbody, Tr, Th, Td, TableCellProduct, TableCellAmount, TableCellOperation, TableCellAction,
     Tag,
+    Tags,
+    TabNav,
+    Select,
+    Dropdown,
+    TimeFilter,
+    MetricCard,
+    Loading,
+    Diagnosis,
+    Charts,
     Pagination
-  } from '@life-ds/components-web';
+  } from '@xiaoyun-ds/components-web';
 
   const roots = new Map();
 
@@ -953,7 +1675,7 @@
         );
       } else if (item.type === 'filter-group-demo') {
         const Wrapper = ({ width, children }) => (
-          <div style={{ width, border: `1px dashed var(--color-border-normal)`, padding: 12, borderRadius: 12 }}>
+          <div style={{ width, border: `1px dashed var(--border-1)`, padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-m)' }}>
             {children}
           </div>
         );
@@ -993,14 +1715,6 @@
         } else {
           root.render(<Wrapper width={'100%'}><Demo /></Wrapper>);
         }
-      } else if (item.type === 'navbar') {
-        root.render(
-          <Navbar />
-        );
-      } else if (item.type === 'menu') {
-        root.render(
-          <Menu />
-        );
       } else if (item.type === 'pageheader') {
         root.render(
           <PageHeader 
@@ -1014,10 +1728,10 @@
             ) : null}
           />
         );
-      } else if (item.type === 'table') {
+      } else if (item.type === 'table-normal') {
         root.render(
-          <TableWrapper>
-            <Table>
+          <NormalTableWrapper>
+            <NormalTable>
               <Thead>
                 <Tr>
                   <Th>商品信息</Th>
@@ -1056,8 +1770,73 @@
                   </Td>
                 </Tr>
               </Tbody>
-            </Table>
-          </TableWrapper>
+            </NormalTable>
+          </NormalTableWrapper>
+        );
+      } else if (item.type === 'table-data-driven') {
+        const columns = [
+          { key: 'merchant', title: '商家', frozen: true },
+          { key: 'region', title: '所属大区' },
+          {
+            title: '交易表现',
+            children: [
+              { key: 'gmv', title: 'GMV (¥万)', isMetric: true, metricStyle: 'currency' },
+              { key: 'orders', title: '订单数', isMetric: true, metricStyle: 'number' },
+            ]
+          },
+          {
+            title: '内容表现',
+            children: [
+              { key: 'live', title: '直播 GMV', isMetric: true, metricStyle: 'currency' },
+              { key: 'video', title: '视频 GMV', isMetric: true, metricStyle: 'currency' },
+            ]
+          },
+          { key: 'op', title: '操作' }
+        ];
+        const data = [
+          {
+            merchant: <TableCellProduct img="./assets/shangpin.png" title="资生堂烫染护理" tag="团购" tagVariant="default" id="23468723648223" />,
+            region: '川渝',
+            gmv: { currency: '¥', number: '128.5', unit: '万', sub: [
+              { label: '同比', value: { value: '+12.4%', type: 'success' } },
+              { label: '环比', value: { value: '-2.1%', type: 'danger' } },
+            ]},
+            orders: { number: '1,280', sub: [{ label: '环比', value: { value: '+5.6%', type: 'success' } }] },
+            live: { currency: '¥', number: '56.2', unit: '万' },
+            video: { currency: '¥', number: '28.9', unit: '万' },
+            op: <TableCellOperation><TableCellAction>详情</TableCellAction><TableCellAction>编辑</TableCellAction></TableCellOperation>
+          },
+          {
+            merchant: <TableCellProduct img="./assets/shangpin.png" title="高级洗剪吹套餐" tag="热销" tagVariant="orange" id="89345723648224" />,
+            region: '华东',
+            gmv: { currency: '¥', number: '88.0', unit: '万', sub: [
+              { label: '同比', value: { value: '+8.7%', type: 'success' } },
+              { label: '环比', value: { value: '+1.3%', type: 'success' } },
+            ]},
+            orders: { number: '880', sub: [{ label: '环比', value: { value: '-1.0%', type: 'danger' } }] },
+            live: { currency: '¥', number: '32.0', unit: '万' },
+            video: { currency: '¥', number: '14.5', unit: '万' },
+            op: <TableCellOperation><TableCellAction>详情</TableCellAction><TableCellAction danger>删除</TableCellAction></TableCellOperation>
+          },
+          {
+            merchant: <strong>合计</strong>,
+            region: '—',
+            gmv: { currency: '¥', number: '216.5', unit: '万' },
+            orders: { number: '2,160' },
+            live: { currency: '¥', number: '88.2', unit: '万' },
+            video: { currency: '¥', number: '43.4', unit: '万' },
+            op: '—',
+            isSummary: true
+          }
+        ];
+        root.render(
+          <Table
+            data={data}
+            columns={columns}
+            frozenColumnCount={1}
+            multiLevelHeader
+            groupDividerLeafIndices={[3]}
+          />
         );
       } else if (item.type === 'tag-matrix') {
         const colors = [
@@ -1118,6 +1897,409 @@
             showQuickJumper={item.showQuickJumper}
             showTotal={item.showTotal ? (total, range) => `共 ${total} 条（${range[0]}-${range[1]}）` : undefined}
           />
+        );
+      } else if (item.type === 'tags-demo') {
+        const colors = ['blue', 'green', 'orange', 'red', 'gray'];
+        root.render(
+          <Tags>
+            {colors.map(c => (
+              <Tag key={c} size="default-size" variant={item.variant} color={c}>{c}</Tag>
+            ))}
+          </Tags>
+        );
+      } else if (item.type === 'tabnav') {
+        const tabItems = [
+          { value: '1', label: '页面一' },
+          { value: '2', label: '页面二' },
+          { value: '3', label: '页面三' }
+        ];
+        root.render(
+          <TabNav
+            size={item.size}
+            items={tabItems}
+            defaultValue="1"
+            rightContent={item.withRight ? <Button variant="primary" size="small">操作</Button> : null}
+          />
+        );
+      } else if (item.type === 'select') {
+        const options = [
+          { value: 'a', label: '选项 A' },
+          { value: 'b', label: '选项 B' },
+          { value: 'c', label: '选项 C - 较长内容示例' }
+        ];
+        const defaultValue = item.preset === 'selected' ? 'b' : undefined;
+        root.render(
+          <Select
+            label={item.label}
+            placeholder="请选择"
+            options={options}
+            defaultValue={defaultValue}
+          />
+        );
+      } else if (item.type === 'dropdown') {
+        const options = item.preset === 'with-disabled'
+          ? [
+              { value: 'a', label: '选项 A' },
+              { value: 'b', label: '选项 B（已禁用）', disabled: true },
+              { value: 'c', label: '选项 C' },
+              { value: 'd', label: '选项 D' }
+            ]
+          : [
+              { value: 'a', label: '选项 A' },
+              { value: 'b', label: '选项 B' },
+              { value: 'c', label: '选项 C' },
+              { value: 'd', label: '选项 D' }
+            ];
+        const DropdownDemo = () => {
+          const [val, setVal] = React.useState('b');
+          return (
+            <Dropdown
+              options={options}
+              value={val}
+              open
+              onChange={(next) => setVal(next)}
+              style={{ position: 'relative' }}
+            />
+          );
+        };
+        root.render(<DropdownDemo />);
+      } else if (item.type === 'timefilter') {
+        root.render(
+          <TimeFilter
+            defaultValue={{ stat: '7d', compare: 'last-period' }}
+          />
+        );
+      } else if (item.type === 'metric-card-grid') {
+        const themes = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'light-purple', 'gray'];
+        const baseProps = {
+          title: '订单总数',
+          value: '12,580',
+          unit: '单',
+        };
+        if (item.preset === 'themes') {
+          root.render(
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+              {themes.map(t => (
+                <MetricCard key={t} {...baseProps} theme={t} title={`Theme: ${t}`} />
+              ))}
+            </div>
+          );
+        } else if (item.preset === 'selected') {
+          root.render(
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(240px, 320px))', gap: 16 }}>
+              <MetricCard {...baseProps} theme="color-1" title="默认 (Default)" />
+              <MetricCard {...baseProps} theme="color-1" title="选中 (Selected)" selected />
+            </div>
+          );
+        } else if (item.preset === 'sizes') {
+          root.render(
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(220px, 320px))', gap: 16, alignItems: 'start' }}>
+              <MetricCard {...baseProps} theme="color-1" size="default-size" title="Default size" />
+              <MetricCard {...baseProps} theme="color-1" size="small" title="Small size" />
+              <MetricCard {...baseProps} theme="color-2" size="default-size" title="带子指标 · default" metrics={[{ label: '同比', value: { value: '+12.4%', type: 'success' } }]} />
+              <MetricCard {...baseProps} theme="color-2" size="small" title="带子指标 · small" metrics={[{ label: '同比', value: { value: '+12.4%', type: 'success' } }]} />
+            </div>
+          );
+        } else {
+          root.render(
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+              <MetricCard
+                {...baseProps}
+                theme="color-2"
+                showInfo
+                metrics={[
+                  { label: '同比', value: { value: '+12.4%', type: 'success' } },
+                  { label: '环比', value: { value: '-2.1%', type: 'danger' } },
+                ]}
+              />
+              <MetricCard
+                {...baseProps}
+                theme="color-3"
+                title="GMV"
+                value="¥ 880,000"
+                metrics={[
+                  { label: '同比', value: { value: '+8.7%', type: 'success' } },
+                  { label: '环比', value: { value: '+1.3%', type: 'success' } },
+                ]}
+              />
+            </div>
+          );
+        }
+      } else if (item.type === 'loading') {
+        root.render(
+          <Loading size={item.size} text={item.text} minHeight={120} />
+        );
+      } else if (item.type === 'diagnosis') {
+        // Three scenarios aligned with designsystem reference:
+        //   styles  → 内容样式示例（bold/color/customColor）
+        //   single  → 多内容单卡片业务示例
+        //   multiple → 多卡片布局示例
+        const stylesCard = {
+          sections: [{
+            title: '基础样式',
+            items: [
+              { parts: [
+                { text: '这是标题：', bold: true },
+                { text: '这是' },
+                { text: '加粗文字', bold: true },
+                { text: '，这是' },
+                { text: '主要颜色', color: 'primary', bold: true },
+                { text: '，这是' },
+                { text: '正向颜色', color: 'success' },
+                { text: '，这是' },
+                { text: '负向颜色', color: 'danger' },
+                { text: '，这是' },
+                { text: '自定义颜色', customColor: '#FF6B00' },
+                { text: '。' }
+              ]},
+              { parts: [
+                { text: '这是 ' },
+                { text: '加粗 + 主色（链接强调）', bold: true, color: 'primary' },
+                { text: ' 的组合，常用于诊断中需要点击的关键数据。' }
+              ]},
+              { parts: [
+                { text: '空 title 不渲染编号外的标题；通过 ' },
+                { text: 'title 字段', bold: true },
+                { text: ' 可在每条 item 前增加段落级标题。' }
+              ]}
+            ]
+          }]
+        };
+
+        const singleCard = {
+          sections: [
+            {
+              title: '现状与潜力',
+              items: [
+                { title: '经营现状：', parts: [
+                  { text: '上月交易 GMV 表现在川渝地区·四川火锅·腰部商家中排名前 30%，月增速 ' },
+                  { text: '23.45%', bold: true, color: 'success' },
+                  { text: '。' }
+                ]},
+                { title: '潜力评估：', parts: [
+                  { text: '在你负责的所有商家中，潜力排行 ' },
+                  { text: 'Top 15%', bold: true, color: 'primary' },
+                  { text: '，主要潜力表现在伙伴 GMV 规模高、线下规模高、线上规模上限高。' }
+                ]},
+                { title: '竞争表现：', parts: [
+                  { text: '竞争圈内业绩排位第 6 名，对标商家「龙歌」周期内支付交易额低于该商家，在服务分析、线下交易&获客卡分析、职人分析下显著胜出。' }
+                ]}
+              ]
+            },
+            {
+              title: '问题与机会',
+              items: [
+                { title: '直播机会：', parts: [
+                  { text: '在流量获取、交易转化、内容互动上均有优化空间，参考标杆商家「禾穆婴」在自播与达人一带一上的具体表现。' }
+                ]},
+                { title: '视频机会：', parts: [
+                  { text: '在流量获取、交易转化、内容互动上均有优化空间，参考标杆商家「巨炸」「最北徐州米线」在商家视频与达人 LV4+ 视频上的具体表现。' }
+                ]}
+              ]
+            }
+          ],
+          buttons: [
+            { text: '竞争分析', type: 'primary' },
+            { text: '机会诊断', type: 'primary' }
+          ]
+        };
+
+        const multipleCards = [
+          {
+            sections: [{
+              title: '区域红黑榜上榜',
+              items: [
+                { title: '区域解决率 Top 10：', parts: [
+                  { text: '共 ' },
+                  { text: '13', bold: true, color: 'primary' },
+                  { text: ' 人上榜' }
+                ]},
+                { title: '区域解决率 Bottom 10：', parts: [
+                  { text: '共 ' },
+                  { text: '12', bold: true, color: 'primary' },
+                  { text: ' 人上榜' }
+                ]}
+              ]
+            }]
+          },
+          {
+            sections: [{
+              title: '重点销售/团队',
+              items: [
+                { title: '解决率偏低：', parts: [
+                  { text: '执行率高 ' },
+                  { text: '3', bold: true, color: 'primary' },
+                  { text: ' 人，执行率低 ' },
+                  { text: '2', bold: true, color: 'primary' },
+                  { text: ' 人' }
+                ]},
+                { title: '"无法调整"比例高：', parts: [
+                  { text: '共 ' },
+                  { text: '12', bold: true, color: 'primary' },
+                  { text: ' 人' }
+                ]},
+                { title: '"可以调整-后续未解决"比例高：', parts: [
+                  { text: '共 ' },
+                  { text: '12', bold: true, color: 'primary' },
+                  { text: ' 人' }
+                ]}
+              ]
+            }]
+          },
+          {
+            sections: [{
+              title: '其他机会推荐',
+              items: [
+                { title: '未解决的重点商户：', parts: [
+                  { text: '共 ' },
+                  { text: '23', bold: true, color: 'primary' },
+                  { text: ' 家' }
+                ]},
+                { title: '未解决的多店商户：', parts: [
+                  { text: '共 ' },
+                  { text: '16', bold: true, color: 'primary' },
+                  { text: ' 家' }
+                ]},
+                { title: '待解决的工单：', parts: [
+                  { text: '共 ' },
+                  { text: '14', bold: true, color: 'primary' },
+                  { text: ' 个' }
+                ]}
+              ]
+            }]
+          }
+        ];
+
+        if (item.preset === 'styles') {
+          root.render(<Diagnosis title="内容样式展示：" layout="single" cards={[stylesCard]} />);
+        } else if (item.preset === 'interactive') {
+          const interactiveCard = {
+            sections: [{
+              title: 'Parts 交互能力',
+              items: [
+                { parts: [
+                  { title: true, text: '链接（link）：' },
+                  { text: '点击 ' },
+                  { link: { url: '#', onClick: () => alert('打开商家详情') }, text: '商家详情' },
+                  { text: ' 查看完整数据，或前往 ' },
+                  { link: { onClick: () => alert('查看分析报告') }, text: '分析报告', bold: true },
+                  { text: '。' }
+                ]},
+                { parts: [
+                  { title: true, text: '行内按钮（button）：' },
+                  { text: '建议立即 ' },
+                  { button: true, buttonType: 'primary', buttonSize: 'small', text: '一键诊断', onButtonClick: () => alert('开始诊断') },
+                  { text: ' 或 ' },
+                  { button: true, buttonType: 'default', buttonSize: 'small', text: '查看历史', iconRight: <Icon name="ic-arrow-right-line" />, onButtonClick: () => alert('查看历史') }
+                ]},
+                { title: 'title 字段示例：', parts: [
+                  { text: '上方的 title（"链接"/"行内按钮"/"title 字段示例"）由 part.title=true 渲染为段落级标题。' }
+                ]}
+              ]
+            }]
+          };
+          root.render(<Diagnosis title="Diagnosis 交互 parts 演示：" layout="single" cards={[interactiveCard]} />);
+        } else if (item.preset === 'multiple') {
+          root.render(
+            <Diagnosis
+              title="周期内处理率表现较好，但解决率较低，存在优化空间，建议关注："
+              layout="multiple"
+              cards={multipleCards}
+            />
+          );
+        } else {
+          root.render(
+            <Diagnosis
+              title="商家当前位于川渝腰部中等水平，存在较高的潜力空间，建议优先提升直播流量获取、视频内容质量"
+              layout="single"
+              cards={[singleCard]}
+            />
+          );
+        }
+      } else if (item.type === 'metric-interactive') {
+        const colorThemes = {
+          'light-purple': ['light-purple'],
+          'colorful': ['color-1', 'color-2', 'color-3', 'color-4', 'color-5'],
+          'gray': ['gray']
+        };
+        const Demo = () => {
+          const [color, setColor] = React.useState('light-purple');
+          const [selectable, setSelectable] = React.useState(true);
+          const [direction, setDirection] = React.useState('bottom');
+          const [selectedIdx, setSelectedIdx] = React.useState(0);
+
+          const themes = colorThemes[color];
+          const count = direction === 'bottom' ? 5 : 3;
+          const cards = Array.from({ length: count }, (_, i) => themes[i % themes.length]);
+
+          const opt = (label, value, current, onClick) => (
+            <button
+              type="button"
+              className={'config-option' + (current === value ? ' active' : '')}
+              onClick={() => onClick(value)}
+            >{label}</button>
+          );
+
+          return (
+            <div>
+              <div className="config-panel">
+                <div className="config-group">
+                  <div className="config-group__label">颜色</div>
+                  <div className="config-options">
+                    {opt('浅紫色', 'light-purple', color, (v) => { setColor(v); setSelectedIdx(0); })}
+                    {opt('彩色', 'colorful', color, (v) => { setColor(v); setSelectedIdx(0); })}
+                    {opt('灰色', 'gray', color, (v) => { setColor(v); setSelectedIdx(0); })}
+                  </div>
+                </div>
+                <div className="config-group">
+                  <div className="config-group__label">是否可选择</div>
+                  <div className="config-options">
+                    {opt('是 - 可选择', true, selectable, (v) => { setSelectable(v); setSelectedIdx(0); })}
+                    {opt('否 - 不可选择', false, selectable, (v) => { setSelectable(v); setSelectedIdx(0); })}
+                  </div>
+                </div>
+                <div className="config-group">
+                  <div className="config-group__label">布局方向（箭头位置）</div>
+                  <div className="config-options">
+                    {opt('横向（箭头底部）', 'bottom', direction, (v) => { setDirection(v); setSelectedIdx(0); })}
+                    {opt('纵向（箭头右侧）', 'right', direction, (v) => { setDirection(v); setSelectedIdx(0); })}
+                  </div>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: direction === 'bottom' ? 'grid' : 'flex',
+                  gridTemplateColumns: direction === 'bottom' ? `repeat(${count}, minmax(180px, 1fr))` : undefined,
+                  flexDirection: direction === 'right' ? 'column' : undefined,
+                  gap: 16,
+                  width: direction === 'right' ? 320 : '100%'
+                }}
+              >
+                {cards.map((theme, idx) => (
+                  <MetricCard
+                    key={idx}
+                    theme={theme}
+                    title="直播支付GMV"
+                    currency="¥"
+                    value="56.28"
+                    unit="万"
+                    arrowDirection={direction}
+                    selected={selectable && idx === selectedIdx}
+                    showInfo
+                    metrics={[
+                      { label: '较上月', value: { value: '+26.67%', type: 'success' } }
+                    ]}
+                    onClick={selectable ? () => setSelectedIdx(idx) : undefined}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        };
+        root.render(<Demo />);
+      } else if (item.type === 'charts') {
+        root.render(
+          <Charts type={item.chartType} height={360} />
         );
       }
       });

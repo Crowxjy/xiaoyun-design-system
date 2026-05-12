@@ -1,6 +1,8 @@
 ### 颜色
 
-请务必使用来自 life-ds-tokens.css的颜色 Token，并通过基于 CSS 数据属性选择器 (Data Attribute Selector) 结合 CSS Variables (自定义属性) 的方式来实现主题切换。
+请务必使用来自 xiaoyun-ds-tokens.css的颜色 Token，并通过基于 CSS 数据属性选择器 (Data Attribute Selector) 结合 CSS Variables (自定义属性) 的方式来实现主题切换。
+
+当前仓库为了兼容 `designsystem` 的视觉规范，也支持一组对齐后的颜色别名，例如 `--primary-5`、`--text-gray-5`、`--bg-3`、`--divider-1`、`--data-chart-1a` 等；这些别名已经映射到当前项目的 token 体系中，可用于 designsystem 风格组件的实现与迁移。
 
 > \*\*注意事项：**token有2层，底层token不带有业务属性，比如** **`--color-brand-5` 指5号品牌色，二层token都带有业务属性，比如** \*\*`--color-text-primary` 是主要文本的颜色token。
 >
@@ -93,4 +95,3 @@
 | 模态框遮罩层 (backdrop) | `--color-bg-mask`                                       |
 | 图标颜色              | `--color-text-primary/secondary/caption/disable`(与文本相同) |
 | 品牌强调色             | `--color-text-primary`                                  |
-

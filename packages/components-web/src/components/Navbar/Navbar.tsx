@@ -5,15 +5,15 @@ import { Input } from '../Input/Input';
 
 export const Navbar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={clsx('lds-navbar', className)} {...props}>
-      <div className="lds-navbar__left">
-        <div className="lds-navbar__logo" aria-label="来客 Logo">
-          <span className="lds-navbar__logo-image" aria-hidden="true" />
+    <div ref={ref} className={clsx('xds-navbar', className)} {...props}>
+      <div className="xds-navbar__left">
+        <div className="xds-navbar__logo" aria-label="来客 Logo">
+          <span className="xds-navbar__logo-image" aria-hidden="true" />
         </div>
       </div>
 
-      <div className="lds-navbar__middle">
-        <div className="lds-navbar__search">
+      <div className="xds-navbar__middle">
+        <div className="xds-navbar__search">
           <Input
             size="default-size"
             prefixIcon={<Icon name="ic-search-line" />}
@@ -22,31 +22,31 @@ export const Navbar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
           />
         </div>
 
-        <nav className="lds-navbar__nav">
-          <a href="#" className="lds-navbar__nav-item is-active">首页</a>
-          <a href="#" className="lds-navbar__nav-item">生意经</a>
-          <a href="#" className="lds-navbar__nav-item">本地推</a>
-          <a href="#" className="lds-navbar__nav-item">学习中心</a>
+        <nav className="xds-navbar__nav">
+          <a href="#" className="xds-navbar__nav-item is-active">首页</a>
+          <a href="#" className="xds-navbar__nav-item">生意经</a>
+          <a href="#" className="xds-navbar__nav-item">本地推</a>
+          <a href="#" className="xds-navbar__nav-item">学习中心</a>
         </nav>
       </div>
 
-      <div className="lds-navbar__right">
-        <div className="lds-navbar__action">
+      <div className="xds-navbar__right">
+        <div className="xds-navbar__action">
           <Icon name="ic-reset-line" />
           <span>返回旧版</span>
         </div>
-        <div className="lds-navbar__divider" />
-        <div className="lds-navbar__action">
+        <div className="xds-navbar__divider" />
+        <div className="xds-navbar__action">
           <Icon name="ic-mobile-line" />
           <span>App下载</span>
         </div>
-        <div className="lds-navbar__divider" />
-        <div className="lds-navbar__user">
-          <div className="lds-navbar__avatar lds-navbar__avatar--preset" aria-hidden="true">
+        <div className="xds-navbar__divider" />
+        <div className="xds-navbar__user">
+          <div className="xds-navbar__avatar xds-navbar__avatar--preset" aria-hidden="true">
             85
           </div>
-          <div className="lds-navbar__user-info">
-            <span className="lds-navbar__username">北京八十五度...</span>
+          <div className="xds-navbar__user-info">
+            <span className="xds-navbar__username">北京八十五度...</span>
             <Icon name="ic-arrow-down-line" />
           </div>
         </div>

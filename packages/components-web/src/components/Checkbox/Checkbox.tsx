@@ -90,20 +90,20 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     return (
       <label
         className={clsx(
-          'lds-checkbox',
-          `lds-checkbox--${size}`,
+          'xds-checkbox',
+          `xds-checkbox--${size}`,
           {
-            'lds-checkbox--checked': currentChecked && !indeterminate,
-            'lds-checkbox--indeterminate': indeterminate,
-            'lds-checkbox--disabled': disabled,
+            'xds-checkbox--checked': currentChecked && !indeterminate,
+            'xds-checkbox--indeterminate': indeterminate,
+            'xds-checkbox--disabled': disabled,
           },
           className
         )}
       >
-        <span className="lds-checkbox__input-wrapper">
+        <span className="xds-checkbox__input-wrapper">
           <input
             type="checkbox"
-            className="lds-checkbox__input"
+            className="xds-checkbox__input"
             checked={currentChecked}
             disabled={disabled}
             readOnly={readOnly}
@@ -112,15 +112,15 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             ref={ref}
             {...props}
           />
-          <span className="lds-checkbox__inner">
-            <span className="lds-checkbox__icon">
+          <span className="xds-checkbox__inner">
+            <span className="xds-checkbox__icon">
               <svg viewBox={iconConfig.viewBox} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path d={iconConfig.path} fill="currentColor" />
               </svg>
             </span>
           </span>
         </span>
-        {showLabel && label ? <span className="lds-checkbox__label">{label}</span> : null}
+        {showLabel && label ? <span className="xds-checkbox__label">{label}</span> : null}
       </label>
     );
   }

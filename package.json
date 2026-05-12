@@ -1,22 +1,22 @@
 {
-  "name": "life-design-system-root",
+  "name": "xiaoyun-design-system-root",
   "private": true,
   "version": "1.0.0",
-  "description": "Life Design System Monorepo",
+  "description": "Xiaoyun Design System Monorepo",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "sync-tokens": "npm run sync-tokens --workspace=@life-ds/tokens",
-    "sync-icons": "npm run sync-icons --workspace=@life-ds/icons",
+    "sync-tokens": "npm run sync-tokens --workspace=@xiaoyun-ds/tokens",
+    "sync-icons": "npm run sync-icons --workspace=@xiaoyun-ds/icons",
     "sync-skills": "mkdir -p packages/skills/content && cp -r skills/* packages/skills/content/"
   },
   "devDependencies": {
   },
   "dependencies": {
-    "@life-ds/components-web": "^1.0.17",
-    "@life-ds/icons": "^1.0.4",
-    "@life-ds/skills": "^1.1.1",
-    "@life-ds/tokens": "^1.0.6"
+    "@xiaoyun-ds/components-web": "^1.0.17",
+    "@xiaoyun-ds/icons": "^1.0.4",
+    "@xiaoyun-ds/skills": "^1.1.1",
+    "@xiaoyun-ds/tokens": "^1.0.6"
   }
 }

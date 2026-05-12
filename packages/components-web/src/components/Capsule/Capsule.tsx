@@ -9,9 +9,9 @@ export interface CapsuleProps extends Omit<React.InputHTMLAttributes<HTMLInputEl
 export const Capsule = React.forwardRef<HTMLInputElement, CapsuleProps>(
   ({ className, size = 'default-size', label, disabled, ...props }, ref) => {
     return (
-      <label className={clsx('lds-capsule-wrapper', className, disabled && 'is-disabled')}>
+      <label className={clsx('xds-capsule-wrapper', className, disabled && 'is-disabled')}>
         <input type="radio" ref={ref} disabled={disabled} {...props} />
-        <span className={clsx('lds-capsule', `lds-capsule--${size}`)}>
+        <span className={clsx('xds-capsule', `xds-capsule--${size}`)}>
           {label}
         </span>
       </label>

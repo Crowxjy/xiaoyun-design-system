@@ -1,10 +1,10 @@
 # 图标参考文档
 
-当任务需要使用 `@life-ds/icons` 选择或实现图标时，请参考此文件。
+当任务需要使用 `@xiaoyun-ds/icons` 选择或实现图标时，请参考此文件。
 
 ## 引入模式
 
-在使用 `@life-ds/icons` 时，请务必注意**不能直接通过静态文件路径引用 SVG Sprite**，因为跨域或代理拦截会导致图标无法渲染。正确的做法是通过包注入脚本，将所有图标集合直接注入到 HTML 的 `<body>` 中。
+在使用 `@xiaoyun-ds/icons` 时，请务必注意**不能直接通过静态文件路径引用 SVG Sprite**，因为跨域或代理拦截会导致图标无法渲染。正确的做法是通过包注入脚本，将所有图标集合直接注入到 HTML 的 `<body>` 中。
 
 **第一步：全局注入图标**
 
@@ -12,7 +12,7 @@
 
 ```javascript
 // 这会自动将 Sprite 注入到页面的 body 内
-import '@life-ds/icons';
+import '@xiaoyun-ds/icons';
 ```
 
 **第二步：在组件中使用**
@@ -21,12 +21,12 @@ import '@life-ds/icons';
 
 ```html
 <!-- ✅ 正确：直接使用 Hash ID 引用注入的 SVG -->
-<svg class="lds-icon">
+<svg class="xds-icon">
   <use href="#ic-arrow-right-line" />
 </svg>
 
 <!-- ❌ 错误：不要使用相对或绝对路径，会引发跨域/代理拦截问题 -->
-<svg class="lds-icon">
+<svg class="xds-icon">
   <use href="/assets/sprite.svg#ic-arrow-right-line" />
 </svg>
 ```
@@ -40,7 +40,7 @@ import '@life-ds/icons';
 • 常用尺寸：24,、20、16、12等
 • 纯图标控件必须始终具备可访问名称。
 • 不要凭记忆捏造图标的 ID 名称，请核实 `sprite.svg` 中确切的图标 ID。
-• 优先使用标准的 `lds-icon` 类名来控制图标的样式和尺寸。
+• 优先使用标准的 `xds-icon` 类名来控制图标的样式和尺寸。
 
 • 常规情况下，均使用线性图标，只有当图标尺寸很小的时候，才会使用对应的面性图标，若线性图标没有对应的面性图标，则使用线性图标
 

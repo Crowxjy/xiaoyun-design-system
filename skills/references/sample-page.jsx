@@ -7,7 +7,7 @@ import {
   Tabs, Tab, Button, Icon, Filter, FilterGroup,
   TableWrapper, Table, Thead, Tbody, Tr, Th, Td, TableCellProduct, TableCellAmount, TableCellOperation, TableCellAction,
   Pagination
-} from '@life-ds/components-web';
+} from '@xiaoyun-ds/components-web';
 
 const App = () => {
   return (
@@ -72,7 +72,7 @@ const App = () => {
               </FilterGroup>
             </div>
 
-            <div className="lds-action-bar">
+            <div className="xds-action-bar">
               <Tabs variant="capsule" size="small" defaultValue="all-member">
                 <Tab value="all-member">全部会员可领</Tab>
                 <Tab value="target-member">定向会员发放</Tab>
@@ -125,7 +125,7 @@ const App = () => {
               </Table>
             </TableWrapper>
 
-            <div className="lds-pagination-wrapper">
+            <div className="xds-pagination-wrapper">
               <Pagination
                 total={500}
                 defaultCurrent={2}

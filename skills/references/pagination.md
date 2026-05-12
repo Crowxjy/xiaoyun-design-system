@@ -14,7 +14,7 @@
 
 ## 最佳实践
 
-- **优先使用 life-ds 组件库中的分页器（Pagination）组件。**
+- **优先使用 xiaoyun-ds 组件库中的分页器（Pagination）组件。**
 - **位置固定**：通常放置在数据容器（如表格）的右下角或底部居中，保持位置的稳定性。
 - **状态清晰**：明确高亮当前所在的页码，让用户清楚自己在整个数据集中的位置。
 - **临界状态处理**：当处于第一页时，禁用“上一页”；处于最后一页时，禁用“下一页”。
@@ -44,7 +44,7 @@
 
 ```tsx
 import React from 'react';
-import { Pagination } from '@life-ds/components-web';
+import { Pagination } from '@xiaoyun-ds/components-web';
 
 export default function Demo() {
   return (
@@ -97,11 +97,11 @@ export default function Demo() {
 ## 反例（禁止）
 
 ```html
-<!-- ❌ 禁止：手写 .lds-pagination DOM 结构与类名 -->
-<div class="lds-pagination lds-pagination--default-size">...</div>
+<!-- ❌ 禁止：手写 .xds-pagination DOM 结构与类名 -->
+<div class="xds-pagination xds-pagination--default-size">...</div>
 ```
 
-必须使用 `@life-ds/components-web` 的 React 组件：`<Pagination />`。
+必须使用 `@xiaoyun-ds/components-web` 的 React 组件：`<Pagination />`。
 
 ## 兜底策略
 

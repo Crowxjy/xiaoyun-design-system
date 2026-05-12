@@ -34,7 +34,7 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
       <TabsContext.Provider value={{ activeValue, onChange: handleChange }}>
         <div
           ref={ref}
-          className={clsx('lds-tabs', `lds-tabs--${variant}`, `lds-tabs--${size}`, className)}
+          className={clsx('xds-tabs', `xds-tabs--${variant}`, `xds-tabs--${size}`, className)}
           {...props}
         >
           {children}
@@ -74,7 +74,7 @@ export const Tab = React.forwardRef<HTMLAnchorElement, TabProps>(
     return (
       <a
         ref={ref}
-        className={clsx('lds-tab', isActive && 'is-active', disabled && 'is-disabled', className)}
+        className={clsx('xds-tab', isActive && 'is-active', disabled && 'is-disabled', className)}
         onClick={handleClick}
         {...props}
       >

@@ -1,14 +1,14 @@
 {
-  "name": "@life-ds/icons",
+  "name": "@xiaoyun-ds/icons",
   "version": "1.0.4",
-  "description": "Life Design System Icons with auto-inject",
+  "description": "Xiaoyun Design System Icons with auto-inject",
   "main": "index.js",
   "files": [
     "index.js",
     "assets/sprite.svg"
   ],
   "scripts": {
-    "sync-icons": "node scripts/generate-icons.mjs"
+    "sync-icons": "node scripts/sync-local-icons.mjs"
   },
   "publishConfig": {
     "access": "public"

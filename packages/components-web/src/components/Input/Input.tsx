@@ -10,33 +10,70 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   onClear?: () => void;
   wrapperClassName?: string;
   isFocused?: boolean;
+  error?: boolean;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, wrapperClassName, size = 'default-size', prefixIcon, suffixIcon, clearable, onClear, disabled, isFocused, ...props }, ref) => {
+  (
+    {
+      className,
+      wrapperClassName,
+      size = 'default-size',
+      prefixIcon,
+      suffixIcon,
+      clearable,
+      onClear,
+      disabled,
+      isFocused,
+      error = false,
+      type,
+      ...props
+    },
+    ref
+  ) => {
+    const [passwordVisible, setPasswordVisible] = React.useState(false);
+    const hasPasswordToggle = type === 'password';
+    const renderedType = hasPasswordToggle ? (passwordVisible ? 'text' : 'password') : type;
+
     return (
       <div
         className={clsx(
-          'lds-input-wrapper',
-          `lds-input-wrapper--${size}`,
+          'xds-input-wrapper',
+          `xds-input-wrapper--${size}`,
+          prefixIcon && 'has-prefix',
+          (suffixIcon || clearable || hasPasswordToggle) && 'has-suffix',
           disabled && 'is-disabled',
           isFocused && 'is-focused',
+          error && 'is-error',
+          type === 'search' && 'is-search',
+          type === 'password' && 'is-password',
           wrapperClassName
         )}
       >
-        {prefixIcon && <span className="lds-input__prefix">{prefixIcon}</span>}
+        {prefixIcon && <span className="xds-input__prefix">{prefixIcon}</span>}
         <input
           ref={ref}
-          className={clsx('lds-input', className)}
+          className={clsx('xds-input', className)}
           disabled={disabled}
+          type={renderedType}
           {...props}
         />
         {clearable && (
-          <span className="lds-input__clear" onClick={onClear}>
-            <Icon name="ic-error-round" />
-          </span>
+          <button type="button" className="xds-input__clear" onClick={onClear} aria-label="Clear input">
+            <span aria-hidden="true">×</span>
+          </button>
         )}
-        {suffixIcon && <span className="lds-input__suffix">{suffixIcon}</span>}
+        {hasPasswordToggle && (
+          <button
+            type="button"
+            className="xds-input__toggle"
+            onClick={() => setPasswordVisible((current) => !current)}
+            aria-label={passwordVisible ? 'Hide password' : 'Show password'}
+          >
+            <Icon name="ic-hide-line" />
+          </button>
+        )}
+        {suffixIcon && <span className="xds-input__suffix">{suffixIcon}</span>}
       </div>
     );
   }

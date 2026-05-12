@@ -13,7 +13,7 @@
 
 ## 最佳实践
 
-- **优先使用 life-ds 组件库中的标签（Tag）组件。**
+- **优先使用 xiaoyun-ds 组件库中的标签（Tag）组件。**
 - 标签文本应极其简短，通常建议为 1-3 个词或几个汉字。
 - 善用颜色传达语义状态（如红色代表错误/拒绝/高危，绿色代表成功/完成，蓝色代表进行中/提示，橘色代表警告，灰色代表默认/中性分类）。
 - 明确区分**只读标签**（仅用于展示状态或分类）和**可交互标签**（可点击筛选、可关闭）。
@@ -51,7 +51,7 @@
 
 ```tsx
 import React from 'react';
-import { Tag, Icon } from '@life-ds/components-web';
+import { Tag, Icon } from '@xiaoyun-ds/components-web';
 
 export default function Demo() {
   return (
@@ -110,7 +110,7 @@ type TagProps = {
 
 ```tsx
 // ❌ 禁止：手写 className 组合（容易偏离 token/规范）
-<span className="lds-tag lds-tag--red lds-tag--plain lds-tag--medium">已完成</span>
+<span className="xds-tag xds-tag--red xds-tag--plain xds-tag--medium">已完成</span>
 ```
 
 ## 实现要点

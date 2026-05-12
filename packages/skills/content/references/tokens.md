@@ -10,14 +10,58 @@
 
 #### 字体（font-family）
 
-`life-ds-tokens` 提供两个字体变量：
+`xiaoyun-ds-tokens` 提供两个字体变量：
 
 | 变量              | 取值                                                                                                                                                                                                                                                                                                | 使用场景                        |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
 | `--font-normal` | `-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei UI,Microsoft YaHei,Source Han Sans CN,noto sans，sans-serif，"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`                     | 全局默认字体，用于正文、标题、标签等所有常规文本    |
 | `--font-number` | `"Douyin Number ABC",-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei UI,Microsoft YaHei,Source Han Sans CN,noto sans，sans-serif，"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"` | 仅用于数据展示类文本，如数字统计、金额、倒计时、编号等 |
 
-#### 文本样式（text styles）
+### 与 `designsystem` 的兼容别名
+
+为了兼容 `~/Documents/trae_projects/designsystem` 的规范命名，当前 `xiaoyun-ds-tokens.css` 也同步暴露了一组可直接复用的别名 token，包括但不限于：
+
+- 字体与字号：`--font-family-default`、`--font-family-number`、`--font-size-xs/sm/md/lg/xl/2xl`
+- 间距与圆角：`--spacing-xs/sm/md/lg/xl`、`--radius-xs/sm/md/lg/xl/full`
+- 动效与阴影：`--transition-fast/base/slow`、`--shadow-sm/md/lg`
+- 颜色语义：`--primary-*`、`--text-gray-*`、`--bg-*`、`--divider-*`、`--border-1`
+
+#### 字号方案的主次关系（重要）
+
+xiaoyun 同时存在两套字号 token，**新页面与文字层级请优先使用方案 A**：
+
+| 方案 | 命名 | 用途 | 状态 |
+|---|---|---|---|
+| **A（主线）** | `--font-size-xs/sm/md/lg/xl/2xl` + `--line-height-*` | 页面规范、模块标题、正文 — 与 designsystem `PAGE_GUIDE.md` 完全对齐 | ✅ 推荐 |
+| B（过渡） | `--display/headline/title/subtitle/body/caption-regular/medium` | 旧组件内部仍在使用，新代码不要再用 | ⚠️ 兼容保留 |
+
+**字号矩阵（方案 A，新代码必须遵守）：**
+
+| token | 值 | 用途 |
+|---|---|---|
+| `--font-size-2xl` / `--line-height-2xl` | 22 / 36 | 页面标题（`.page-title`） |
+| `--font-size-xl` / `--line-height-xl` | 20 / 30 | 一级模块标题（`.section-title`） |
+| `--font-size-lg` / `--line-height-lg` | 16 / 24 | 二级标题（`.subsection-title`） |
+| `--font-size-md` / `--line-height-md` | 14 / 22 | 三级标题、正文（`.subtitle` / `.body-text`） |
+| `--font-size-sm` / `--line-height-sm` | 13 / 22 | 紧凑型按钮、表单 |
+| `--font-size-xs` / `--line-height-xs` | 12 / 18 | 辅助信息（`.secondary-text`） |
+
+#### 内容层间距 token（与方案 A 配套）
+
+> ⚠️ 这些 token 仅用于 `.app-content` **内部**的模块/标题间距，**不要**用 `--spacing-page-padding-*` 去覆盖外层 `.app-content` 的 padding —— 外层 padding 与 background 由 [base.css](../packages/components-web/styles/base.css) 的 `.app-content` 统一负责，覆盖会导致双重 padding、破坏滚动与圆角投影。详细使用规则请见 [layout.md](./layout.md#页面规范使用指南规范文档详情页通用)。
+
+| token | 值 | 用途 |
+|---|---|---|
+| `--spacing-page-title-to-first-section` | 20px | 页面标题与第一个模块间间距（仅当不使用 `<PageHeader>` 时） |
+| `--spacing-between-sections` | 32px | 各 `.section` 模块之间间距 |
+| `--spacing-section-content` | 20px | `.section-title` 与 `.section-content` 之间间距 |
+| `--layout-content-max-width` | 960px | 正文段落 (`.body-text` / `.page-summary`) 最大宽度上限 |
+
+> `--spacing-page-padding-top/bottom/left/right` 仅用于「**完全独立的非业务页面**」（如设计系统自身的预览页 `index.html`），业务页面通过基础框架 `.app-content` 自动获得 padding，**不要**显式使用这组 token。
+
+#### 文本样式（text styles）— ⚠️ 过渡保留方案 B
+
+> **新页面请优先使用上方方案 A 的 `--font-size-*` + `--line-height-*` 单粒度 token**，下表的 `font` 简写仅用于兼容旧组件，不要在新页面中引用。
 
 包含字号、字重、行高的综合 token，可直接用于 `font` 简写属性：
 
@@ -113,4 +157,3 @@
 | `--spacing-5x`  | 20px (5x)  | **常规间距**：区块内面板之间、Label 与内容（横向）、面板内边距等。 |
 | `--spacing-8x`  | 32px (8x)  | **容器内边距**：内容区、容器类组件内边距。                |
 | `--spacing-10x` | 40px (10x) | **跨域间距**：不带线条分割的区块之间留白。                |
-

@@ -1,32 +1,32 @@
-# @life-ds/components-web
+# @xiaoyun-ds/components-web
 
-Life Design System 是一套高保真的 Web 设计系统。为了满足不同业务方灵活接入的需求，本项目采用 Monorepo 架构进行管理，由以下独立 NPM 包组成：
+Xiaoyun Design System 是一套高保真的 Web 设计系统。为了满足不同业务方灵活接入的需求，本项目采用 Monorepo 架构进行管理，由以下独立 NPM 包组成：
 
-- 🎨 **[@life-ds/tokens](../tokens)**: 提供设计系统所有的色彩、字体、阴影等底层 CSS 变量。
-- 🖼️ **[@life-ds/icons](../icons)**: 提供标准化的高质量 SVG Sprite 图标库。
-- 🧱 **[@life-ds/components-web](./)**: 提供核心 React Web 组件、样式资源及一键自动化接入工具（CLI）。
+- 🎨 **[@xiaoyun-ds/tokens](../tokens)**: 提供设计系统所有的色彩、字体、阴影等底层 CSS 变量。
+- 🖼️ **[@xiaoyun-ds/icons](../icons)**: 提供标准化的高质量 SVG Sprite 图标库。
+- 🧱 **[@xiaoyun-ds/components-web](./)**: 提供核心 React Web 组件、样式资源及一键自动化接入工具（CLI）。
 
 ---
 
 ## 🚀 快速开始 (推荐方式)
 
-如果您希望在您的项目中**完整接入** Life Design System（包含 React 组件、Token 和图标），我们强烈推荐使用 `@life-ds/components-web` 包提供的自动化初始化脚本。
+如果您希望在您的项目中**完整接入** Xiaoyun Design System（包含 React 组件、Token 和图标），我们强烈推荐使用 `@xiaoyun-ds/components-web` 包提供的自动化初始化脚本。
 
 ### 1. 安装组件库
 
 在您的项目根目录中运行以下命令：
 
 ```bash
-npm install @life-ds/components-web
+npm install @xiaoyun-ds/components-web
 ```
-*(注意：npm 会自动为您下载底层的 `@life-ds/tokens` 和 `@life-ds/icons` 依赖)*
+*(注意：npm 会自动为您下载底层的 `@xiaoyun-ds/tokens` 和 `@xiaoyun-ds/icons` 依赖)*
 
 ### 2. 执行初始化脚本
 
 安装完成后，运行 CLI 工具：
 
 ```bash
-npx life-ds init
+npx xiaoyun-ds init
 ```
 
 **发生了什么？**
@@ -34,7 +34,7 @@ npx life-ds init
 - 样式文件：复制到 `styles/` 或 `src/styles/`
 - 资源文件：根据项目结构复制到 `assets/`、`src/assets/` 和/或 `public/assets/`
 - 包含的核心文件：
-  - `life-ds-tokens.css`
+  - `xiaoyun-ds-tokens.css`
   - `base.css`
   - `components.css`
   - `sprite.svg`
@@ -49,19 +49,19 @@ npx life-ds init
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="./styles/life-ds-tokens.css">
+  <link rel="stylesheet" href="./styles/xiaoyun-ds-tokens.css">
   <link rel="stylesheet" href="./styles/base.css">
   <link rel="stylesheet" href="./styles/components.css">
 </head>
 <body>
-  <!-- 尽情使用 Life Design System 组件吧！ -->
+  <!-- 尽情使用 Xiaoyun Design System 组件吧！ -->
 </body>
 </html>
 ```
 
 ### 4. 在 React 中使用组件
 
-完成样式资源接入后，请在 React 项目中直接导入并使用 `@life-ds/components-web` 的组件：
+完成样式资源接入后，请在 React 项目中直接导入并使用 `@xiaoyun-ds/components-web` 的组件：
 
 ```tsx
 import React from 'react';
@@ -82,7 +82,7 @@ import {
   Th,
   Td,
   Pagination,
-} from '@life-ds/components-web';
+} from '@xiaoyun-ds/components-web';
 
 export function ProductListPage() {
   return (
@@ -108,7 +108,7 @@ export function ProductListPage() {
                 <Filter type="time" label="售卖时间" placeholder="请选择" onClick={() => {}} />
               </FilterGroup>
             </div>
-            <div className="lds-action-bar">
+            <div className="xds-action-bar">
               <Tabs variant="capsule" defaultValue="all">
                 <Tab value="all" label="全部" />
                 <Tab value="onsale" label="售卖中" />
@@ -131,7 +131,7 @@ export function ProductListPage() {
                 </Tbody>
               </Table>
             </TableWrapper>
-            <div className="lds-pagination-wrapper">
+            <div className="xds-pagination-wrapper">
               <Pagination total={100} current={1} pageSize={10} onChange={() => {}} />
             </div>
           </main>
@@ -142,7 +142,7 @@ export function ProductListPage() {
 }
 ```
 
-在 React 项目中，请优先使用组件库导出的组件，避免手写 `.lds-` DOM/class 结构来拼装已有组件。
+在 React 项目中，请优先使用组件库导出的组件，避免手写 `.xds-` DOM/class 结构来拼装已有组件。
 
 图标的使用方式请参考 [Icon 使用指南](../icons/README.md)。
 
@@ -157,11 +157,11 @@ export function ProductListPage() {
 如果您只想要使用统一的设计变量：
 
 ```bash
-npm install @life-ds/tokens
+npm install @xiaoyun-ds/tokens
 ```
 然后在您的 CSS 或入口文件中引入：
 ```css
-@import '@life-ds/tokens/life-ds-tokens.css';
+@import '@xiaoyun-ds/tokens/xiaoyun-ds-tokens.css';
 ```
 
 ### 单独接入 Icon
@@ -169,12 +169,12 @@ npm install @life-ds/tokens
 如果您只想要图标资源：
 
 ```bash
-npm install @life-ds/icons
+npm install @xiaoyun-ds/icons
 ```
 在您的 HTML 文件中，您可以通过绝对路径或者配置构建工具来引用：
 ```html
-<svg class="lds-icon">
-  <use href="node_modules/@life-ds/icons/assets/sprite.svg#icon-name"></use>
+<svg class="xds-icon">
+  <use href="node_modules/@xiaoyun-ds/icons/assets/sprite.svg#icon-name"></use>
 </svg>
 ```
 
@@ -190,14 +190,14 @@ npm install @life-ds/icons
 npm install
 ```
 
-### 同步 Figma 设计资源
-设计系统由 Figma 驱动。如果您修改了 Figma 源文件，可以通过以下命令同步最新资产（需在 `.env.local` 配置 Figma Token）：
+### 同步设计资源快照
+设计系统以仓库内已提交资产为准。如需校验当前资产是否齐全，可执行以下命令：
 
 ```bash
-# 同步最新 Design Tokens (变量、排版、阴影)
+# 校验最新 Design Tokens 产物
 npm run sync-tokens
 
-# 同步最新的 SVG 图标
+# 校验最新的 SVG 图标产物
 npm run sync-icons
 ```
 
@@ -209,16 +209,16 @@ npm run sync-icons
 npm run sync-tokens
 
 # 重新构建 components-web 的 dist
-npm run build --workspace=@life-ds/components-web
+npm run build --workspace=@xiaoyun-ds/components-web
 
 # 先发布 tokens，再发布 components-web
-npm publish --workspace=@life-ds/tokens --access public
-npm publish --workspace=@life-ds/components-web --access public
+npm publish --workspace=@xiaoyun-ds/tokens --access public
+npm publish --workspace=@xiaoyun-ds/components-web --access public
 ```
 
-如果本轮还包含 `@life-ds/skills`，请在发布前额外执行：
+如果本轮还包含 `@xiaoyun-ds/skills`，请在发布前额外执行：
 
 ```bash
 npm run sync-skills
-npm publish --workspace=@life-ds/skills --access public
+npm publish --workspace=@xiaoyun-ds/skills --access public
 ```

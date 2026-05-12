@@ -1,6 +1,6 @@
-# @life-ds/skills
+# @xiaoyun-ds/skills
 
-Life Design System 的 AI 技能定义与 Agent 指令集。该包将设计规范、工作流和组件准则打包为标准化的 Prompt，支持在 Trae、Coze 等多种 Agent 平台中快速接入。
+Xiaoyun Design System 的 AI 技能定义与 Agent 指令集。该包将设计规范、工作流和组件准则打包为标准化的 Prompt，支持在 Trae、Coze 等多种 Agent 平台中快速接入。
 
 ## 🚀 引入与使用
 
@@ -9,15 +9,15 @@ Life Design System 的 AI 技能定义与 Agent 指令集。该包将设计规�
 为了避免 Trae 配置体积过大以及丢失上下文，本项目采用了**本地技能机制**。只需执行以下命令：
 
 ```bash
-npx @life-ds/skills install
+npx @xiaoyun-ds/skills install
 ```
 
 **命令效果**：
-该命令会自动将所有组件的详细参考规范和核心工作流文件 (`SKILL.md`) 复制到当前项目工作区的 `.trae/skills/life-design-system/` 目录下。
+该命令会自动将所有组件的详细参考规范和核心工作流文件 (`SKILL.md`) 复制到当前项目工作区的 `.trae/skills/xiaoyun-design-system/` 目录下。
 
 ### 2. 在 Trae 中使用
 
-执行完上述命令后，重启或刷新 Trae。你将在右侧面板看到名为 `life-design-system` 的本地技能。直接选中它开始对话即可！
+执行完上述命令后，重启或刷新 Trae。你将在右侧面板看到名为 `xiaoyun-design-system` 的本地技能。直接选中它开始对话即可！
 
 *Agent 已经内置了系统指令，它会自动使用文件读取能力去查看本地 `.trae/skills/` 目录下的组件规范文档。*
 
@@ -30,20 +30,20 @@ Claude Code 支持从 `.claude/skills/` 或 `~/.claude/skills/` 目录自动发�
 在项目根目录执行：
 
 ```bash
-npx @life-ds/skills install-claude
+npx @xiaoyun-ds/skills install-claude
 ```
 
-安装完成后，Claude Code 会在当前项目中自动发现 `life-design-system`。你可以直接让 Claude 在相关 UI 场景下自动使用它，或者手动通过 `/life-design-system` 调用。
+安装完成后，Claude Code 会在当前项目中自动发现 `xiaoyun-design-system`。你可以直接让 Claude 在相关 UI 场景下自动使用它，或者手动通过 `/xiaoyun-design-system` 调用。
 
 #### 个人级安装（所有项目可用）
 
 如果你希望在本机所有项目中复用这个技能，可以执行：
 
 ```bash
-npx @life-ds/skills install-claude user
+npx @xiaoyun-ds/skills install-claude user
 ```
 
-这样安装后，`life-design-system` 会对当前用户的所有 Claude Code 项目生效。
+这样安装后，`xiaoyun-design-system` 会对当前用户的所有 Claude Code 项目生效。
 
 #### 说明
 
@@ -59,19 +59,19 @@ npx @life-ds/skills install-claude user
 
 ```bash
 # 安装技能到本地 .trae 目录
-npx @life-ds/skills install
+npx @xiaoyun-ds/skills install
 
 # 安装技能到当前项目的 Claude Code
-npx @life-ds/skills install-claude
+npx @xiaoyun-ds/skills install-claude
 
 # 安装技能到当前用户的 Claude Code
-npx @life-ds/skills install-claude user
+npx @xiaoyun-ds/skills install-claude user
 
 # 列出所有可用的 Skills
-npx @life-ds/skills list
+npx @xiaoyun-ds/skills list
 
 # 打印某个 Skill 的核心 Prompt 内容
-npx @life-ds/skills get life-design-system
+npx @xiaoyun-ds/skills get xiaoyun-design-system
 ```
 
 ---
@@ -96,20 +96,20 @@ npm run sync-skills
 
 ## 📦 发布指南
 
-发布前请确保您已登录 NPM 且拥有 `@life-ds` 作用域的权限。
+发布前请确保您已登录 NPM 且拥有 `@xiaoyun-ds` 作用域的权限。
 
 ### 1. 更新版本号
 推荐直接在根目录执行，不生成 git tag：
 ```bash
 # 根据修改幅度更新版本 (patch, minor, major)
-npm version minor --workspace=@life-ds/skills --no-git-tag-version
+npm version minor --workspace=@xiaoyun-ds/skills --no-git-tag-version
 ```
 
 ### 2. 执行发布
 发布前请先同步最新 skill 内容，然后在根目录执行（推荐）：
 ```bash
 npm run sync-skills
-npm publish --workspace=@life-ds/skills --access public
+npm publish --workspace=@xiaoyun-ds/skills --access public
 ```
 或者在 `packages/skills` 目录下直接执行：
 ```bash

@@ -1,17 +1,25 @@
-# Life Design System (life-ds)
+# Xiaoyun Design System (xiaoyun-ds)
 
-Life Design System 是一套面向 Web 开发的高保真设计系统，旨在通过自动化的工作流将 Figma 设计资产完美转化为前端代码。本项目采用 Monorepo 架构，实现了设计变量 (Tokens)、图标 (Icons)、组件 (Components) 以及 AI 技能 (Skills) 的统一管理与分发。
+> ⚠️ **项目定位声明**
+>
+> 本项目基于 **Life-Design-System** 强行魔改而来，**仅用于内部实验测试或销运业务的规范参考**，**不作为对外发布的标准设计系统**。
+>
+> - 与上游 Life-Design-System 不保持兼容，token、组件 API 与视觉细节可能随销运业务需求随时调整
+> - 不承诺向后兼容、不接受外部业务团队接入
+> - 如需稳定的设计系统，请使用上游官方 Life-Design-System
+
+Xiaoyun Design System 是一套面向 Web 开发的高保真设计系统，旨在通过自动化工作流将设计资产稳定转化为前端代码。本项目采用 Monorepo 架构，实现了设计变量 (Tokens)、图标 (Icons)、组件 (Components) 以及 AI 技能 (Skills) 的统一管理与分发。
 
 ## 📦 项目架构
 
-本项目由以下核心包组成，所有包均发布在 `@life-ds` 作用域下：
+本项目由以下核心包组成，所有包均发布在 `@xiaoyun-ds` 作用域下：
 
 | 包名 | 说明 | 目录 |
 | :--- | :--- | :--- |
-| **[@life-ds/tokens](./packages/tokens)** | 设计系统底层变量（色彩、间距、排版、阴影等） | `packages/tokens` |
-| **[@life-ds/icons](./packages/icons)** | 标准化 SVG Sprite 图标库，支持自动注入与 CSS 换色 | `packages/icons` |
-| **[@life-ds/components-web](./packages/components-web)** | 核心 React Web 组件库、样式资源及自动化接入工具 (CLI) | `packages/components-web` |
-| **[@life-ds/skills](./packages/skills)** | 为 Trae/Coze 等 Agent 准备的设计规范 Prompt 与技能集 | `packages/skills` |
+| **[@xiaoyun-ds/tokens](./packages/tokens)** | 设计系统底层变量（色彩、间距、排版、阴影等） | `packages/tokens` |
+| **[@xiaoyun-ds/icons](./packages/icons)** | 标准化 SVG Sprite 图标库，支持自动注入与 CSS 换色 | `packages/icons` |
+| **[@xiaoyun-ds/components-web](./packages/components-web)** | 核心 React Web 组件库、样式资源及自动化接入工具 (CLI) | `packages/components-web` |
+| **[@xiaoyun-ds/skills](./packages/skills)** | 为 Trae/Coze 等 Agent 准备的设计规范 Prompt 与技能集 | `packages/skills` |
 
 ---
 
@@ -19,19 +27,19 @@ Life Design System 是一套面向 Web 开发的高保真设计系统，旨在�
 
 ### 1. 接入 React 组件库与样式 (Components-Web)
 
-这是最推荐的接入方式。`@life-ds/components-web` 提供 React 组件 API，`npx life-ds init` 会自动为您准备 Token、基础样式和图标资源。
+这是最推荐的接入方式。`@xiaoyun-ds/components-web` 提供 React 组件 API，`npx xiaoyun-ds init` 会自动为您准备 Token、基础样式和图标资源。
 
 ```bash
 # 1. 安装组件库包
-npm install @life-ds/components-web
+npm install @xiaoyun-ds/components-web
 
 # 2. 运行初始化工具，提取资产到您的项目目录（如 `styles/`、`src/styles/`、`assets/`、`src/assets/` 或 `public/assets/`）
-npx life-ds init
+npx xiaoyun-ds init
 ```
 
 随后在您的入口文件或 HTML 模板中引入生成的 CSS：
 ```html
-<link rel="stylesheet" href="./styles/life-ds-tokens.css">
+<link rel="stylesheet" href="./styles/xiaoyun-ds-tokens.css">
 <link rel="stylesheet" href="./styles/base.css">
 <link rel="stylesheet" href="./styles/components.css">
 ```
@@ -40,7 +48,7 @@ npx life-ds init
 
 ```tsx
 import React from 'react';
-import { Navbar, Menu, FilterGroup, Filter, Button } from '@life-ds/components-web';
+import { Navbar, Menu, FilterGroup, Filter, Button } from '@xiaoyun-ds/components-web';
 
 export function App() {
   return (
@@ -61,18 +69,18 @@ export function App() {
 }
 ```
 
-在 React 项目中，请优先使用 `@life-ds/components-web` 提供的组件，避免手写 `.lds-` DOM 结构或仅通过 class 名拼装组件。
+在 React 项目中，请优先使用 `@xiaoyun-ds/components-web` 提供的组件，避免手写 `.xds-` DOM 结构或仅通过 class 名拼装组件。
 
 ### 2. 接入 AI 技能集 (Skills)
 
-如果您希望在 Trae 或其他 AI 编程助手（Agent）中使用 Life Design System 的规范进行辅助开发，可以接入我们的技能包。
+如果您希望在 Trae 或其他 AI 编程助手（Agent）中使用 Xiaoyun Design System 的规范进行辅助开发，可以接入我们的技能包。
 
 ```bash
 # 1. 安装技能包
-npm install @life-ds/skills
+npm install @xiaoyun-ds/skills
 
 # 2. 获取特定技能的配置（以 Trae 为例）
-npx life-ds-skills trae-config life-design-system
+npx xiaoyun-ds-skills trae-config xiaoyun-design-system
 ```
 将输出的 JSON 内容复制并填入 Trae 的 `skill-creator` 即可完成注册。
 
@@ -80,17 +88,17 @@ npx life-ds-skills trae-config life-design-system
 
 ## 🛠️ 开发者同步指南 (维护者专用)
 
-本项目实现了与 Figma 的高度同步。如果您是设计系统的维护者，请确保本地存在 `.env.local` 并配置了 `FIGMA_TOKEN`。
+本项目以仓库内已提交的设计资产为准。如果您是设计系统的维护者，请在本地更新源码后执行对应的校验命令。
 
 ### 同步设计变量 (Tokens)
 ```bash
-# 从 Figma 拉取并更新色彩、排版、阴影等变量
+# 校验 token 源文件是否齐全
 npm run sync-tokens
 ```
 
 ### 同步图标库 (Icons)
 ```bash
-# 从 Figma 拉取最新 SVG 图标并重新生成雪碧图
+# 校验图标产物是否齐全
 npm run sync-icons
 ```
 
@@ -115,27 +123,27 @@ npm run sync-tokens
 npm run sync-skills
 
 # 如果 components-web 有源码更新，先重新构建 dist
-npm run build --workspace=@life-ds/components-web
+npm run build --workspace=@xiaoyun-ds/components-web
 ```
 
-本轮如需发布 `@life-ds/tokens`、`@life-ds/components-web`、`@life-ds/skills`，建议按依赖顺序执行：
+本轮如需发布 `@xiaoyun-ds/tokens`、`@xiaoyun-ds/components-web`、`@xiaoyun-ds/skills`，建议按依赖顺序执行：
 
 ```bash
 # 1. 发布 tokens
-npm publish --workspace=@life-ds/tokens --access public
+npm publish --workspace=@xiaoyun-ds/tokens --access public
 
 # 2. 发布 components-web
-npm publish --workspace=@life-ds/components-web --access public
+npm publish --workspace=@xiaoyun-ds/components-web --access public
 
 # 3. 发布 skills
-npm publish --workspace=@life-ds/skills --access public
+npm publish --workspace=@xiaoyun-ds/skills --access public
 ```
 
 发布完成后再推送 GitHub，并补上版本 tag：
 
 ```bash
 git add .
-git commit -m "chore: release life-ds packages"
+git commit -m "chore: release xiaoyun-ds packages"
 git push origin main
 
 git tag components-web-v1.0.15
@@ -146,4 +154,4 @@ git push origin components-web-v1.0.15 tokens-v1.0.6 skills-v1.1.0
 
 ---
 
-© 2026 Life Design System. Built with 抖音来客设计规范.
+© 2026 Xiaoyun Design System. Built with 抖音来客设计规范.

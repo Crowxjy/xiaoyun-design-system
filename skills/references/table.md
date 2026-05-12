@@ -66,7 +66,7 @@
 
 ## 最佳实践
 
-- **优先使用 life-ds 组件库中的表格（Table）组件。**
+- **优先使用 xiaoyun-ds 组件库中的表格（Table）组件。**
 - 当需要一起扫描、比较或管理几行相关的数据时，请使用表格。如果是移动端或卡片式展示，请考虑使用列表（List）。
 - **对齐方式**：文本类型数据左对齐，数字或金额类型右对齐，状态标签或简短固定操作可居中对齐。
 - **空白数据**：单元格没有数据时，应显示破折号（如 `-` 或 `--`），而不是留白或显示“null”，以明确告知用户该数据缺失而非未加载。
@@ -100,7 +100,7 @@ import {
   TableCellAmount,
   TableCellOperation,
   TableCellAction,
-} from '@life-ds/components-web';
+} from '@xiaoyun-ds/components-web';
 
 export default function Demo() {
   return (
@@ -145,7 +145,7 @@ export default function Demo() {
 
 ```tsx
 // ❌ 禁止：手写 HTML + className 拼表格结构（容易与规范实现偏离）
-<table className="lds-table lds-table--default-size">...</table>
+<table className="xds-table xds-table--default-size">...</table>
 ```
 
 ## 开箱即用单元格 (Cells)

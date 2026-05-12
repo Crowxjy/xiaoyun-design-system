@@ -13,7 +13,7 @@
 
 ## 最佳实践
 
-- **优先使用 life-ds 组件库中的选项卡（Tabs）组件。**
+- **优先使用 xiaoyun-ds 组件库中的选项卡（Tabs）组件。**
 - 选项卡应用于**平级内容**的切换，不应代表步骤（如向导）或层级关系（如面包屑）。
 - 标签文本应简短且具有概括性，通常为 2-6 个字的名词，避免使用长句。
 - 选项卡数量通常建议在 2 到 6 个之间。如果超过 6 个，应考虑在末尾使用“更多”下拉菜单，或者支持横向滚动。
@@ -61,13 +61,13 @@
 | **Default (默认)** | 独立的大型筛选/聚合页顶部，或常规数据列表的标准过滤项 |
 | **Small (小号)** | 紧凑型表格、下拉面板内嵌的微型过滤标签 |
 
-> **注意**：实际开发中，请严格按照 `life-ds` 组件库的 React API 使用 `Tabs` / `Tab` 组件。当前正确属性为 `variant="primary|capsule|filter"` 与 `size="large|small"`，不要再手写 HTML class 结构。
+> **注意**：实际开发中，请严格按照 `xiaoyun-ds` 组件库的 React API 使用 `Tabs` / `Tab` 组件。当前正确属性为 `variant="primary|capsule|filter"` 与 `size="large|small"`，不要再手写 HTML class 结构。
 
 **示例代码**：
 
 ```tsx
 import React from 'react';
-import { Tabs, Tab } from '@life-ds/components-web';
+import { Tabs, Tab } from '@xiaoyun-ds/components-web';
 
 export default function Demo() {
   return (
@@ -101,7 +101,7 @@ export default function Demo() {
 
 ```tsx
 // ❌ 禁止：手写 className / DOM 结构模拟 Tabs
-<div className="lds-tabs lds-tabs--primary lds-tabs--default-size">...</div>
+<div className="xds-tabs xds-tabs--primary xds-tabs--default-size">...</div>
 ```
 
 ## 实现要点

@@ -38,7 +38,7 @@ type CommonProps = {
    */
   rightIcon?: React.ReactNode;
   /**
-   * 组件宽度（默认 294px，符合 Figma 规格）
+   * 组件宽度（默认 294px，符合当前组件规范）
    */
   width?: number | string;
 };
@@ -96,9 +96,9 @@ export const Filter = React.forwardRef<HTMLElement, FilterProps>((props, ref) =>
       <div
         ref={ref as unknown as React.Ref<HTMLDivElement>}
         className={clsx(
-          'lds-filter',
-          `lds-filter--${size}`,
-          'lds-filter--input',
+          'xds-filter',
+          `xds-filter--${size}`,
+          'xds-filter--input',
           {
             'is-disabled': disabled,
             'is-active': isActive,
@@ -115,11 +115,11 @@ export const Filter = React.forwardRef<HTMLElement, FilterProps>((props, ref) =>
         }}
         {...rest}
       >
-        <span className="lds-filter__label">{label}</span>
-        <span className="lds-filter__divider" aria-hidden="true" />
-        <span className="lds-filter__control">
+        <span className="xds-filter__label">{label}</span>
+        <span className="xds-filter__divider" aria-hidden="true" />
+        <span className="xds-filter__control">
           <input
-            className="lds-filter__input"
+            className="xds-filter__input"
             disabled={disabled}
             value={value}
             defaultValue={defaultValue}
@@ -138,7 +138,7 @@ export const Filter = React.forwardRef<HTMLElement, FilterProps>((props, ref) =>
   const iconNode =
     rightIcon ??
     (defaultIconName ? (
-      <Icon name={defaultIconName} className="lds-filter__icon-svg" aria-hidden="true" />
+      <Icon name={defaultIconName} className="xds-filter__icon-svg" aria-hidden="true" />
     ) : null);
 
   return (
@@ -146,9 +146,9 @@ export const Filter = React.forwardRef<HTMLElement, FilterProps>((props, ref) =>
       ref={ref as unknown as React.Ref<HTMLButtonElement>}
       type="button"
       className={clsx(
-        'lds-filter',
-        `lds-filter--${size}`,
-        `lds-filter--${type}`,
+        'xds-filter',
+        `xds-filter--${size}`,
+        `xds-filter--${type}`,
         {
           'is-disabled': disabled,
           'is-active': isActive,
@@ -161,14 +161,14 @@ export const Filter = React.forwardRef<HTMLElement, FilterProps>((props, ref) =>
       onClick={onClick}
       {...rest}
     >
-      <span className="lds-filter__label">{label}</span>
-      <span className="lds-filter__divider" aria-hidden="true" />
-      <span className="lds-filter__control">
-        <span className="lds-filter__value">
+      <span className="xds-filter__label">{label}</span>
+      <span className="xds-filter__divider" aria-hidden="true" />
+      <span className="xds-filter__control">
+        <span className="xds-filter__value">
           {filled ? value : placeholder ?? value}
         </span>
       </span>
-      {iconNode ? <span className="lds-filter__icon">{iconNode}</span> : null}
+      {iconNode ? <span className="xds-filter__icon">{iconNode}</span> : null}
     </button>
   );
 });

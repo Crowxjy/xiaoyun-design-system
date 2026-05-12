@@ -24,19 +24,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Publish @life-ds/tokens
+      - name: Publish @xiaoyun-ds/tokens
         run: npm publish --access public
         working-directory: packages/tokens
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @life-ds/icons
+      - name: Publish @xiaoyun-ds/icons
         run: npm publish --access public
         working-directory: packages/icons
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @life-ds/components-web
+      - name: Publish @xiaoyun-ds/components-web
         run: npm publish --access public
         working-directory: packages/components-web
         env:

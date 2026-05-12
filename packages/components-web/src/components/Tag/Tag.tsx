@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 export type TagSize = 'large' | 'default-size' | 'small';
 export type TagVariant = 'fill' | 'light' | 'outline';
 export type TagColor = 'blue' | 'green' | 'orange' | 'red' | 'gray';
+export type TagSpecial = 'special-1' | 'special-2' | 'special-3';
 
 export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
@@ -29,6 +30,10 @@ export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
    * 右侧图标，可选
    */
   rightIcon?: React.ReactNode;
+  /**
+   * 特殊样式，来自 designsystem 的品牌标签。
+   */
+  special?: TagSpecial;
 }
 
 export const Tag = React.forwardRef<HTMLSpanElement, TagProps>(
@@ -40,6 +45,7 @@ export const Tag = React.forwardRef<HTMLSpanElement, TagProps>(
       color = 'gray',
       leftIcon,
       rightIcon,
+      special,
       children,
       ...props
     },
@@ -51,20 +57,22 @@ export const Tag = React.forwardRef<HTMLSpanElement, TagProps>(
       <span
         ref={ref}
         className={clsx(
-          'lds-tag',
-          `lds-tag--${size}`,
-          `lds-tag--${variant}`,
-          `lds-tag--${color}`,
+          'xds-tag',
+          `xds-tag--${size}`,
+          `xds-tag--${variant}`,
+          `xds-tag--${color}`,
+          special && `xds-tag--${special}`,
           {
-            'lds-tag--interactive': isInteractive,
+            'xds-tag--interactive': isInteractive,
+            'xds-tag--special': Boolean(special),
           },
           className
         )}
         {...props}
       >
-        {leftIcon ? <span className="lds-tag__icon lds-tag__icon--left">{leftIcon}</span> : null}
-        {children ? <span className="lds-tag__content">{children}</span> : null}
-        {rightIcon ? <span className="lds-tag__icon lds-tag__icon--right">{rightIcon}</span> : null}
+        {leftIcon ? <span className="xds-tag__icon xds-tag__icon--left">{leftIcon}</span> : null}
+        {children ? <span className="xds-tag__content">{children}</span> : null}
+        {rightIcon ? <span className="xds-tag__icon xds-tag__icon--right">{rightIcon}</span> : null}
       </span>
     );
   }

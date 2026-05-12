@@ -93,12 +93,12 @@ function installSkill() {
     return;
   }
 
-  const targetDir = path.join(process.cwd(), '.trae', 'skills', 'life-design-system');
+  const targetDir = path.join(process.cwd(), '.trae', 'skills', 'xiaoyun-design-system');
   try {
     fs.mkdirSync(targetDir, { recursive: true });
     // Copy all contents from CONTENT_DIR to targetDir
     fs.cpSync(CONTENT_DIR, targetDir, { recursive: true });
-    console.log(`✅ 技能 "life-design-system" 已成功安装到本地！`);
+    console.log(`✅ 技能 "xiaoyun-design-system" 已成功安装到本地！`);
     console.log(`📂 路径: ${path.relative(process.cwd(), targetDir)}`);
     console.log(`\n现在您可以在 Trae 中重新加载或打开 Skill 面板使用它了！`);
   } catch (error) {
@@ -125,20 +125,20 @@ function installClaudeSkill(scope = 'project') {
   }
 
   const targetDir = normalizedScope === 'user'
-    ? path.join(os.homedir(), '.claude', 'skills', 'life-design-system')
-    : path.join(process.cwd(), '.claude', 'skills', 'life-design-system');
+    ? path.join(os.homedir(), '.claude', 'skills', 'xiaoyun-design-system')
+    : path.join(process.cwd(), '.claude', 'skills', 'xiaoyun-design-system');
 
   try {
     fs.mkdirSync(targetDir, { recursive: true });
     fs.cpSync(CONTENT_DIR, targetDir, { recursive: true });
-    console.log(`✅ 技能 "life-design-system" 已成功安装到 Claude Code！`);
+    console.log(`✅ 技能 "xiaoyun-design-system" 已成功安装到 Claude Code！`);
     console.log(`📂 路径: ${targetDir}`);
     if (normalizedScope === 'project') {
       console.log('\n当前为项目级安装，仅对当前项目生效。');
     } else {
       console.log('\n当前为个人级安装，对当前用户的所有 Claude Code 项目生效。');
     }
-    console.log('现在您可以在 Claude Code 中自动使用它，或通过 /life-design-system 手动调用。');
+    console.log('现在您可以在 Claude Code 中自动使用它，或通过 /xiaoyun-design-system 手动调用。');
   } catch (error) {
     console.error('❌ 安装 Claude Code 技能失败:', error);
   }
@@ -146,7 +146,7 @@ function installClaudeSkill(scope = 'project') {
 
 function showHelp() {
   console.log(`
-Usage: life-ds-skills <command> [args]
+Usage: xiaoyun-ds-skills <command> [args]
 
 Commands:
   install           Install the skill to local .trae/skills/ directory

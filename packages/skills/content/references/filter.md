@@ -4,7 +4,7 @@
 
 ## 默认选择：筛选器组
 
-在绝大多数场景中，优先使用 `@life-ds/components-web` 的 `FilterGroup` 作为默认筛选容器，用于承载多个 `Filter` 组件，并实现统一的对齐、间距与响应式布局（grid）。
+在绝大多数场景中，优先使用 `@xiaoyun-ds/components-web` 的 `FilterGroup` 作为默认筛选容器，用于承载多个 `Filter` 组件，并实现统一的对齐、间距与响应式布局（grid）。
 
 ## 何时需要“查询 / 重置”
 
@@ -22,7 +22,7 @@
 
 ## 最佳实践
 
-- **优先使用 @life-ds/components-web 提供的 React** **`Filter`** **组件渲染“筛选-元件”。**
+- **优先使用 @xiaoyun-ds/components-web 提供的 React** **`Filter`** **组件渲染“筛选-元件”。**
 - **大多数情况下优先使用** **`FilterGroup`** **承载多个** **`Filter`，不要手写 grid/间距。**
 - 默认展示最常用的核心筛选条件，将次要条件收纳在“展开/高级筛选”中。
 - 清晰展示当前已生效的筛选条件（特别是当筛选面板收起时），并提供一键“清空”或“重置”操作。
@@ -41,7 +41,7 @@
 
 ```tsx
 import React from 'react';
-import { FilterGroup, Filter } from '@life-ds/components-web';
+import { FilterGroup, Filter } from '@xiaoyun-ds/components-web';
 
 export function FilterGroupDemo() {
   return (
@@ -74,7 +74,7 @@ export function FilterGroupDemo() {
 
 ```tsx
 import React from 'react';
-import { FilterGroup, Filter } from '@life-ds/components-web';
+import { FilterGroup, Filter } from '@xiaoyun-ds/components-web';
 
 export function FilterGroupWithActionsDemo() {
   return (
@@ -95,14 +95,14 @@ export function FilterGroupWithActionsDemo() {
 ## 注意事项
 
 - 默认用 `FilterGroup` 做容器：不要自己写 `display: grid` / `grid-template-columns` 去拼筛选区。
-- `Filter` 是基础单元：不要手工拼装 `.lds-filter` DOM 结构和 class。
+- `Filter` 是基础单元：不要手工拼装 `.xds-filter` DOM 结构和 class。
 - “查询 / 重置”仅在筛选项较多时启用；小于等于 3 个筛选项时一般不需要操作按钮。
 
 **禁止示例**：
 
 ```html
-<!-- ❌ 禁止：React 项目不要手工拼装 .lds-filter DOM / 类名 -->
-<div class="lds-filter">...</div>
+<!-- ❌ 禁止：React 项目不要手工拼装 .xds-filter DOM / 类名 -->
+<div class="xds-filter">...</div>
 ```
 
 ## 实现要点

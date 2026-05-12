@@ -10,7 +10,7 @@ export interface FilterGroupProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   size?: FilterSize;
   /**
-   * Grid 单元最小宽度。默认按 Figma 的 294px 让容器自适应 3/4/更多列。
+   * Grid 单元最小宽度。默认按当前组件规范的 294px 让容器自适应 3/4/更多列。
    * @default 294
    */
   minItemWidth?: number;
@@ -73,20 +73,20 @@ export const FilterGroup = React.forwardRef<HTMLDivElement, FilterGroupProps>(
     return (
       <div
         ref={ref}
-        className={clsx('lds-filter-group', className)}
+        className={clsx('xds-filter-group', className)}
         style={
           {
             ...style,
             // CSS vars for responsive grid behaviour.
-            ['--lds-filter-group-min-item-width' as any]: `${minItemWidth}px`,
-            ['--lds-filter-group-gap' as any]: `${gap}px`,
+            ['--xds-filter-group-min-item-width' as any]: `${minItemWidth}px`,
+            ['--xds-filter-group-gap' as any]: `${gap}px`,
           } as React.CSSProperties
         }
         {...props}
       >
-        <div className="lds-filter-group__grid">{children}</div>
+        <div className="xds-filter-group__grid">{children}</div>
         {shouldRenderActionsRow ? (
-          <div className="lds-filter-group__actions-row">
+          <div className="xds-filter-group__actions-row">
             {actions ? (
               actions
             ) : (

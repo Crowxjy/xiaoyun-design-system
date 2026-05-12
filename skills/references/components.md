@@ -13,7 +13,7 @@
 1. 将 UI 拆分为清晰的区域。
 2. 识别每个区域中可能的组件。
 3. 推断哪些部分是可复用的基础组件（Primitives），哪些部分是组合组件（Composition）。
-4. 使用仓库现有的模式或 life-ds 等效组件进行实现。
+4. 使用仓库现有的模式或 xiaoyun-ds 等效组件进行实现。
 5. 保持层级结构、间距节奏和状态行为。
 
 ## 如何识别图像中的组件
@@ -47,6 +47,20 @@
 - 标签 (Tag)
 - 多选框 (Checkbox)
 - 选项 (Capsule)
+
+## 当前库已补齐的 React 组件
+
+当前 `@xiaoyun-ds/components-web` 除了 life-design 原有组件外，也已提供一批按照 `designsystem` 视觉风格改写的 React 组件，可直接复用：
+
+- 指标卡：`MetricCard`、`MetricCardGroup`
+- 页面级标签导航：`TabNav`
+- 时间筛选：`TimeFilter`
+- 下拉能力：`Select`、`Dropdown`
+- 数据可视化与状态：`Charts`、`Loading`
+- 诊断信息块：`Diagnosis`
+- 标签容器：`Tags`
+
+当用户需求明显匹配这些模式时，优先使用对应 React 组件，而不是重新手写同类 DOM 结构。
 
 如果 UI 可以用这些模式表示，请在引入自定义结构之前优先使用它们。
 

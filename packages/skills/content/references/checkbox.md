@@ -13,7 +13,7 @@
 
 ## 最佳实践
 
-- **优先使用 life-ds 组件库中的复选框组件。**
+- **优先使用 xiaoyun-ds 组件库中的复选框组件。**
 - 复选框用于**多选**；如果选项是互斥的（只能选一个），请使用单选框（Radio）。
 - 必须将复选框与其对应的文本标签关联起来（通常使用 `<label>`），确保点击文本也能触发复选框，从而扩大点击区域（Hit area）。
 - 列表排列时，优先选择垂直排列以便于扫描和阅读。如果必须使用水平排列，请确保选项之间有足够的间距，避免用户将标签与错误的复选框混淆。
@@ -41,10 +41,10 @@
 
 ```tsx
 import React from 'react';
-import { Checkbox } from '@life-ds/components-web';
+import { Checkbox } from '@xiaoyun-ds/components-web';
 
 /**
- * ✅ 正确：使用 @life-ds/components-web 的 React 组件，不要手写 .lds-xxx 类名拼结构
+ * ✅ 正确：使用 @xiaoyun-ds/components-web 的 React 组件，不要手写 .xds-xxx 类名拼结构
  *
  * 约束：
  * - 右侧文案默认不显示；只有 showLabel={true} 才会显示 label

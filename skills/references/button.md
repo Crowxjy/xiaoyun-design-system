@@ -13,7 +13,7 @@
 
 ## 最佳实践
 
-- **优先使用 @life-ds/components-web 组件库中的 `<Button>` 组件（如果是在 React 项目中）。**
+- **优先使用 @xiaoyun-ds/components-web 组件库中的 `<Button>` 组件（如果是在 React 项目中）。**
 - 使用 Primary（主按钮）执行核心 CTA，使用 **Default**（普通按钮）执行辅助操作。
 - 同一区块内避免出现2个及2个以上的 Primary 按钮。
 - 标签应以动词开头。
@@ -30,17 +30,17 @@
 
 ## React 组件用法（推荐）
 
-在 React 项目中，**禁止手写 CSS 类名拼接**，必须使用 `@life-ds/components-web` 包提供的 `<Button>` 组件，以避免尺寸和变体类名遗漏问题。
+在 React 项目中，**禁止手写 CSS 类名拼接**，必须使用 `@xiaoyun-ds/components-web` 包提供的 `<Button>` 组件，以避免尺寸和变体类名遗漏问题。
 
 ```tsx
-import { Button, Icon } from '@life-ds/components-web';
+import { Button, Icon } from '@xiaoyun-ds/components-web';
 
 // ✅ 正确：使用 React 组件
 <Button variant="primary" size="large">确认提交</Button>
 <Button variant="default" icon={<Icon name="ic-add-round-line" />}>添加</Button>
 
 // ❌ 错误：在 React 中手动拼接类名
-<button className="lds-btn lds-btn--primary lds-btn--large">确认提交</button>
+<button className="xds-btn xds-btn--primary xds-btn--large">确认提交</button>
 ```
 
 ### Button 组件 API
@@ -55,21 +55,21 @@ import { Button, Icon } from '@life-ds/components-web';
 
 ## 原生 HTML/CSS 用法（非 React 环境）
 
-在非 React 环境中，使用组件库按钮时，除了指定样式变体（如 `.lds-btn--primary`），**必须**组合对应的尺寸类名，否则会导致高度和内边距缺失！
+在非 React 环境中，使用组件库按钮时，除了指定样式变体（如 `.xds-btn--primary`），**必须**组合对应的尺寸类名，否则会导致高度和内边距缺失！
 
 | 尺寸名称 | 类名组合 | 目标高度 | 适用场景 |
 | :--- | :--- | :--- | :--- |
-| **Large (大)** | `.lds-btn .lds-btn--large` | 48px | 核心行动点（如整宽表单提交底部） |
-| **Default (默认)** | `.lds-btn .lds-btn--default-size` | 40px | 绝大部分页面的常规操作按钮（默认选项） |
-| **Small (小)** | `.lds-btn .lds-btn--small` | 36px | 表格行内操作、紧凑的工具栏等 |
+| **Large (大)** | `.xds-btn .xds-btn--large` | 48px | 核心行动点（如整宽表单提交底部） |
+| **Default (默认)** | `.xds-btn .xds-btn--default-size` | 40px | 绝大部分页面的常规操作按钮（默认选项） |
+| **Small (小)** | `.xds-btn .xds-btn--small` | 36px | 表格行内操作、紧凑的工具栏等 |
 
 **示例代码**：
 ```html
 <!-- ✅ 正确：带尺寸类名 -->
-<button class="lds-btn lds-btn--primary lds-btn--default-size">确认提交</button>
+<button class="xds-btn xds-btn--primary xds-btn--default-size">确认提交</button>
 
 <!-- ❌ 错误：缺失尺寸类名，高度塌陷 -->
-<button class="lds-btn lds-btn--primary">确认提交</button>
+<button class="xds-btn xds-btn--primary">确认提交</button>
 ```
 
 ## 实现要点

@@ -2,7 +2,7 @@ import React from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
 
 type ButtonSize = 'large' | 'default-size' | 'small';
-type ButtonVariant = 'primary' | 'default' | 'secondary' | 'text' | 'icon';
+type ButtonVariant = 'primary' | 'default' | 'secondary' | 'outline' | 'text' | 'text-primary' | 'text-secondary' | 'icon';
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     /**
      * The size of the button
@@ -18,8 +18,39 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
      * Optional icon to render inside the button. For 'icon' variant, this is the only content.
      */
     icon?: React.ReactNode;
+    /**
+     * Optional left icon. `icon` remains as a legacy alias.
+     */
+    leftIcon?: React.ReactNode;
+    /**
+     * Optional right icon.
+     */
+    rightIcon?: React.ReactNode;
 }
 declare const Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
+
+declare global {
+    interface Window {
+        VChart?: {
+            new (spec: Record<string, unknown>, options: {
+                dom: HTMLElement;
+            }): {
+                renderSync?: () => void;
+                render?: () => void;
+                release?: () => void;
+            };
+        };
+    }
+}
+type ChartType = 'line' | 'bar' | 'bar-horizontal' | 'pie' | 'scatter' | 'waterfall';
+interface ChartsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'data'> {
+    type?: ChartType;
+    spec?: Record<string, unknown>;
+    data?: Array<Record<string, unknown>>;
+    height?: number;
+    emptyText?: React.ReactNode;
+}
+declare const Charts: React.ForwardRefExoticComponent<ChartsProps & React.RefAttributes<HTMLDivElement>>;
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
     /**
@@ -35,6 +66,71 @@ interface CapsuleProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>,
 }
 declare const Capsule: React.ForwardRefExoticComponent<CapsuleProps & React.RefAttributes<HTMLInputElement>>;
 
+interface DiagnosisButton {
+    text: React.ReactNode;
+    type?: ButtonVariant;
+}
+interface DiagnosisContentPart {
+    text: React.ReactNode;
+    bold?: boolean;
+    color?: 'primary' | 'danger' | 'success';
+    customColor?: string;
+    title?: boolean;
+    link?: {
+        url?: string;
+        onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+    };
+    button?: boolean;
+    buttonType?: ButtonVariant;
+    buttonSize?: ButtonSize;
+    iconRight?: React.ReactNode;
+    onButtonClick?: (part: DiagnosisContentPart) => void;
+}
+interface DiagnosisListItem {
+    title?: React.ReactNode;
+    text?: React.ReactNode;
+    parts?: DiagnosisContentPart[];
+}
+interface DiagnosisSection {
+    title?: React.ReactNode;
+    items: DiagnosisListItem[];
+}
+interface DiagnosisCard {
+    sections: DiagnosisSection[];
+    buttons?: DiagnosisButton[];
+}
+interface DiagnosisProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+    title?: React.ReactNode;
+    cards: DiagnosisCard[];
+    buttons?: DiagnosisButton[];
+    layout?: 'single' | 'multiple';
+    onButtonClick?: (buttonIndex: number, button: DiagnosisButton, cardIndex?: number) => void;
+    onPartClick?: (part: DiagnosisContentPart) => void;
+}
+declare const Diagnosis: React.ForwardRefExoticComponent<DiagnosisProps & React.RefAttributes<HTMLDivElement>>;
+
+interface DropdownOption {
+    value: string;
+    label: React.ReactNode;
+    disabled?: boolean;
+}
+interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+    options: DropdownOption[];
+    value?: string;
+    open?: boolean;
+    /**
+     * 点击列表外部时自动关闭。默认开启；仅在受控（提供了 onClose）时生效。
+     * @default true
+     */
+    closeOnClickOutside?: boolean;
+    /**
+     * 关闭回调。配合 closeOnClickOutside 与受控 open 使用。
+     */
+    onClose?: () => void;
+    onChange?: (value: string, option: DropdownOption) => void;
+}
+declare const Dropdown: React.ForwardRefExoticComponent<DropdownProps & React.RefAttributes<HTMLDivElement>>;
+
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
     size?: 'large' | 'default-size' | 'small';
     prefixIcon?: React.ReactNode;
@@ -43,6 +139,7 @@ interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, '
     onClear?: () => void;
     wrapperClassName?: string;
     isFocused?: boolean;
+    error?: boolean;
 }
 declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
 
@@ -81,7 +178,7 @@ type CommonProps = {
      */
     rightIcon?: React.ReactNode;
     /**
-     * 组件宽度（默认 294px，符合 Figma 规格）
+     * 组件宽度（默认 294px，符合当前组件规范）
      */
     width?: number | string;
 };
@@ -107,7 +204,7 @@ interface FilterGroupProps extends React.HTMLAttributes<HTMLDivElement> {
      */
     size?: FilterSize;
     /**
-     * Grid 单元最小宽度。默认按 Figma 的 294px 让容器自适应 3/4/更多列。
+     * Grid 单元最小宽度。默认按当前组件规范的 294px 让容器自适应 3/4/更多列。
      * @default 294
      */
     minItemWidth?: number;
@@ -146,6 +243,52 @@ interface FilterGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 declare const FilterGroup: React.ForwardRefExoticComponent<FilterGroupProps & React.RefAttributes<HTMLDivElement>>;
 
+interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
+    size?: 'small' | 'default-size' | 'large';
+    text?: React.ReactNode;
+    minHeight?: number | string;
+}
+declare const Loading: React.ForwardRefExoticComponent<LoadingProps & React.RefAttributes<HTMLDivElement>>;
+
+type MetricCardTheme = 'color-1' | 'color-2' | 'color-3' | 'color-4' | 'color-5' | 'light-purple' | 'gray';
+type MetricCardSize = 'default-size' | 'small';
+interface MetricCardMetricValue {
+    value: React.ReactNode;
+    type?: 'success' | 'danger' | 'default';
+}
+interface MetricCardMetricItem {
+    label?: React.ReactNode;
+    value: React.ReactNode | MetricCardMetricValue;
+}
+interface MetricCardProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'title' | 'value'> {
+    title: React.ReactNode;
+    value: React.ReactNode;
+    currency?: React.ReactNode;
+    unit?: React.ReactNode;
+    metrics?: MetricCardMetricItem[];
+    theme?: MetricCardTheme;
+    size?: MetricCardSize;
+    selected?: boolean;
+    showInfo?: boolean;
+    arrowDirection?: 'bottom' | 'right';
+    /**
+     * 是否可交互（hover 边框 / selected 边框 / 装饰图隐藏）。
+     * 不传时按是否绑定 onClick 自动推断。
+     */
+    clickable?: boolean;
+}
+declare const MetricCard: React.ForwardRefExoticComponent<MetricCardProps & React.RefAttributes<HTMLButtonElement>>;
+interface MetricCardGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+    cards: Array<Omit<MetricCardProps, 'selected'> & {
+        id: string;
+    }>;
+    value?: string;
+    defaultValue?: string;
+    selectable?: boolean;
+    onChange?: (value: string) => void;
+}
+declare const MetricCardGroup: React.ForwardRefExoticComponent<MetricCardGroupProps & React.RefAttributes<HTMLDivElement>>;
+
 interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
     variant?: 'primary' | 'capsule' | 'filter';
     size?: 'large' | 'small';
@@ -160,6 +303,21 @@ interface TabProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, '
     active?: boolean;
 }
 declare const Tab: React.ForwardRefExoticComponent<TabProps & React.RefAttributes<HTMLAnchorElement>>;
+
+interface TabNavItem {
+    value: string;
+    label: React.ReactNode;
+    disabled?: boolean;
+}
+interface TabNavProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+    items?: TabNavItem[];
+    value?: string;
+    defaultValue?: string;
+    size?: 'default-size' | 'large';
+    onChange?: (value: string) => void;
+    rightContent?: React.ReactNode;
+}
+declare const TabNav: React.ForwardRefExoticComponent<TabNavProps & React.RefAttributes<HTMLDivElement>>;
 
 declare const Navbar: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
 
@@ -186,8 +344,8 @@ interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 declare const PageHeader: React.ForwardRefExoticComponent<PageHeaderProps & React.RefAttributes<HTMLDivElement>>;
 
-declare const TableWrapper: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
-declare const Table: React.ForwardRefExoticComponent<React.TableHTMLAttributes<HTMLTableElement> & React.RefAttributes<HTMLTableElement>>;
+declare const NormalTableWrapper: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
+declare const NormalTable: React.ForwardRefExoticComponent<React.TableHTMLAttributes<HTMLTableElement> & React.RefAttributes<HTMLTableElement>>;
 declare const Thead: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
 declare const Tbody: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
 declare const Tr: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableRowElement> & React.RefAttributes<HTMLTableRowElement>>;
@@ -200,6 +358,50 @@ interface TableCellActionProps extends React.AnchorHTMLAttributes<HTMLAnchorElem
     danger?: boolean;
 }
 declare const TableCellAction: React.ForwardRefExoticComponent<TableCellActionProps & React.RefAttributes<HTMLAnchorElement>>;
+type TableCellMetricType = 'success' | 'danger' | 'default';
+interface TableCellSubMetric {
+    label?: React.ReactNode;
+    value?: React.ReactNode | {
+        value: React.ReactNode;
+        type?: TableCellMetricType;
+    };
+    values?: Array<React.ReactNode | {
+        value: React.ReactNode;
+        type?: TableCellMetricType;
+    }>;
+    type?: TableCellMetricType;
+}
+interface TableCellStandardValue {
+    main?: React.ReactNode;
+    sub?: React.ReactNode | TableCellSubMetric[];
+}
+interface TableCellMetricValue {
+    currency?: React.ReactNode;
+    number?: React.ReactNode;
+    unit?: React.ReactNode;
+    sub?: React.ReactNode | TableCellSubMetric[];
+}
+interface TableColumn {
+    key?: string;
+    title: React.ReactNode;
+    children?: TableColumn[];
+    isMetric?: boolean;
+    metricStyle?: 'enhanced' | 'plain';
+    render?: (value: any, row: TableRowData, rowIndex: number) => React.ReactNode;
+}
+interface TableRowData {
+    [key: string]: any;
+    isSummary?: boolean;
+}
+interface TableProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+    data: TableRowData[];
+    columns: TableColumn[];
+    frozenColumnCount?: number;
+    multiLevelHeader?: boolean;
+    lastRowBorder?: boolean;
+    groupDividerLeafIndices?: number[];
+}
+declare const Table: React.ForwardRefExoticComponent<TableProps & React.RefAttributes<HTMLDivElement>>;
 
 interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
     /**
@@ -227,6 +429,7 @@ declare const Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.Re
 type TagSize = 'large' | 'default-size' | 'small';
 type TagVariant = 'fill' | 'light' | 'outline';
 type TagColor = 'blue' | 'green' | 'orange' | 'red' | 'gray';
+type TagSpecial = 'special-1' | 'special-2' | 'special-3';
 interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
     /**
      * 标签尺寸
@@ -251,8 +454,16 @@ interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
      * 右侧图标，可选
      */
     rightIcon?: React.ReactNode;
+    /**
+     * 特殊样式，来自 designsystem 的品牌标签。
+     */
+    special?: TagSpecial;
 }
 declare const Tag: React.ForwardRefExoticComponent<TagProps & React.RefAttributes<HTMLSpanElement>>;
+
+interface TagsProps extends React.HTMLAttributes<HTMLDivElement> {
+}
+declare const Tags: React.ForwardRefExoticComponent<TagsProps & React.RefAttributes<HTMLDivElement>>;
 
 type PaginationSize = 'default-size' | 'small';
 interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
@@ -288,12 +499,12 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onCha
      */
     pageSizeOptions?: number[];
     /**
-     * 是否显示每页条数切换（Figma: 数量）
+     * 是否显示每页条数切换
      * @default true
      */
     showSizeChanger?: boolean;
     /**
-     * 是否显示快速跳页（Figma: 跳页）
+     * 是否显示快速跳页
      * @default true
      */
     showQuickJumper?: boolean;
@@ -327,4 +538,40 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onCha
 }
 declare const Pagination: React.ForwardRefExoticComponent<PaginationProps & React.RefAttributes<HTMLElement>>;
 
-export { Button, type ButtonProps, type ButtonSize, type ButtonVariant, Capsule, type CapsuleProps, Checkbox, type CheckboxProps, Filter, type FilterButtonProps, FilterGroup, type FilterGroupProps, type FilterInputProps, type FilterProps, type FilterSize, type FilterType, Icon, type IconProps, Input, type InputProps, Menu, type MenuProps, Navbar, PageHeader, type PageHeaderProps, Pagination, type PaginationProps, type PaginationSize, Tab, type TabProps, Table, TableCellAction, type TableCellActionProps, TableCellAmount, TableCellOperation, TableCellProduct, TableWrapper, Tabs, type TabsProps, Tag, type TagColor, type TagProps, type TagSize, type TagVariant, Tbody, Td, Th, Thead, Tr };
+interface SelectProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
+    label?: React.ReactNode;
+    placeholder?: string;
+    options: DropdownOption[];
+    value?: string;
+    defaultValue?: string;
+    onChange?: (value: string, option: DropdownOption) => void;
+}
+declare const Select: React.ForwardRefExoticComponent<SelectProps & React.RefAttributes<HTMLDivElement>>;
+
+interface TimeFilterOption {
+    value: string;
+    label: React.ReactNode;
+}
+interface TimeFilterChangePayload {
+    stat: string;
+    compare: string;
+    statRange?: {
+        start: Date;
+        end: Date;
+    } | null;
+    compareRange?: {
+        start: Date;
+        end: Date;
+    } | null;
+}
+interface TimeFilterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
+    statOptions?: TimeFilterOption[];
+    compareOptionsMap?: Record<string, TimeFilterOption[]>;
+    defaultStat?: string;
+    defaultCompare?: string;
+    emphasis?: boolean;
+    onChange?: (value: TimeFilterChangePayload) => void;
+}
+declare const TimeFilter: React.ForwardRefExoticComponent<TimeFilterProps & React.RefAttributes<HTMLDivElement>>;
+
+export { Button, type ButtonProps, type ButtonSize, type ButtonVariant, Capsule, type CapsuleProps, type ChartType, Charts, type ChartsProps, Checkbox, type CheckboxProps, Diagnosis, type DiagnosisButton, type DiagnosisCard, type DiagnosisContentPart, type DiagnosisListItem, type DiagnosisProps, type DiagnosisSection, Dropdown, type DropdownOption, type DropdownProps, Filter, type FilterButtonProps, FilterGroup, type FilterGroupProps, type FilterInputProps, type FilterProps, type FilterSize, type FilterType, Icon, type IconProps, Input, type InputProps, Loading, type LoadingProps, Menu, type MenuProps, MetricCard, MetricCardGroup, type MetricCardGroupProps, type MetricCardMetricItem, type MetricCardMetricValue, type MetricCardProps, type MetricCardSize, type MetricCardTheme, Navbar, NormalTable, NormalTableWrapper, PageHeader, type PageHeaderProps, Pagination, type PaginationProps, type PaginationSize, Select, type SelectProps, Tab, TabNav, type TabNavItem, type TabNavProps, type TabProps, Table, TableCellAction, type TableCellActionProps, TableCellAmount, type TableCellMetricType, type TableCellMetricValue, TableCellOperation, TableCellProduct, type TableCellStandardValue, type TableCellSubMetric, type TableColumn, type TableProps, type TableRowData, Tabs, type TabsProps, Tag, type TagColor, type TagProps, type TagSize, type TagSpecial, type TagVariant, Tags, type TagsProps, Tbody, Td, Th, Thead, TimeFilter, type TimeFilterChangePayload, type TimeFilterOption, type TimeFilterProps, Tr };

@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>需求录入门户 · 销运设计系统</title>
+  <link rel="stylesheet" href="../packages/tokens/xiaoyun-ds-tokens.css">
+  <link rel="stylesheet" href="../packages/components-web/styles/base.css">
+  <link rel="stylesheet" href="../packages/components-web/styles/components.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: var(--font-normal);
+      background: var(--bg-2);
+      color: var(--text-gray-5);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .portal-page {
+      padding: var(--spacing-page-padding-top) var(--spacing-page-padding-right) var(--spacing-page-padding-bottom) var(--spacing-page-padding-left);
+    }
+
+    .portal-shell {
+      max-width: var(--layout-content-max-width);
+      margin: 0 auto;
+    }
+
+    .portal-notice {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-lg);
+      background: var(--bg-1);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-gray-4);
+    }
+
+    .portal-notice-text {
+      flex: 1 1 0;
+      min-width: 0;
+      font-size: var(--font-size-md);
+      line-height: 1.6;
+    }
+
+    .section {
+      margin-top: var(--spacing-between-sections);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-gray-5);
+    }
+
+    .section-title::before {
+      content: "";
+      width: 3px;
+      height: 16px;
+      margin-right: var(--spacing-sm);
+      border-radius: var(--radius-full);
+      background: var(--text-gray-3);
+      flex: 0 0 auto;
+    }
+
+    .section-content {
+      margin-top: var(--spacing-section-content);
+    }
+
+    .portal-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: var(--spacing-lg);
+      align-items: start;
+    }
+
+    .portal-panel {
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-lg);
+      background: var(--bg-1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .portal-panel-inner {
+      padding: var(--spacing-lg);
+    }
+
+    .portal-panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-sm);
+      margin: 0 0 var(--spacing-lg);
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      color: var(--text-gray-5);
+    }
+
+    .portal-panel-meta {
+      font-size: var(--font-size-sm);
+      color: var(--text-gray-3);
+    }
+
+    .portal-status-row,
+    .portal-actions,
+    .portal-inline-grid,
+    .portal-inline-actions,
+    .portal-history-header,
+    .portal-history-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+
+    .portal-status-row {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .portal-directory-path {
+      flex: 1 1 100%;
+      font-size: var(--font-size-sm);
+      color: var(--text-gray-3);
+      word-break: break-all;
+    }
+
+    .portal-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .portal-inline-grid {
+      align-items: flex-start;
+    }
+
+    .portal-inline-grid > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .portal-field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .portal-label {
+      font-size: var(--font-size-md);
+      font-weight: 500;
+      color: var(--text-gray-5);
+    }
+
+    .portal-label-sub {
+      font-size: var(--font-size-sm);
+      color: var(--text-gray-3);
+      font-weight: 400;
+    }
+
+    .portal-textarea,
+    .portal-preview {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-md);
+      background: var(--bg-1);
+      color: var(--text-gray-5);
+      font-family: var(--font-normal);
+      font-size: var(--font-size-md);
+      line-height: 1.6;
+    }
+
+    .portal-textarea {
+      min-height: calc(var(--spacing-10x) * 2);
+      padding: var(--spacing-md);
+      resize: vertical;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .portal-textarea:focus {
+      outline: none;
+      border-color: var(--primary-5);
+      box-shadow: 0 0 0 3px rgba(81, 113, 255, 0.12);
+    }
+
+    .portal-textarea--compact {
+      min-height: calc(var(--spacing-10x) * 1.4);
+    }
+
+    .portal-helper {
+      font-size: var(--font-size-sm);
+      line-height: 1.6;
+      color: var(--text-gray-3);
+    }
+
+    .portal-actions {
+      justify-content: space-between;
+      padding-top: var(--spacing-sm);
+      border-top: 1px solid var(--divider-1);
+    }
+
+    .portal-actions-main,
+    .portal-actions-side {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+
+    .portal-preview-panel {
+      position: sticky;
+      top: var(--spacing-lg);
+    }
+
+    .portal-preview {
+      min-height: calc(var(--spacing-10x) * 6);
+      margin: 0;
+      padding: var(--spacing-lg);
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--bg-2);
+      font-family: ui-monospace, SFMono-Regular, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: var(--font-size-sm);
+    }
+
+    .portal-history-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .portal-history-item {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-md);
+      background: var(--bg-1);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .portal-history-item:hover {
+      border-color: var(--primary-4);
+      background: var(--bg-7);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .portal-history-item.is-active {
+      border-color: var(--primary-5);
+      background: var(--bg-7);
+    }
+
+    .portal-history-title {
+      margin: 0;
+      font-size: var(--font-size-md);
+      font-weight: 600;
+      color: var(--text-gray-5);
+    }
+
+    .portal-history-path {
+      margin-top: var(--spacing-xs);
+      font-size: var(--font-size-sm);
+      color: var(--text-gray-3);
+      word-break: break-all;
+    }
+
+    .portal-history-meta {
+      margin-top: var(--spacing-sm);
+      color: var(--text-gray-3);
+      font-size: var(--font-size-sm);
+    }
+
+    .portal-empty {
+      padding: var(--spacing-xl);
+      border: 1px dashed var(--divider-2);
+      border-radius: var(--radius-lg);
+      background: var(--bg-2);
+      text-align: center;
+      color: var(--text-gray-3);
+      font-size: var(--font-size-md);
+      line-height: 1.6;
+    }
+
+    .portal-divider {
+      height: 1px;
+      margin: var(--spacing-lg) 0;
+      background: var(--divider-1);
+    }
+
+    .portal-checkbox-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      align-items: center;
+    }
+
+    @media (max-width: 1080px) {
+      .portal-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .portal-preview-panel {
+        position: static;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+        "clsx": "https://esm.sh/clsx@2.1.1",
+        "@xiaoyun-ds/components-web": "../packages/components-web/dist/index.mjs"
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="../packages/icons/index.js"></script>
+  <script type="text/babel" data-type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import {
+      Button,
+      Checkbox,
+      Icon,
+      Input,
+      Loading,
+      PageHeader,
+      Select,
+      Tab,
+      Tabs,
+      Tag,
+      Tags
+    } from '@xiaoyun-ds/components-web';
+
+    const MODULE_OPTIONS = [
+      { value: 'sales-ops-dashboard', label: '销运 / 数据看板' },
+      { value: 'merchant-management', label: '销运 / 商家管理' },
+      { value: 'ticket-center', label: '销运 / 工单中心' },
+      { value: 'crm', label: '销运 / 客户管理' },
+      { value: 'other', label: '其他' }
+    ];
+
+    const TARGET_OPTIONS = [
+      { value: 'bd', label: 'BD' },
+      { value: 'sales', label: '销售' },
+      { value: 'ops', label: '运营' },
+      { value: 'merchant', label: '商家' },
+      { value: 'admin', label: '内部管理员' }
+    ];
+
+    const STATUS_META = {
+      info: { color: 'blue', label: '提示' },
+      success: { color: 'green', label: '成功' },
+      warning: { color: 'orange', label: '注意' },
+      error: { color: 'red', label: '错误' }
+    };
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    const EMPTY_FORM = {
+      requestName: '',
+      submitter: '',
+      submitDate: today,
+      module: 'sales-ops-dashboard',
+      targetUser: 'BD',
+      goal: '',
+      kpi1: '',
+      kpi2: '',
+      kpi3: '',
+      architecture: '',
+      dataRows: '',
+      interactions: '',
+      attachmentDir: '',
+      attachmentNotes: '',
+      requiredComponents: '',
+      forbiddenComponents: '',
+      desktopOnly: true
+    };
+
+    function compactDate(date) {
+      return (date || today).replaceAll('-', '');
+    }
+
+    function sanitizeFileName(value) {
+      const cleaned = (value || 'untitled')
+        .trim()
+        .replace(/[<>:"/\\\\|?*]+/g, '')
+        .replace(/\\s+/g, '-');
+      return cleaned || 'untitled';
+    }
+
+    function lines(value) {
+      return value
+        .split('\\n')
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    function listFromText(value) {
+      return value
+        .split(/[\\n,，、]/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    function normalizeDataRows(value) {
+      const rows = lines(value).map((line) => line.replace(/^\\|/, '').replace(/\\|$/, ''));
+      return rows
+        .map((line) => line.split('|').map((cell) => cell.trim()).filter((cell) => cell.length > 0))
+        .filter((cells) => cells.length >= 4)
+        .map((cells) => `| ${cells[0]} | ${cells[1]} | ${cells[2]} | ${cells[3]} |`);
+    }
+
+    function buildFileName(form) {
+      return `page-request-${sanitizeFileName(form.requestName)}-${compactDate(form.submitDate)}.md`;
+    }
+
+    function buildMarkdown(form) {
+      const kpis = [form.kpi1, form.kpi2, form.kpi3].map((item) => item.trim()).filter(Boolean);
+      const interactionLines = lines(form.interactions);
+      const attachmentLines = lines(form.attachmentNotes);
+      const requiredComponents = listFromText(form.requiredComponents);
+      const forbiddenComponents = listFromText(form.forbiddenComponents);
+      const dataRows = normalizeDataRows(form.dataRows);
+      const requestName = form.requestName.trim() || '未命名需求';
+      const goal = form.goal.trim() || '{请补充一句话核心目标}';
+      const architecture = form.architecture.trim() || '- PageHeader: {请补充页面标题}\\n- Section L1: {请补充章节}\\n  - 组件名: {请补充作用}';
+      const attachmentDir = form.attachmentDir.trim() || `templates/_attachments/${sanitizeFileName(requestName)}/`;
+      const targetUser = form.targetUser.trim() || 'BD';
+      const moduleLabel = MODULE_OPTIONS.find((item) => item.value === form.module)?.label || form.module;
+
+      const renderedKpis = kpis.length
+        ? kpis.map((item, index) => `  ${index + 1}. ${item}`).join('\\n')
+        : '  1.\\n  2.\\n  3.';
+
+      const renderedDataRows = dataRows.length
+        ? dataRows.join('\\n')
+        : '| field_name | string | 示例值 | mock |';
+
+      const renderedInteractions = interactionLines.length
+        ? interactionLines.map((item, index) => `${index + 1}. ${item}`).join('\\n')
+        : '1. 点击 {组件名} 的 {元素} → {结果}';
+
+      const renderedAttachments = attachmentLines.length
+        ? attachmentLines.map((item) => `  - ${item}`).join('\\n')
+        : '  - reference-1.png：整体页面布局参考';
+
+      const renderedRequired = requiredComponents.length ? requiredComponents.join(' + ') : '{请补充必须使用的组件}';
+      const renderedForbidden = forbiddenComponents.length ? forbiddenComponents.join(' / ') : '{可留空}';
+      const renderedResponsive = form.desktopOnly ? '仅做桌面端 ≥1280px，不做移动端' : '{请补充响应式范围}';
+
+      return `# 页面需求：${requestName}
+
+## 元信息
+- 提交人：${form.submitter.trim() || '{请补充提交人}'}
+- 提交日期：${form.submitDate || today}
+- 业务模块：${moduleLabel}
+- 目标用户：${targetUser}
+
+## 页面目标（1 句话 + 最多 3 条 KPI）
+- 核心目标：${goal}
+- 衡量指标（最多 3 条）：
+${renderedKpis}
+
+## 信息架构（缩进树状，仅写"组件名 + 一句话作用"，不要写 DOM）
+${architecture}
+
+> 约束：
+> - 每个 Section 必须以"3×16 竖线 + 中文标题"渲染（h2，20/600）
+> - 仅可使用组件白名单里的 23 个组件
+> - 若白名单不能覆盖，请在"边界要求"里说明，由 AI 升级提案而非自己写 DOM
+
+## 关键数据（每个数据来源都要写示例值；mock 即可）
+| 字段名 | 类型 | 示例值 | 来源 |
+|---|---|---|---|
+${renderedDataRows}
+
+## 关键交互（按"动作 → 结果"列写，禁止描述 DOM）
+${renderedInteractions}
+
+## 视觉参考（图片附件）
+- 路径：\`${attachmentDir}\`
+- 文件清单：
+${renderedAttachments}
+
+> AI 必读：
+> 图片仅作为「层级与组件选择参考」。AI 必须在产物 README 里输出"图片解读 → token 映射表"，
+> 禁止用取色器从图片复制 hex 值，颜色一律映射到 tokens.md 的 token。
+
+## 边界要求（硬约束 / 黑白名单）
+- 必须使用：${renderedRequired}
+- 禁止使用：${renderedForbidden}
+- 数据规模假设：表格 ≤ 200 行；指标卡 ≤ 5 张；筛选项 ≤ 6 个
+- 响应式：${renderedResponsive}
+
+## 验收标准（AI 自检 + 人工复核都按这条清单跑）
+- [ ] 产物为单文件 \`demo/${sanitizeFileName(requestName)}/index.html\`，双击即可打开
+- [ ] 仅 import \`@xiaoyun-ds/components-web\` 的白名单组件，未出现原生业务 DOM
+- [ ] 所有色值/字号/间距走 token，无硬编码
+- [ ] 标题层级符合 22/600 + 20/600 + 16/600 三档
+- [ ] 页面描述（若有）\`max-width: 960px\`
+- [ ] 数据全部 mock，字段名与"关键数据"表一致
+- [ ] AI 在 \`demo/${sanitizeFileName(requestName)}/README.md\` 输出：图片解读、组件选型理由、token 映射表、自检结果
+`;
+    }
+
+    function parseHistoryMeta(text, file) {
+      const title = text.match(/^# 页面需求：(.+)$/m)?.[1]?.trim() || file.name;
+      const submitter = text.match(/^- 提交人：(.+)$/m)?.[1]?.trim() || '未填写';
+      const submitDate = text.match(/^- 提交日期：(.+)$/m)?.[1]?.trim() || '未填写';
+      const module = text.match(/^- 业务模块：(.+)$/m)?.[1]?.trim() || '未填写';
+      return {
+        id: `${file.name}-${file.lastModified}`,
+        name: file.name,
+        title,
+        submitter,
+        submitDate,
+        module,
+        text,
+        lastModified: file.lastModified
+      };
+    }
+
+    function App() {
+      const [viewMode, setViewMode] = React.useState('draft');
+      const [form, setForm] = React.useState(EMPTY_FORM);
+      const [directoryHandle, setDirectoryHandle] = React.useState(null);
+      const [directoryLabel, setDirectoryLabel] = React.useState('尚未选择 templates 目录');
+      const [status, setStatus] = React.useState({ tone: 'info', message: '请先选择 templates 目录，再保存需求文件。' });
+      const [historyLoading, setHistoryLoading] = React.useState(false);
+      const [historyItems, setHistoryItems] = React.useState([]);
+      const [selectedHistoryId, setSelectedHistoryId] = React.useState('');
+
+      const supportsFileSystem = typeof window !== 'undefined' && 'showDirectoryPicker' in window && window.isSecureContext;
+      const previewMarkdown = React.useMemo(() => buildMarkdown(form), [form]);
+      const selectedHistory = React.useMemo(
+        () => historyItems.find((item) => item.id === selectedHistoryId) || null,
+        [historyItems, selectedHistoryId]
+      );
+
+      const setField = React.useCallback((key, value) => {
+        setForm((prev) => ({ ...prev, [key]: value }));
+      }, []);
+
+      const refreshHistory = React.useCallback(async (handle = directoryHandle) => {
+        if (!handle) return;
+        setHistoryLoading(true);
+        try {
+          const items = [];
+          for await (const entry of handle.values()) {
+            if (entry.kind !== 'file') continue;
+            if (!entry.name.startsWith('page-request-') || !entry.name.endsWith('.md')) continue;
+            const file = await entry.getFile();
+            const text = await file.text();
+            items.push(parseHistoryMeta(text, file));
+          }
+          items.sort((a, b) => b.lastModified - a.lastModified);
+          setHistoryItems(items);
+          setSelectedHistoryId((current) => current || items[0]?.id || '');
+        } catch (error) {
+          setStatus({ tone: 'error', message: `读取历史文件失败：${error.message}` });
+        } finally {
+          setHistoryLoading(false);
+        }
+      }, [directoryHandle]);
+
+      const chooseDirectory = React.useCallback(async () => {
+        if (!supportsFileSystem) {
+          setStatus({ tone: 'error', message: '当前浏览器或打开方式不支持目录写入。请使用 Chromium 浏览器并通过 http://localhost 打开。' });
+          return;
+        }
+        try {
+          const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+          setDirectoryHandle(handle);
+          setDirectoryLabel(handle.name || '已选择目录');
+          if (handle.name !== 'templates') {
+            setStatus({ tone: 'warning', message: '已选择目录，但目录名不是 templates；仍可写入，请确认这是预期位置。' });
+          } else {
+            setStatus({ tone: 'success', message: 'templates 目录已连接，可直接写入 page-request-*.md 并读取历史记录。' });
+          }
+          await refreshHistory(handle);
+        } catch (error) {
+          if (error?.name === 'AbortError') return;
+          setStatus({ tone: 'error', message: `选择目录失败：${error.message}` });
+        }
+      }, [refreshHistory, supportsFileSystem]);
+
+      const validateBeforeSave = React.useCallback(() => {
+        if (!form.requestName.trim()) return '请先填写需求名称。';
+        if (!form.submitter.trim()) return '请先填写提交人。';
+        if (!form.goal.trim()) return '请先填写核心目标。';
+        if (!form.architecture.trim()) return '请先填写信息架构。';
+        if (!form.dataRows.trim()) return '请先填写关键数据。';
+        if (!form.interactions.trim()) return '请先填写关键交互。';
+        return '';
+      }, [form]);
+
+      const saveRequestFile = React.useCallback(async () => {
+        const validationMessage = validateBeforeSave();
+        if (validationMessage) {
+          setStatus({ tone: 'warning', message: validationMessage });
+          return;
+        }
+        if (!directoryHandle) {
+          setStatus({ tone: 'warning', message: '请先选择 templates 目录。' });
+          return;
+        }
+
+        try {
+          const fileName = buildFileName(form);
+          const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(previewMarkdown);
+          await writable.close();
+          setStatus({ tone: 'success', message: `已写入 ${directoryHandle.name}/${fileName}` });
+          await refreshHistory(directoryHandle);
+          setViewMode('history');
+        } catch (error) {
+          setStatus({ tone: 'error', message: `写入失败：${error.message}` });
+        }
+      }, [directoryHandle, form, previewMarkdown, refreshHistory, validateBeforeSave]);
+
+      const copyMarkdown = React.useCallback(async () => {
+        try {
+          await navigator.clipboard.writeText(previewMarkdown);
+          setStatus({ tone: 'success', message: '当前草稿已复制到剪贴板。' });
+        } catch (error) {
+          setStatus({ tone: 'error', message: `复制失败：${error.message}` });
+        }
+      }, [previewMarkdown]);
+
+      const fillExample = React.useCallback(() => {
+        setForm({
+          requestName: '商家经营看板',
+          submitter: '张三',
+          submitDate: today,
+          module: 'sales-ops-dashboard',
+          targetUser: 'BD',
+          goal: 'BD 一眼看清自己负责商家的经营指标，并定位需要重点跟进的问题商家。',
+          kpi1: 'GMV 月环比',
+          kpi2: '解决率 vs 区域均值',
+          kpi3: '待处理工单数',
+          architecture: '- PageHeader: 商家经营看板\\n  - tabs: [本月, 本季]\\n- Section L1: 关键指标\\n  - MetricCardGroup: 4 张指标卡，支持选中切换下方图表\\n- Section L1: 趋势分析\\n  - Tabs: [按日, 按周, 按月]\\n  - Charts: 折线图，展示当前选中指标的时间序列\\n- Section L1: AI 诊断\\n  - Diagnosis: 单卡片多 sections，给出现状、问题、建议',
+          dataRows: 'gmv | currency | ¥ 88.6 万 | mock\\ngmv_trend | percent | +12.4% | mock\\norder_count | number | 12580 | mock\\nsolve_rate | percent | 87.2% | mock\\npending_ticket | number | 14 | mock',
+          interactions: '点击 MetricCardGroup 的某张卡 → 下方 Charts 切换为该指标的趋势\\n点击 Tabs 的“按日/按周/按月” → Charts 切换粒度\\nPageHeader 的 tabs 切换“本月/本季” → 全部数据 mock 切换',
+          attachmentDir: 'templates/_attachments/business-dashboard/',
+          attachmentNotes: 'reference-1.png：整体看板布局\\nreference-2.png：MetricCardGroup 选中态',
+          requiredComponents: 'MetricCardGroup, Charts, Diagnosis',
+          forbiddenComponents: 'Table',
+          desktopOnly: true
+        });
+        setViewMode('draft');
+        setStatus({ tone: 'info', message: '已填充一份看板类示例草稿，可直接修改后保存。' });
+      }, []);
+
+      const resetForm = React.useCallback(() => {
+        setForm({ ...EMPTY_FORM, submitDate: today });
+        setViewMode('draft');
+        setStatus({ tone: 'info', message: '已恢复为空白草稿。' });
+      }, []);
+
+      const loadHistoryAsDraft = React.useCallback(() => {
+        if (!selectedHistory) return;
+        setViewMode('draft');
+        setStatus({ tone: 'info', message: `已切换到草稿视图，可参考 ${selectedHistory.name} 手动修改。` });
+      }, [selectedHistory]);
+
+      const statusMeta = STATUS_META[status.tone] || STATUS_META.info;
+      const previewText = viewMode === 'history' && selectedHistory ? selectedHistory.text : previewMarkdown;
+
+      return (
+        <div className="app-container">
+          <div className="app-body">
+            <main className="app-content portal-page">
+              <div className="portal-shell">
+                <PageHeader
+                  title="需求录入门户"
+                  tabs={
+                    <Tabs value={viewMode} onChange={setViewMode} variant="primary" size="small">
+                      <Tab value="draft">新建需求</Tab>
+                      <Tab value="history">历史记录</Tab>
+                    </Tabs>
+                  }
+                />
+
+                <section className="section" style={{ marginTop: 'var(--spacing-page-title-to-first-section)' }}>
+                  <div className="section-content">
+                    <div className="portal-notice">
+                      <Tags>
+                        <Tag color="orange" variant="light">仅限内部试用</Tag>
+                        <Tag color="blue" variant="light">只生成模板，不直接生成页面</Tag>
+                        <Tag color={supportsFileSystem ? 'green' : 'red'} variant="light">
+                          {supportsFileSystem ? '已支持目录写入' : '当前环境不支持目录写入'}
+                        </Tag>
+                      </Tags>
+                      <div className="portal-notice-text">
+                        产品同事在这里填写结构化需求，写入 <code>templates/page-request-*.md</code> 后，再把文件路径发给 AI。
+                        AI 会按 <code>page-generation-pipeline</code> 用白名单组件生成页面，而不是自由拼 DOM。
+                      </div>
+                      <div className="portal-inline-actions">
+                        <Button variant="secondary" size="small" onClick={() => window.open('../templates/page-request-template.md', '_blank')}>
+                          打开模板
+                        </Button>
+                        <Button variant="secondary" size="small" onClick={() => window.open('../skills/references/page-generation-pipeline.md', '_blank')}>
+                          打开流水线
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="section">
+                  <h2 className="section-title">工作目录</h2>
+                  <div className="section-content">
+                    <div className="portal-panel">
+                      <div className="portal-panel-inner">
+                        <div className="portal-status-row">
+                          <Button variant="primary" size="small" onClick={chooseDirectory}>
+                            选择 templates 目录
+                          </Button>
+                          <Button variant="secondary" size="small" onClick={() => refreshHistory()} disabled={!directoryHandle}>
+                            刷新历史
+                          </Button>
+                          <Tag color={statusMeta.color} variant="light">{statusMeta.label}</Tag>
+                          <span className="portal-helper">{status.message}</span>
+                          <div className="portal-directory-path">当前目录：{directoryLabel}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="section">
+                  <h2 className="section-title">{viewMode === 'draft' ? '需求草稿' : '历史记录'}</h2>
+                  <div className="section-content">
+                    <div className="portal-grid">
+                      <div className="portal-panel">
+                        <div className="portal-panel-inner">
+                          {viewMode === 'draft' ? (
+                            <>
+                              <div className="portal-panel-title">
+                                <span>结构化填写</span>
+                                <span className="portal-panel-meta">保存后会直接生成 page-request-*.md</span>
+                              </div>
+
+                              <div className="portal-form">
+                                <div className="portal-inline-grid">
+                                  <div className="portal-field">
+                                    <label className="portal-label">需求名称</label>
+                                    <Input
+                                      value={form.requestName}
+                                      onChange={(event) => setField('requestName', event.target.value)}
+                                      placeholder="例如：商家经营看板"
+                                    />
+                                  </div>
+                                  <div className="portal-field">
+                                    <label className="portal-label">提交人</label>
+                                    <Input
+                                      value={form.submitter}
+                                      onChange={(event) => setField('submitter', event.target.value)}
+                                      placeholder="例如：张三"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="portal-inline-grid">
+                                  <div className="portal-field">
+                                    <label className="portal-label">提交日期</label>
+                                    <Input
+                                      type="date"
+                                      value={form.submitDate}
+                                      onChange={(event) => setField('submitDate', event.target.value)}
+                                    />
+                                  </div>
+                                  <div className="portal-field">
+                                    <label className="portal-label">业务模块</label>
+                                    <Select
+                                      value={form.module}
+                                      options={MODULE_OPTIONS}
+                                      onChange={(value) => setField('module', value)}
+                                    />
+                                  </div>
+                                  <div className="portal-field">
+                                    <label className="portal-label">目标用户</label>
+                                    <Select
+                                      value={TARGET_OPTIONS.find((item) => item.label === form.targetUser)?.value || 'bd'}
+                                      options={TARGET_OPTIONS}
+                                      onChange={(value, option) => setField('targetUser', option.label)}
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="portal-field">
+                                  <label className="portal-label">核心目标</label>
+                                  <textarea
+                                    className="portal-textarea portal-textarea--compact"
+                                    value={form.goal}
+                                    onChange={(event) => setField('goal', event.target.value)}
+                                    placeholder="一句话描述这个页面给谁看、解决什么问题。"
+                                  />
+                                </div>
+
+                                <div className="portal-inline-grid">
+                                  <div className="portal-field">
+                                    <label className="portal-label">KPI 1</label>
+                                    <Input value={form.kpi1} onChange={(event) => setField('kpi1', event.target.value)} placeholder="例如：GMV 月环比" />
+                                  </div>
+                                  <div className="portal-field">
+                                    <label className="portal-label">KPI 2</label>
+                                    <Input value={form.kpi2} onChange={(event) => setField('kpi2', event.target.value)} placeholder="例如：解决率 vs 区域均值" />
+                                  </div>
+                                  <div className="portal-field">
+                                    <label className="portal-label">KPI 3</label>
+                                    <Input value={form.kpi3} onChange={(event) => setField('kpi3', event.target.value)} placeholder="例如：待处理工单数" />
+                                  </div>
+                                </div>
+
+                                <div className="portal-field">
+                                  <label className="portal-label">
+                                    信息架构
+                                    <span className="portal-label-sub">只写组件名与作用，不写 DOM</span>
+                                  </label>
+                                  <textarea
+                                    className="portal-textarea"
+                                    value={form.architecture}
+                                    onChange={(event) => setField('architecture', event.target.value)}
+                                    placeholder="- PageHeader: 页面标题&#10;- Section L1: 章节标题&#10;  - Table: 展示主列表"
+                                  />
+                                </div>
+
+                                <div className="portal-field">
+                                  <label className="portal-label">
+                                    关键数据
+                                    <span className="portal-label-sub">每行使用 field | type | sample | source</span>
+                                  </label>
+                                  <textarea
+                                    className="portal-textarea"
+                                    value={form.dataRows}
+                                    onChange={(event) => setField('dataRows', event.target.value)}
+                                    placeholder="order_count | number | 12580 | mock&#10;gmv_trend | percent | +12.4% | mock"
+                                  />
+                                </div>
+
+                                <div className="portal-field">
+                                  <label className="portal-label">
+                                    关键交互
+                                    <span className="portal-label-sub">每行一条，按“动作 → 结果”填写</span>
+                                  </label>
+                                  <textarea
+                                    className="portal-textarea"
+                                    value={form.interactions}
+                                    onChange={(event) => setField('interactions', event.target.value)}
+                                    placeholder="点击 Tabs 的‘本月/本季’ → 全部数据 mock 切换"
+                                  />
+                                </div>
+
+                                <div className="portal-inline-grid">
+                                  <div className="portal-field">
+                                    <label className="portal-label">附件目录</label>
+                                    <Input
+                                      value={form.attachmentDir}
+                                      onChange={(event) => setField('attachmentDir', event.target.value)}
+                                      placeholder="templates/_attachments/{需求名}/"
+                                    />
+                                  </div>
+                                  <div className="portal-field">
+                                    <label className="portal-label">响应式</label>
+                                    <div className="portal-checkbox-row">
+                                      <Checkbox
+                                        checked={form.desktopOnly}
+                                        onChange={(event) => setField('desktopOnly', event.target.checked)}
+                                        showLabel
+                                        label="仅桌面端 ≥1280px"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="portal-field">
+                                  <label className="portal-label">
+                                    附件说明
+                                    <span className="portal-label-sub">每行一个文件名与用途说明</span>
+                                  </label>
+                                  <textarea
+                                    className="portal-textarea portal-textarea--compact"
+                                    value={form.attachmentNotes}
+                                    onChange={(event) => setField('attachmentNotes', event.target.value)}
+                                    placeholder="reference-1.png：整体布局参考&#10;reference-2.png：选中态参考"
+                                  />
+                                </div>
+
+                                <div className="portal-inline-grid">
+                                  <div className="portal-field">
+                                    <label className="portal-label">必须使用的组件</label>
+                                    <Input
+                                      value={form.requiredComponents}
+                                      onChange={(event) => setField('requiredComponents', event.target.value)}
+                                      placeholder="例如：MetricCardGroup, Table, Pagination"
+                                    />
+                                  </div>
+                                  <div className="portal-field">
+                                    <label className="portal-label">禁止使用的组件</label>
+                                    <Input
+                                      value={form.forbiddenComponents}
+                                      onChange={(event) => setField('forbiddenComponents', event.target.value)}
+                                      placeholder="例如：Charts"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="portal-actions">
+                                  <div className="portal-actions-main">
+                                    <Button variant="primary" onClick={saveRequestFile}>
+                                      写入需求文件
+                                    </Button>
+                                    <Button variant="secondary" onClick={copyMarkdown}>
+                                      复制草稿
+                                    </Button>
+                                  </div>
+                                  <div className="portal-actions-side">
+                                    <Button variant="secondary" size="small" onClick={fillExample}>
+                                      填充示例
+                                    </Button>
+                                    <Button variant="secondary" size="small" onClick={resetForm}>
+                                      清空表单
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="portal-panel-title">
+                                <span>历史模板</span>
+                                <span className="portal-panel-meta">仅读取当前目录下的 page-request-*.md</span>
+                              </div>
+
+                              {historyLoading ? (
+                                <Loading text="正在读取历史需求…" minHeight="var(--spacing-3xl)" />
+                              ) : historyItems.length ? (
+                                <div className="portal-history-list">
+                                  {historyItems.map((item) => (
+                                    <button
+                                      key={item.id}
+                                      type="button"
+                                      className={`portal-history-item${selectedHistoryId === item.id ? ' is-active' : ''}`}
+                                      onClick={() => setSelectedHistoryId(item.id)}
+                                    >
+                                      <div className="portal-history-header">
+                                        <h3 className="portal-history-title">{item.title}</h3>
+                                        <Tag color="gray" variant="light">{item.submitDate}</Tag>
+                                      </div>
+                                      <div className="portal-history-path">{item.name}</div>
+                                      <div className="portal-history-meta">
+                                        <span>提交人：{item.submitter}</span>
+                                        <span>模块：{item.module}</span>
+                                      </div>
+                                    </button>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="portal-empty">
+                                  还没有发现历史需求文件。先选择 <code>templates</code> 目录并写入一份草稿。
+                                </div>
+                              )}
+
+                              <div className="portal-divider" />
+
+                              <div className="portal-inline-actions">
+                                <Button variant="secondary" size="small" onClick={() => refreshHistory()} disabled={!directoryHandle}>
+                                  刷新列表
+                                </Button>
+                                <Button variant="secondary" size="small" onClick={loadHistoryAsDraft} disabled={!selectedHistory}>
+                                  回到草稿视图
+                                </Button>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="portal-panel portal-preview-panel">
+                        <div className="portal-panel-inner">
+                          <div className="portal-panel-title">
+                            <span>{viewMode === 'history' ? '文件预览' : '模板预览'}</span>
+                            <span className="portal-panel-meta">
+                              {viewMode === 'history' && selectedHistory ? selectedHistory.name : buildFileName(form)}
+                            </span>
+                          </div>
+                          <pre className="portal-preview">{previewText}</pre>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
