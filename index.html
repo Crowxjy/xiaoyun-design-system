@@ -183,7 +183,7 @@
       display: inline-block;
       width: 3px;
       height: 16px;
-      background: var(--text-gray-5);
+      background: var(--text-gray-3);
       border-radius: 4px;
       margin-right: 8px;
       flex-shrink: 0;
@@ -219,10 +219,18 @@
       align-items: flex-end;
       justify-content: flex-start;
     }
+    .matrix-head .matrix-cell.size-head {
+      align-items: flex-start;
+      justify-content: flex-start;
+      text-align: left;
+    }
     .size-head {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
       gap: 4px;
+      width: 100%;
+      text-align: left;
     }
     .size-head strong {
       font-size: var(--font-size-md);
@@ -431,6 +439,122 @@
       border: 1px solid transparent;
     }
 
+    .doc-main.page-layout-active {
+      position: relative;
+    }
+    .page-header {
+      margin-bottom: var(--spacing-page-title-to-first-section);
+    }
+    .page-title-wrapper {
+      margin-bottom: var(--spacing-page-title-to-first-section);
+    }
+    .page-title {
+      font-size: var(--font-size-2xl);
+      line-height: var(--line-height-2xl);
+      font-weight: 600;
+      color: var(--text-gray-5);
+      margin: 0 0 12px 0;
+    }
+    .page-description {
+      max-width: var(--layout-content-max-width);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-sm);
+      color: var(--text-gray-3);
+      margin: 0;
+    }
+    .section,
+    .subsection,
+    .subsubsection {
+      position: relative;
+    }
+    .section {
+      margin-bottom: var(--spacing-between-sections);
+    }
+    .section.last-section {
+      margin-bottom: 0 !important;
+    }
+    .subsection {
+      margin-bottom: var(--spacing-page-title-to-first-section);
+    }
+    .subsection.last-subsection {
+      margin-bottom: 0 !important;
+    }
+    .subsubsection {
+      margin-bottom: 16px;
+    }
+    .subsubsection.last-subsubsection {
+      margin-bottom: 0 !important;
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin: 0 0 var(--spacing-page-title-to-first-section) 0;
+      font-size: var(--font-size-xl);
+      line-height: var(--line-height-xl);
+      font-weight: 600;
+      color: var(--text-gray-5);
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 16px;
+      margin-right: 8px;
+      border-radius: 4px;
+      background: var(--text-gray-3);
+      flex-shrink: 0;
+    }
+    .subsection-title {
+      margin: 0 0 12px 0;
+      font-size: var(--font-size-lg);
+      line-height: var(--line-height-lg);
+      font-weight: 600;
+      color: var(--text-gray-5);
+    }
+    .subsubsection-title {
+      margin: 0 0 12px 0;
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      font-weight: 500;
+      color: var(--text-gray-5);
+    }
+    .content-box {
+      height: 200px;
+      border: 1px dashed var(--border-1);
+      border-radius: var(--radius-md);
+      background: transparent;
+    }
+    .content-box.reading-box {
+      width: min(100%, var(--layout-content-max-width));
+      border-color: var(--danger-4);
+    }
+    .spacing-marker {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      font-size: 10px;
+      color: var(--danger-5);
+      background: rgba(250, 91, 80, 0.1);
+      border-top: 0.5px solid var(--danger-5);
+      border-bottom: 0.5px solid var(--danger-5);
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .spacing-marker-horizontal {
+      left: auto;
+      right: auto;
+      width: auto;
+      border-top: none;
+      border-bottom: none;
+      border-left: 0.5px solid var(--danger-5);
+      border-right: 0.5px solid var(--danger-5);
+    }
+
     /* ---------------------------------------------------
        MetricCard Interactive Config Panel
        --------------------------------------------------- */
@@ -565,6 +689,7 @@
       <a href="#colors" class="nav-item active" data-target="colors">颜色规范</a>
       <a href="#typography" class="nav-item" data-target="typography">文字规范</a>
       <a href="#spacing" class="nav-item" data-target="spacing">间距与圆角</a>
+      <a href="#page-layout" class="nav-item" data-target="page-layout">页面布局</a>
     </div>
 
     <div class="nav-section">
@@ -683,6 +808,12 @@
       title: '间距与圆角',
       desc: 'Spacing 比例尺、Radius 圆角、Shadow 阴影各组 token 的可视化预览。',
       render: () => renderSpacingSpec()
+    },
+    'page-layout': {
+      kind: 'spec',
+      title: '页面布局',
+      desc: '参考页面布局预览页，把标题、说明、Section / Subsection / 内容盒子与上下左右间距节奏可视化，便于对照页面骨架是否符合规范。',
+      render: () => renderPageLayoutSpec()
     },
     button: {
       title: '按钮 Button',
@@ -1409,6 +1540,135 @@
       </div>`;
   }
 
+  function renderPageLayoutSpec() {
+    return `
+      <div class="page-header">
+        <div class="page-title-wrapper">
+          <h1 class="page-title" id="page-title">页面规范示意</h1>
+          <p class="page-description" id="page-description">这里展示页面标题、描述、Section / Subsection / 内容盒子之间的标准节奏，方便对照规范判断是否出现了额外容器、错误边距或层级混乱。</p>
+        </div>
+        <div class="content-box" id="content-box-1"></div>
+      </div>
+
+      <div class="section" id="section-a">
+        <h2 class="section-title" id="section-title-a">一级模块 A</h2>
+        <div class="subsection" id="subsection-a1">
+          <h3 class="subsection-title" id="subsection-title-a1">二级模块 A.1</h3>
+          <div class="subsubsection" id="subsubsection-a11">
+            <h4 class="subsubsection-title" id="subsubsection-title-a11">三级模块 A.1.1</h4>
+            <div class="content-box" id="content-box-a11"></div>
+          </div>
+          <div class="subsubsection last-subsubsection" id="subsubsection-a12">
+            <h4 class="subsubsection-title" id="subsubsection-title-a12">三级模块 A.1.2</h4>
+            <div class="content-box reading-box" id="content-box-a12"></div>
+          </div>
+        </div>
+        <div class="subsection last-subsection" id="subsection-a2">
+          <h3 class="subsection-title" id="subsection-title-a2">二级模块 A.2</h3>
+          <div class="content-box" id="content-box-a2"></div>
+        </div>
+      </div>
+
+      <div class="section" id="section-b">
+        <h2 class="section-title" id="section-title-b">一级模块 B</h2>
+        <div class="content-box" id="content-box-b"></div>
+      </div>
+
+      <div class="section last-section" id="section-c">
+        <h2 class="section-title" id="section-title-c">一级模块 C</h2>
+        <div class="subsection" id="subsection-c1">
+          <h3 class="subsection-title" id="subsection-title-c1">二级模块 C.1</h3>
+          <div class="content-box" id="content-box-c1"></div>
+        </div>
+        <div class="subsection last-subsection" id="subsection-c2">
+          <h3 class="subsection-title" id="subsection-title-c2">二级模块 C.2</h3>
+          <div class="content-box" id="content-box-c2"></div>
+        </div>
+      </div>`;
+  }
+
+  function initPageLayoutPreviewMarkers() {
+    if (!mainEl || !mainEl.classList.contains('page-layout-active')) return;
+
+    mainEl.querySelectorAll('.spacing-marker').forEach(marker => marker.remove());
+
+    const pageRect = mainEl.getBoundingClientRect();
+    if (!pageRect.width || !pageRect.height) return;
+
+    const pairs = [
+      { prev: null, next: 'page-title', spacing: 20 },
+      { prev: 'page-title', next: 'page-description', spacing: 12 },
+      { prev: 'page-description', next: 'content-box-1', spacing: 20 },
+      { prev: 'content-box-1', next: 'section-title-a', spacing: 20 },
+      { prev: 'section-title-a', next: 'subsection-title-a1', spacing: 20 },
+      { prev: 'subsection-title-a1', next: 'subsubsection-title-a11', spacing: 16 },
+      { prev: 'subsubsection-title-a11', next: 'content-box-a11', spacing: 12 },
+      { prev: 'content-box-a11', next: 'subsubsection-title-a12', spacing: 16 },
+      { prev: 'subsubsection-title-a12', next: 'content-box-a12', spacing: 12 },
+      { prev: 'content-box-a12', next: 'subsection-title-a2', spacing: 20 },
+      { prev: 'subsection-title-a2', next: 'content-box-a2', spacing: 16 },
+      { prev: 'content-box-a2', next: 'section-title-b', spacing: 32 },
+      { prev: 'section-title-b', next: 'content-box-b', spacing: 20 },
+      { prev: 'content-box-b', next: 'section-title-c', spacing: 32 },
+      { prev: 'section-title-c', next: 'subsection-title-c1', spacing: 20 },
+      { prev: 'subsection-title-c1', next: 'content-box-c1', spacing: 16 },
+      { prev: 'content-box-c1', next: 'subsection-title-c2', spacing: 20 },
+      { prev: 'subsection-title-c2', next: 'content-box-c2', spacing: 16 },
+      { prev: 'content-box-c2', next: null, spacing: 20 }
+    ];
+
+    pairs.forEach(pair => {
+      const marker = document.createElement('div');
+      marker.className = 'spacing-marker';
+      marker.textContent = String(pair.spacing);
+
+      let top;
+      if (pair.prev === null) {
+        top = 0;
+      } else {
+        const prevEl = document.getElementById(pair.prev);
+        if (!prevEl) return;
+        top = prevEl.getBoundingClientRect().bottom - pageRect.top;
+      }
+
+      marker.style.top = `${top}px`;
+      marker.style.height = `${pair.spacing}px`;
+      mainEl.appendChild(marker);
+    });
+
+    const leftMarker = document.createElement('div');
+    leftMarker.className = 'spacing-marker spacing-marker-horizontal';
+    leftMarker.textContent = '24';
+    leftMarker.style.position = 'absolute';
+    leftMarker.style.left = '0';
+    leftMarker.style.top = '0';
+    leftMarker.style.bottom = '0';
+    leftMarker.style.width = '24px';
+    leftMarker.style.display = 'flex';
+    leftMarker.style.alignItems = 'center';
+    leftMarker.style.justifyContent = 'center';
+    mainEl.appendChild(leftMarker);
+
+    const rightMarker = document.createElement('div');
+    rightMarker.className = 'spacing-marker spacing-marker-horizontal';
+    rightMarker.textContent = '24';
+    rightMarker.style.position = 'absolute';
+    rightMarker.style.right = '0';
+    rightMarker.style.top = '0';
+    rightMarker.style.bottom = '0';
+    rightMarker.style.width = '24px';
+    rightMarker.style.display = 'flex';
+    rightMarker.style.alignItems = 'center';
+    rightMarker.style.justifyContent = 'center';
+    mainEl.appendChild(rightMarker);
+  }
+
+  window.addEventListener('resize', () => {
+    if (mainEl && mainEl.classList.contains('page-layout-active')) {
+      initPageLayoutPreviewMarkers();
+    }
+  });
+
   // ---- Markdown Renderer ----
   async function renderMarkdown(path) {
     mainEl.innerHTML = `<div class="markdown-loading">正在加载文档：${path} ...</div>`;
@@ -1432,6 +1692,14 @@
 
     // ---- Spec view (颜色 / 文字 / 间距) ----
     if (comp.kind === 'spec') {
+      if (compId === 'page-layout') {
+        mainEl.classList.add('page-layout-active');
+        mainEl.innerHTML = comp.render();
+        requestAnimationFrame(initPageLayoutPreviewMarkers);
+        return;
+      }
+      mainEl.classList.remove('page-layout-active');
+      mainEl.querySelectorAll('.spacing-marker').forEach(marker => marker.remove());
       mainEl.innerHTML = `
         <div class="doc-page-header">
           <h1 class="doc-page-title">${comp.title}</h1>
@@ -1441,6 +1709,8 @@
       `;
       return;
     }
+    mainEl.classList.remove('page-layout-active');
+    mainEl.querySelectorAll('.spacing-marker').forEach(marker => marker.remove());
 
     let html = `
       <div class="doc-page-header">
