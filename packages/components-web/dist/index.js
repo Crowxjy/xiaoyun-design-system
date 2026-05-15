@@ -1169,9 +1169,12 @@ var import_react16 = __toESM(require("react"));
 var import_clsx16 = require("clsx");
 var import_jsx_runtime16 = require("react/jsx-runtime");
 var PageHeader = import_react16.default.forwardRef(
-  ({ className, title, tabs, ...props }, ref) => {
+  ({ className, title, description, tabs, ...props }, ref) => {
     return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { ref, className: (0, import_clsx16.clsx)("xds-page-header", className), ...props, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h1", { className: "xds-page-header__title", children: title }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "xds-page-header__heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h1", { className: "xds-page-header__title", children: title }),
+        description ? /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { className: "xds-page-header__description", children: description }) : null
+      ] }),
       tabs && /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "xds-page-header__tabs", children: tabs })
     ] });
   }

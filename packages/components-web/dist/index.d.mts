@@ -340,6 +340,7 @@ declare const Menu: React.ForwardRefExoticComponent<MenuProps & React.RefAttribu
 
 interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string;
+    description?: React.ReactNode;
     tabs?: React.ReactNode;
 }
 declare const PageHeader: React.ForwardRefExoticComponent<PageHeaderProps & React.RefAttributes<HTMLDivElement>>;

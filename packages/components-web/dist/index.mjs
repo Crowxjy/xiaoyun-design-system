@@ -1098,9 +1098,12 @@ import React16 from "react";
 import { clsx as clsx16 } from "clsx";
 import { jsx as jsx16, jsxs as jsxs13 } from "react/jsx-runtime";
 var PageHeader = React16.forwardRef(
-  ({ className, title, tabs, ...props }, ref) => {
+  ({ className, title, description, tabs, ...props }, ref) => {
     return /* @__PURE__ */ jsxs13("div", { ref, className: clsx16("xds-page-header", className), ...props, children: [
-      /* @__PURE__ */ jsx16("h1", { className: "xds-page-header__title", children: title }),
+      /* @__PURE__ */ jsxs13("div", { className: "xds-page-header__heading", children: [
+        /* @__PURE__ */ jsx16("h1", { className: "xds-page-header__title", children: title }),
+        description ? /* @__PURE__ */ jsx16("p", { className: "xds-page-header__description", children: description }) : null
+      ] }),
       tabs && /* @__PURE__ */ jsx16("div", { className: "xds-page-header__tabs", children: tabs })
     ] });
   }

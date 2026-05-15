@@ -49,30 +49,6 @@
       margin-top: var(--spacing-between-sections);
     }
 
-    .section-title {
-      display: flex;
-      align-items: center;
-      margin: 0;
-      font-size: var(--font-size-xl);
-      font-weight: 600;
-      line-height: 1.4;
-      color: var(--text-gray-5);
-    }
-
-    .section-title::before {
-      content: "";
-      width: 3px;
-      height: 16px;
-      margin-right: var(--spacing-sm);
-      border-radius: var(--radius-full);
-      background: var(--text-gray-3);
-      flex: 0 0 auto;
-    }
-
-    .section-content {
-      margin-top: var(--spacing-section-content);
-    }
-
     .portal-grid {
       display: grid;
       grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
@@ -97,9 +73,6 @@
       justify-content: space-between;
       gap: var(--spacing-sm);
       margin: 0 0 var(--spacing-lg);
-      font-size: var(--font-size-lg);
-      font-weight: 600;
-      color: var(--text-gray-5);
     }
 
     .portal-panel-meta {
@@ -751,7 +724,7 @@ ${renderedAttachments}
                         <div className="portal-panel-inner">
                           {viewMode === 'draft' ? (
                             <>
-                              <div className="portal-panel-title">
+                              <div className="portal-panel-title xds-heading-level-2">
                                 <span>结构化填写</span>
                                 <span className="portal-panel-meta">保存后会直接生成 page-request-*.md</span>
                               </div>
@@ -943,7 +916,7 @@ ${renderedAttachments}
                             </>
                           ) : (
                             <>
-                              <div className="portal-panel-title">
+                              <div className="portal-panel-title xds-heading-level-2">
                                 <span>历史模板</span>
                                 <span className="portal-panel-meta">仅读取当前目录下的 page-request-*.md</span>
                               </div>
@@ -994,7 +967,7 @@ ${renderedAttachments}
 
                       <div className="portal-panel portal-preview-panel">
                         <div className="portal-panel-inner">
-                          <div className="portal-panel-title">
+                          <div className="portal-panel-title xds-heading-level-2">
                             <span>{viewMode === 'history' ? '文件预览' : '模板预览'}</span>
                             <span className="portal-panel-meta">
                               {viewMode === 'history' && selectedHistory ? selectedHistory.name : buildFileName(form)}

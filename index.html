@@ -140,10 +140,6 @@
       margin-bottom: var(--spacing-page-title-to-first-section);
     }
     .doc-page-title {
-      font-size: var(--font-size-2xl);
-      line-height: var(--line-height-2xl);
-      font-weight: 600;
-      color: var(--text-gray-5);
       margin: 0 0 var(--spacing-sm) 0;
     }
     .doc-page-desc {
@@ -169,24 +165,7 @@
       margin-bottom: var(--spacing-section-content);
     }
     .variant-title {
-      font-size: var(--font-size-xl);
-      line-height: var(--line-height-xl);
-      font-weight: 600;
-      color: var(--text-gray-5);
       margin: 0;
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-    .variant-title::before {
-      content: '';
-      display: inline-block;
-      width: 3px;
-      height: 16px;
-      background: var(--text-gray-3);
-      border-radius: 4px;
-      margin-right: 8px;
-      flex-shrink: 0;
     }
     .variant-desc {
       font-size: var(--font-size-md);
@@ -296,10 +275,6 @@
     .spec-section { margin-bottom: var(--spacing-between-sections); }
     .spec-section:last-child { margin-bottom: 0; }
     .spec-section h3 {
-      font-size: var(--font-size-lg);
-      line-height: var(--line-height-lg);
-      font-weight: 600;
-      color: var(--text-gray-5);
       margin: 0 0 var(--spacing-md);
     }
     .color-grid {
@@ -449,10 +424,6 @@
       margin-bottom: var(--spacing-page-title-to-first-section);
     }
     .page-title {
-      font-size: var(--font-size-2xl);
-      line-height: var(--line-height-2xl);
-      font-weight: 600;
-      color: var(--text-gray-5);
       margin: 0 0 12px 0;
     }
     .page-description {
@@ -486,38 +457,13 @@
       margin-bottom: 0 !important;
     }
     .section-title {
-      display: flex;
-      align-items: center;
-      position: relative;
       margin: 0 0 var(--spacing-page-title-to-first-section) 0;
-      font-size: var(--font-size-xl);
-      line-height: var(--line-height-xl);
-      font-weight: 600;
-      color: var(--text-gray-5);
-    }
-    .section-title::before {
-      content: '';
-      display: inline-block;
-      width: 3px;
-      height: 16px;
-      margin-right: 8px;
-      border-radius: 4px;
-      background: var(--text-gray-3);
-      flex-shrink: 0;
     }
     .subsection-title {
       margin: 0 0 12px 0;
-      font-size: var(--font-size-lg);
-      line-height: var(--line-height-lg);
-      font-weight: 600;
-      color: var(--text-gray-5);
     }
     .subsubsection-title {
       margin: 0 0 12px 0;
-      font-size: var(--font-size-md);
-      line-height: var(--line-height-md);
-      font-weight: 500;
-      color: var(--text-gray-5);
     }
     .content-box {
       height: 200px;
@@ -605,10 +551,10 @@
       color: var(--text-gray-5);
       max-width: var(--layout-content-max-width);
     }
-    .markdown-body h1 { font-size: var(--font-size-2xl); line-height: var(--line-height-2xl); font-weight: 600; color: var(--text-gray-5); margin: 0 0 var(--spacing-md); }
-    .markdown-body h2 { font-size: var(--font-size-xl); line-height: var(--line-height-xl); font-weight: 600; color: var(--text-gray-5); margin: var(--spacing-between-sections) 0 var(--spacing-md); }
-    .markdown-body h3 { font-size: var(--font-size-lg); line-height: var(--line-height-lg); font-weight: 600; color: var(--text-gray-5); margin: var(--spacing-lg) 0 var(--spacing-sm); }
-    .markdown-body h4 { font-size: var(--font-size-md); line-height: var(--line-height-md); font-weight: 500; color: var(--text-gray-5); margin: var(--spacing-md) 0 var(--spacing-sm); }
+    .markdown-body h1 { margin: 0 0 var(--spacing-md); }
+    .markdown-body h2 { margin: var(--spacing-between-sections) 0 var(--spacing-md); }
+    .markdown-body h3 { margin: var(--spacing-lg) 0 var(--spacing-sm); }
+    .markdown-body h4 { margin: var(--spacing-md) 0 var(--spacing-sm); }
     .markdown-body p { margin: 0 0 var(--spacing-md); color: var(--text-gray-4); }
     .markdown-body ul, .markdown-body ol { margin: 0 0 var(--spacing-md); padding-left: var(--spacing-lg); color: var(--text-gray-4); }
     .markdown-body li { margin: 4px 0; }
@@ -1371,7 +1317,7 @@
   function swatchGroup(title, items) {
     return `
       <div class="spec-section">
-        <h3>${title}</h3>
+        <h3 class="subsection-title">${title}</h3>
         <div class="color-grid">
           ${items.map(([n, v, h]) => swatch(n, v, h || '')).join('')}
         </div>
@@ -1459,7 +1405,7 @@
     ];
     return `
       <div class="spec-section">
-        <h3>文字层级 · 共 12 个 token</h3>
+        <h3 class="subsection-title">文字层级 · 共 12 个 token</h3>
         <div class="typography-list">
           ${tokens.map(t => `
             <div class="typography-row">
@@ -1496,7 +1442,7 @@
     ];
     return `
       <div class="spec-section">
-        <h3>基础间距 · 4px 基线</h3>
+        <h3 class="subsection-title">基础间距 · 4px 基线</h3>
         <div class="spacing-grid">
           ${spacings.map(([n, v]) => `
             <div class="spacing-row">
@@ -1507,7 +1453,7 @@
         </div>
       </div>
       <div class="spec-section">
-        <h3>语义间距 Semantic</h3>
+        <h3 class="subsection-title">语义间距 Semantic</h3>
         <div class="spacing-grid">
           ${semantic.map(([n, v]) => `
             <div class="spacing-row">
@@ -1518,7 +1464,7 @@
         </div>
       </div>
       <div class="spec-section">
-        <h3>圆角 Radius</h3>
+        <h3 class="subsection-title">圆角 Radius</h3>
         <div class="radius-grid">
           ${radii.map(([n, v]) => `
             <div class="radius-card">
@@ -1529,7 +1475,7 @@
         </div>
       </div>
       <div class="spec-section">
-        <h3>阴影 Shadow</h3>
+        <h3 class="subsection-title">阴影 Shadow</h3>
         <div class="shadow-grid">
           ${shadows.map(([n, label]) => `
             <div class="shadow-card" style="box-shadow: var(--${n});">
@@ -1544,7 +1490,7 @@
     return `
       <div class="page-header">
         <div class="page-title-wrapper">
-          <h1 class="page-title" id="page-title">页面规范示意</h1>
+          <h1 class="doc-page-title page-title" id="page-title">页面规范示意</h1>
           <p class="page-description" id="page-description">这里展示页面标题、描述、Section / Subsection / 内容盒子之间的标准节奏，方便对照规范判断是否出现了额外容器、错误边距或层级混乱。</p>
         </div>
         <div class="content-box" id="content-box-1"></div>
@@ -1670,6 +1616,14 @@
   });
 
   // ---- Markdown Renderer ----
+  function applyMarkdownHeadingClasses(container) {
+    if (!container) return;
+    container.querySelectorAll('h1').forEach(heading => heading.classList.add('doc-page-title'));
+    container.querySelectorAll('h2').forEach(heading => heading.classList.add('section-title'));
+    container.querySelectorAll('h3').forEach(heading => heading.classList.add('subsection-title'));
+    container.querySelectorAll('h4').forEach(heading => heading.classList.add('subsubsection-title'));
+  }
+
   async function renderMarkdown(path) {
     mainEl.innerHTML = `<div class="markdown-loading">正在加载文档：${path} ...</div>`;
     try {
@@ -1680,6 +1634,7 @@
       mainEl.innerHTML = `
         <article class="markdown-body">${html}</article>
       `;
+      applyMarkdownHeadingClasses(mainEl.querySelector('.markdown-body'));
     } catch (err) {
       mainEl.innerHTML = `<div class="markdown-error">加载失败：${err.message}</div>`;
     }
@@ -1727,7 +1682,7 @@
       html += `
         <div class="variant-section">
           <div class="variant-header">
-            <h2 class="variant-title">${variant.title}</h2>
+            <h2 class="variant-title section-title">${variant.title}</h2>
             ${variant.desc ? `<span class="variant-desc">${variant.desc}</span>` : ''}
           </div>
       `;

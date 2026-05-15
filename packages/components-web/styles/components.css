@@ -1048,7 +1048,67 @@ button.xds-filter {
   font-weight: 500;
 }
 
-/* 11. 页面标题栏 (PageHeader) */
+/* 11. 标题语义与页面标题栏 (Heading + PageHeader) */
+.xds-heading-page,
+.doc-page-title,
+.xds-page-header__title {
+  font-size: var(--font-size-2xl, 22px);
+  line-height: var(--line-height-2xl, 32px);
+  font-weight: 600;
+  color: var(--text-gray-5, var(--color-text-primary));
+  margin: 0;
+}
+
+.xds-heading-level-1,
+.section-title {
+  font-size: var(--font-size-xl, 20px);
+  line-height: var(--line-height-xl, 28px);
+  font-weight: 600;
+  color: var(--text-gray-5, var(--color-text-primary));
+  margin: 0;
+}
+
+.xds-heading-level-2,
+.subsection-title {
+  font-size: var(--font-size-lg, 16px);
+  line-height: var(--line-height-lg, 24px);
+  font-weight: 600;
+  color: var(--text-gray-5, var(--color-text-primary));
+  margin: 0;
+}
+
+.xds-heading-level-3,
+.subsubsection-title {
+  font-size: var(--font-size-md, 14px);
+  line-height: var(--line-height-md, 22px);
+  font-weight: 500;
+  color: var(--text-gray-5, var(--color-text-primary));
+  margin: 0;
+}
+
+.xds-heading-with-prefix,
+.section-title {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.xds-heading-with-prefix::before,
+.section-title::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 16px;
+  margin-right: 8px;
+  border-radius: 4px;
+  background: var(--text-gray-3, var(--color-text-secondary));
+  flex-shrink: 0;
+}
+
+.section-content {
+  margin-top: var(--spacing-section-content);
+}
+
 .xds-page-header {
   display: flex;
   flex-direction: column;
@@ -1058,10 +1118,19 @@ button.xds-filter {
   width: 100%;
 }
 
-.xds-page-header__title {
-  font: var(--headline-medium);
-  color: var(--color-text-primary);
+.xds-page-header__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3x, 12px);
+}
+
+.xds-page-header__description {
+  font-size: var(--font-size-md, 14px);
+  line-height: var(--line-height-md, 22px);
+  font-weight: 400;
+  color: var(--text-gray-3, var(--color-text-secondary));
   margin: 0;
+  max-width: var(--layout-content-max-width);
 }
 
 .xds-page-header__tabs {
