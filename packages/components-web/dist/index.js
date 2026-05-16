@@ -1287,6 +1287,12 @@ var TableCellAction = import_react18.default.forwardRef(
   ({ className, danger, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("a", { ref, className: (0, import_clsx18.clsx)("xds-table-cell__action", danger && "is-danger", className), ...props })
 );
 TableCellAction.displayName = "TableCellAction";
+function getStickyCellStyle(leafIndex, frozenColumnCount) {
+  if (leafIndex >= frozenColumnCount) return void 0;
+  return {
+    left: `${leafIndex * 200}px`
+  };
+}
 function getLeafCount(col) {
   if (!col.children || col.children.length === 0) return 1;
   return col.children.reduce((sum, child) => sum + getLeafCount(child), 0);
@@ -1421,6 +1427,7 @@ var Table = import_react18.default.forwardRef(
       {
         ref,
         className: (0, import_clsx18.clsx)(
+          "xds-table-wrapper",
           "xds-table-container",
           frozenColumnCount > 0 && "has-frozen-column",
           !lastRowBorder && "no-last-row-border",
@@ -1428,47 +1435,62 @@ var Table = import_react18.default.forwardRef(
         ),
         ...props,
         children: /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("table", { className: "xds-table", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("thead", { children: useMultiLevel && headerLevels ? headerLevels.map((level, levelIndex) => {
+          /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("thead", { className: "xds-table__thead", children: useMultiLevel && headerLevels ? headerLevels.map((level, levelIndex) => {
             let currentLeafIndex = 0;
-            return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("tr", { children: level.map((cell, cellIndex) => {
+            return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("tr", { className: "xds-table__row xds-table__row--head", children: level.map((cell, cellIndex) => {
               const colSpan = cell.colSpan || 1;
               const isFrozen = currentLeafIndex < frozenColumnCount;
               const partiallyFrozen = currentLeafIndex < frozenColumnCount && currentLeafIndex + colSpan > frozenColumnCount;
               const isLastColumn = cellIndex === level.length - 1;
               const isGroupLastLeaf = cell.isLeaf && cell.originalCol.parent && cell.originalCol.parent.children && cell.originalCol.parent.children.indexOf(cell.originalCol) === cell.originalCol.parent.children.length - 1;
               const className2 = (0, import_clsx18.clsx)(
+                "xds-table__th",
                 isFrozen && !partiallyFrozen && "is-frozen",
                 cell.isLeaf && "is-leaf-header",
                 !isLastColumn && !cell.isLeaf && "has-right-border",
                 cell.isLeaf && !isLastColumn && (isGroupLastLeaf || !cell.originalCol.parent) && "has-right-border"
               );
-              const th = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("th", { colSpan, rowSpan: cell.rowSpan || 1, className: className2, children: cell.title }, cellIndex);
+              const th = /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+                "th",
+                {
+                  colSpan,
+                  rowSpan: cell.rowSpan || 1,
+                  className: className2,
+                  style: isFrozen && !partiallyFrozen ? getStickyCellStyle(currentLeafIndex, frozenColumnCount) : void 0,
+                  children: cell.title
+                },
+                cellIndex
+              );
               currentLeafIndex += colSpan;
               return th;
             }) }, levelIndex);
-          }) : /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("tr", { children: leafColumns.map((col, colIndex) => /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+          }) : /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("tr", { className: "xds-table__row xds-table__row--head", children: leafColumns.map((col, colIndex) => /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
             "th",
             {
               className: (0, import_clsx18.clsx)(
+                "xds-table__th",
                 "is-leaf-header",
                 colIndex < frozenColumnCount && "is-frozen",
                 groupDividerLeafIndices.includes(colIndex) && "is-group-divider"
               ),
+              style: colIndex < frozenColumnCount ? getStickyCellStyle(colIndex, frozenColumnCount) : void 0,
               children: col.title
             },
             colIndex
           )) }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("tbody", { children: data.map((row, rowIndex) => /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("tr", { className: (0, import_clsx18.clsx)(row.isSummary && "is-summary-row"), children: leafColumns.map((col, colIndex) => {
+          /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("tbody", { className: "xds-table__tbody", children: data.map((row, rowIndex) => /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("tr", { className: (0, import_clsx18.clsx)("xds-table__row", row.isSummary && "is-summary-row"), children: leafColumns.map((col, colIndex) => {
             const value = col.key !== void 0 ? row[col.key] : void 0;
             const cellContent = col.render ? col.render(value, row, rowIndex) : col.isMetric && col.metricStyle === "enhanced" ? renderMetricCell(value) : renderStandardCell(value);
             return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
               "td",
               {
                 className: (0, import_clsx18.clsx)(
+                  "xds-table__td",
                   col.isMetric && col.metricStyle === "enhanced" && "xds-table__metric-cell",
                   colIndex < frozenColumnCount && "is-frozen",
                   groupDividerLeafIndices.includes(colIndex) && "is-group-divider"
                 ),
+                style: colIndex < frozenColumnCount ? getStickyCellStyle(colIndex, frozenColumnCount) : void 0,
                 children: cellContent
               },
               colIndex

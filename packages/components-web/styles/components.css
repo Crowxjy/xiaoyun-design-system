@@ -2073,6 +2073,17 @@ button.xds-filter {
   font-family: var(--font-family-default);
 }
 
+.xds-table-container.has-frozen-column .is-frozen {
+  position: sticky;
+  z-index: 2;
+  background: inherit;
+}
+
+.xds-table__thead .is-frozen {
+  z-index: 4;
+  background: var(--bg-3);
+}
+
 .xds-table__th,
 .xds-table__td {
   text-align: left;
@@ -2090,6 +2101,11 @@ button.xds-filter {
   font-weight: 500;
   line-height: var(--line-height-md);
   white-space: nowrap;
+}
+
+.xds-table__th.has-right-border,
+.xds-table__td.is-group-divider {
+  border-right: 1px solid var(--divider-1);
 }
 
 .xds-table__td {
@@ -2113,6 +2129,18 @@ button.xds-filter {
   background: var(--bg-3);
 }
 
+.xds-table tbody .xds-table__row:hover .is-frozen {
+  background: var(--bg-3);
+}
+
+.xds-table tbody .xds-table__row.is-summary-row {
+  background: var(--bg-2);
+}
+
+.xds-table tbody .xds-table__row.is-summary-row .xds-table__td {
+  font-weight: 500;
+}
+
 .xds-table tbody .xds-table__row td:first-child .cell-main,
 .xds-table tbody .xds-table__row td:first-child .xds-table-cell__main {
   font-weight: 500;
@@ -2120,6 +2148,83 @@ button.xds-filter {
 
 .xds-table-cell--amount {
   font-family: var(--font-family-number);
+}
+
+.xds-table__metric-cell {
+  vertical-align: top;
+}
+
+.xds-table-cell__metric-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.xds-table-cell__metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.xds-table-cell__metric-value-group {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+.xds-table-cell__metric-currency,
+.xds-table-cell__metric-unit {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  color: var(--text-gray-4);
+}
+
+.xds-table-cell__metric-number {
+  font-family: var(--font-family-number);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  font-weight: 600;
+  color: var(--text-gray-5);
+}
+
+.xds-table-cell__metric-sub,
+.xds-table-cell__sub {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  color: var(--text-gray-3);
+}
+
+.xds-table-cell__sub-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.xds-table-cell__sub-metric-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.xds-table-cell__sub-metric-label {
+  color: var(--text-gray-3);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+}
+
+.xds-table-cell__sub-metric-value {
+  color: var(--text-gray-4);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+}
+
+.xds-table-cell__sub-metric-value.is-success {
+  color: var(--success-5);
+}
+
+.xds-table-cell__sub-metric-value.is-danger {
+  color: var(--danger-5);
 }
 
 .xds-table-cell__product-title {

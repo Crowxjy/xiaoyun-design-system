@@ -98,12 +98,40 @@
     }
     .nav-section { margin-bottom: var(--spacing-sm); }
     .nav-section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
       padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-xs);
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
       font-size: var(--font-size-xs);
       line-height: var(--line-height-xs);
       color: var(--text-gray-2);
       font-weight: 500;
       letter-spacing: 0.5px;
+    }
+    .nav-section-title::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-right: 1.5px solid var(--text-gray-2);
+      border-bottom: 1.5px solid var(--text-gray-2);
+      transform: rotate(45deg) translateY(-1px);
+      transform-origin: center;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .nav-section.is-collapsed .nav-section-title::after {
+      transform: rotate(-45deg) translateY(1px);
+    }
+    .nav-section-body {
+      overflow: hidden;
+    }
+    .nav-section.is-collapsed .nav-section-body {
+      display: none;
     }
     .nav-item {
       display: flex;
@@ -631,59 +659,67 @@
   <!-- Sidebar Navigation -->
   <aside class="doc-sidebar">
     <div class="nav-section">
-      <div class="nav-section-title">规范</div>
-      <a href="#colors" class="nav-item active" data-target="colors">颜色规范</a>
-      <a href="#typography" class="nav-item" data-target="typography">文字规范</a>
-      <a href="#spacing" class="nav-item" data-target="spacing">间距与圆角</a>
-      <a href="#page-layout" class="nav-item" data-target="page-layout">页面布局</a>
+      <button type="button" class="nav-section-title" aria-expanded="true">规范</button>
+      <div class="nav-section-body">
+        <a href="#colors" class="nav-item active" data-target="colors">颜色规范</a>
+        <a href="#typography" class="nav-item" data-target="typography">文字规范</a>
+        <a href="#spacing" class="nav-item" data-target="spacing">间距与圆角</a>
+        <a href="#page-layout" class="nav-item" data-target="page-layout">页面布局</a>
+      </div>
+    </div>
+
+    <div class="nav-section is-collapsed">
+      <button type="button" class="nav-section-title" aria-expanded="false">给研发&AI看的文档</button>
+      <div class="nav-section-body">
+        <a href="#doc-color" class="nav-item" data-doc="skills/references/color.md">颜色规范文档</a>
+        <a href="#doc-tokens" class="nav-item" data-doc="skills/references/tokens.md">Tokens 文档</a>
+        <a href="#doc-layout" class="nav-item" data-doc="skills/references/layout.md">布局规范文档</a>
+        <a href="#doc-components" class="nav-item" data-doc="skills/references/components.md">组件总览</a>
+        <a href="#doc-button" class="nav-item" data-doc="skills/references/button.md">Button 规范</a>
+        <a href="#doc-checkbox" class="nav-item" data-doc="skills/references/checkbox.md">Checkbox 规范</a>
+        <a href="#doc-filter" class="nav-item" data-doc="skills/references/filter.md">Filter 规范</a>
+        <a href="#doc-icon" class="nav-item" data-doc="skills/references/icon.md">Icon 规范</a>
+        <a href="#doc-pagination" class="nav-item" data-doc="skills/references/pagination.md">Pagination 规范</a>
+        <a href="#doc-table" class="nav-item" data-doc="skills/references/table.md">Table 规范</a>
+        <a href="#doc-tabs" class="nav-item" data-doc="skills/references/tabs.md">Tabs 规范</a>
+        <a href="#doc-tag" class="nav-item" data-doc="skills/references/tag.md">Tag 规范</a>
+        <a href="#doc-motion" class="nav-item" data-doc="skills/references/motion.md">Motion 规范</a>
+      </div>
     </div>
 
     <div class="nav-section">
-      <div class="nav-section-title">给研发&AI看的文档</div>
-      <a href="#doc-color" class="nav-item" data-doc="skills/references/color.md">颜色规范文档</a>
-      <a href="#doc-tokens" class="nav-item" data-doc="skills/references/tokens.md">Tokens 文档</a>
-      <a href="#doc-layout" class="nav-item" data-doc="skills/references/layout.md">布局规范文档</a>
-      <a href="#doc-components" class="nav-item" data-doc="skills/references/components.md">组件总览</a>
-      <a href="#doc-button" class="nav-item" data-doc="skills/references/button.md">Button 规范</a>
-      <a href="#doc-checkbox" class="nav-item" data-doc="skills/references/checkbox.md">Checkbox 规范</a>
-      <a href="#doc-filter" class="nav-item" data-doc="skills/references/filter.md">Filter 规范</a>
-      <a href="#doc-icon" class="nav-item" data-doc="skills/references/icon.md">Icon 规范</a>
-      <a href="#doc-pagination" class="nav-item" data-doc="skills/references/pagination.md">Pagination 规范</a>
-      <a href="#doc-table" class="nav-item" data-doc="skills/references/table.md">Table 规范</a>
-      <a href="#doc-tabs" class="nav-item" data-doc="skills/references/tabs.md">Tabs 规范</a>
-      <a href="#doc-tag" class="nav-item" data-doc="skills/references/tag.md">Tag 规范</a>
-      <a href="#doc-motion" class="nav-item" data-doc="skills/references/motion.md">Motion 规范</a>
+      <button type="button" class="nav-section-title" aria-expanded="true">组件</button>
+      <div class="nav-section-body">
+        <a href="#button" class="nav-item" data-target="button">按钮 Button</a>
+        <a href="#capsule" class="nav-item" data-target="capsule">胶囊切换 Capsule</a>
+        <a href="#checkbox" class="nav-item" data-target="checkbox">多选框 Checkbox</a>
+        <a href="#input" class="nav-item" data-target="input">输入框 Input</a>
+        <a href="#filter" class="nav-item" data-target="filter">筛选控件 Filter</a>
+        <a href="#filtergroup" class="nav-item" data-target="filtergroup">筛选容器 FilterGroup</a>
+        <a href="#tabs" class="nav-item" data-target="tabs">标签页 Tabs</a>
+        <a href="#pageheader" class="nav-item" data-target="pageheader">页头 PageHeader</a>
+        <a href="#table" class="nav-item" data-target="table">表格 Table</a>
+        <a href="#pagination" class="nav-item" data-target="pagination">分页 Pagination</a>
+        <a href="#tag" class="nav-item" data-target="tag">标签 Tag</a>
+        <a href="#tags" class="nav-item" data-target="tags">标签组 Tags</a>
+        <a href="#tabnav" class="nav-item" data-target="tabnav">主导航标签 TabNav</a>
+        <a href="#select" class="nav-item" data-target="select">选择器 Select</a>
+        <a href="#dropdown" class="nav-item" data-target="dropdown">下拉浮层 Dropdown</a>
+        <a href="#timefilter" class="nav-item" data-target="timefilter">时间筛选 TimeFilter</a>
+        <a href="#metriccard" class="nav-item" data-target="metriccard">指标卡 MetricCard</a>
+        <a href="#loading" class="nav-item" data-target="loading">加载 Loading</a>
+        <a href="#diagnosis" class="nav-item" data-target="diagnosis">诊断卡 Diagnosis</a>
+        <a href="#charts" class="nav-item" data-target="charts">图表 Charts</a>
+      </div>
     </div>
 
     <div class="nav-section">
-      <div class="nav-section-title">组件</div>
-      <a href="#button" class="nav-item" data-target="button">按钮 Button</a>
-      <a href="#capsule" class="nav-item" data-target="capsule">胶囊切换 Capsule</a>
-      <a href="#checkbox" class="nav-item" data-target="checkbox">多选框 Checkbox</a>
-      <a href="#input" class="nav-item" data-target="input">输入框 Input</a>
-      <a href="#filter" class="nav-item" data-target="filter">筛选控件 Filter</a>
-      <a href="#filtergroup" class="nav-item" data-target="filtergroup">筛选容器 FilterGroup</a>
-      <a href="#tabs" class="nav-item" data-target="tabs">标签页 Tabs</a>
-      <a href="#pageheader" class="nav-item" data-target="pageheader">页头 PageHeader</a>
-      <a href="#table" class="nav-item" data-target="table">表格 Table</a>
-      <a href="#pagination" class="nav-item" data-target="pagination">分页 Pagination</a>
-      <a href="#tag" class="nav-item" data-target="tag">标签 Tag</a>
-      <a href="#tags" class="nav-item" data-target="tags">标签组 Tags</a>
-      <a href="#tabnav" class="nav-item" data-target="tabnav">主导航标签 TabNav</a>
-      <a href="#select" class="nav-item" data-target="select">选择器 Select</a>
-      <a href="#dropdown" class="nav-item" data-target="dropdown">下拉浮层 Dropdown</a>
-      <a href="#timefilter" class="nav-item" data-target="timefilter">时间筛选 TimeFilter</a>
-      <a href="#metriccard" class="nav-item" data-target="metriccard">指标卡 MetricCard</a>
-      <a href="#loading" class="nav-item" data-target="loading">加载 Loading</a>
-      <a href="#diagnosis" class="nav-item" data-target="diagnosis">诊断卡 Diagnosis</a>
-      <a href="#charts" class="nav-item" data-target="charts">图表 Charts</a>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-section-title">需求录入</div>
-      <a href="#doc-page-request-template" class="nav-item" data-doc="templates/page-request-template.md">页面需求模板</a>
-      <a href="#doc-page-generation-pipeline" class="nav-item" data-doc="skills/references/page-generation-pipeline.md">页面生成流水线</a>
-      <a href="./request-portal/index.html" class="nav-item">需求录入门户</a>
+      <button type="button" class="nav-section-title" aria-expanded="true">需求录入</button>
+      <div class="nav-section-body">
+        <a href="#doc-page-request-template" class="nav-item" data-doc="templates/page-request-template.md">页面需求模板</a>
+        <a href="#doc-page-generation-pipeline" class="nav-item" data-doc="skills/references/page-generation-pipeline.md">页面生成流水线</a>
+        <a href="./request-portal/index.html" class="nav-item">需求录入门户</a>
+      </div>
     </div>
   </aside>
 
@@ -1734,13 +1770,34 @@
 
   // 3. Initialization and Event Listeners
   const navItems = document.querySelectorAll('.nav-item');
+  const navSectionTitles = document.querySelectorAll('.nav-section-title');
+
+  function setNavSectionCollapsed(section, collapsed) {
+    if (!section) return;
+    section.classList.toggle('is-collapsed', collapsed);
+    const titleEl = section.querySelector('.nav-section-title');
+    if (titleEl) {
+      titleEl.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    }
+  }
+
+  function expandNavSectionForItem(item) {
+    if (!item) return;
+    const section = item.closest('.nav-section');
+    setNavSectionCollapsed(section, false);
+  }
   
   function handleNavClick(e) {
+    const docPath = this.getAttribute('data-doc');
+    const target = this.getAttribute('data-target');
+    if (!docPath && !target) {
+      return;
+    }
     e.preventDefault();
+    expandNavSectionForItem(this);
     navItems.forEach(n => n.classList.remove('active'));
     this.classList.add('active');
 
-    const docPath = this.getAttribute('data-doc');
     if (docPath) {
       const hash = (this.getAttribute('href') || '').replace('#', '');
       renderMarkdown(docPath);
@@ -1748,12 +1805,18 @@
       return;
     }
 
-    const target = this.getAttribute('data-target');
     renderView(target);
     window.location.hash = target;
   }
 
   navItems.forEach(item => item.addEventListener('click', handleNavClick));
+  navSectionTitles.forEach(title => {
+    title.addEventListener('click', () => {
+      const section = title.closest('.nav-section');
+      const shouldCollapse = !section.classList.contains('is-collapsed');
+      setNavSectionCollapsed(section, shouldCollapse);
+    });
+  });
 
   // Handle URL hash on load
   const hash = window.location.hash.replace('#', '') || 'colors';
@@ -2005,15 +2068,15 @@
           {
             title: '交易表现',
             children: [
-              { key: 'gmv', title: 'GMV (¥万)', isMetric: true, metricStyle: 'currency' },
-              { key: 'orders', title: '订单数', isMetric: true, metricStyle: 'number' },
+              { key: 'gmv', title: 'GMV (¥万)', isMetric: true, metricStyle: 'enhanced' },
+              { key: 'orders', title: '订单数', isMetric: true, metricStyle: 'enhanced' },
             ]
           },
           {
             title: '内容表现',
             children: [
-              { key: 'live', title: '直播 GMV', isMetric: true, metricStyle: 'currency' },
-              { key: 'video', title: '视频 GMV', isMetric: true, metricStyle: 'currency' },
+              { key: 'live', title: '直播 GMV', isMetric: true, metricStyle: 'enhanced' },
+              { key: 'video', title: '视频 GMV', isMetric: true, metricStyle: 'enhanced' },
             ]
           },
           { key: 'op', title: '操作' }

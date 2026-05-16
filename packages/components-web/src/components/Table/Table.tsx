@@ -135,6 +135,13 @@ interface HeaderCellInfo {
   leafStartIndex: number;
 }
 
+function getStickyCellStyle(leafIndex: number, frozenColumnCount: number) {
+  if (leafIndex >= frozenColumnCount) return undefined;
+  return {
+    left: `${leafIndex * 200}px`,
+  } as React.CSSProperties;
+}
+
 function getLeafCount(col: InternalColumn): number {
   if (!col.children || col.children.length === 0) return 1;
   return col.children.reduce((sum, child) => sum + getLeafCount(child), 0);
@@ -305,6 +312,7 @@ export const Table = React.forwardRef<HTMLDivElement, TableProps>(
       <div
         ref={ref}
         className={clsx(
+          'xds-table-wrapper',
           'xds-table-container',
           frozenColumnCount > 0 && 'has-frozen-column',
           !lastRowBorder && 'no-last-row-border',
@@ -313,12 +321,12 @@ export const Table = React.forwardRef<HTMLDivElement, TableProps>(
         {...props}
       >
         <table className="xds-table">
-          <thead>
+          <thead className="xds-table__thead">
             {useMultiLevel && headerLevels
               ? headerLevels.map((level, levelIndex) => {
                   let currentLeafIndex = 0;
                   return (
-                    <tr key={levelIndex}>
+                    <tr key={levelIndex} className="xds-table__row xds-table__row--head">
                       {level.map((cell, cellIndex) => {
                         const colSpan = cell.colSpan || 1;
                         const isFrozen = currentLeafIndex < frozenColumnCount;
@@ -332,13 +340,20 @@ export const Table = React.forwardRef<HTMLDivElement, TableProps>(
                           cell.originalCol.parent.children.indexOf(cell.originalCol) ===
                             cell.originalCol.parent.children.length - 1;
                         const className = clsx(
+                          'xds-table__th',
                           isFrozen && !partiallyFrozen && 'is-frozen',
                           cell.isLeaf && 'is-leaf-header',
                           !isLastColumn && !cell.isLeaf && 'has-right-border',
                           cell.isLeaf && !isLastColumn && (isGroupLastLeaf || !cell.originalCol.parent) && 'has-right-border'
                         );
                         const th = (
-                          <th key={cellIndex} colSpan={colSpan} rowSpan={cell.rowSpan || 1} className={className}>
+                          <th
+                            key={cellIndex}
+                            colSpan={colSpan}
+                            rowSpan={cell.rowSpan || 1}
+                            className={className}
+                            style={isFrozen && !partiallyFrozen ? getStickyCellStyle(currentLeafIndex, frozenColumnCount) : undefined}
+                          >
                             {cell.title}
                           </th>
                         );
@@ -349,15 +364,17 @@ export const Table = React.forwardRef<HTMLDivElement, TableProps>(
                   );
                 })
               : (
-                <tr>
+                <tr className="xds-table__row xds-table__row--head">
                   {leafColumns.map((col, colIndex) => (
                     <th
                       key={colIndex}
                       className={clsx(
+                        'xds-table__th',
                         'is-leaf-header',
                         colIndex < frozenColumnCount && 'is-frozen',
                         groupDividerLeafIndices.includes(colIndex) && 'is-group-divider'
                       )}
+                      style={colIndex < frozenColumnCount ? getStickyCellStyle(colIndex, frozenColumnCount) : undefined}
                     >
                       {col.title}
                     </th>
@@ -365,9 +382,9 @@ export const Table = React.forwardRef<HTMLDivElement, TableProps>(
                 </tr>
               )}
           </thead>
-          <tbody>
+          <tbody className="xds-table__tbody">
             {data.map((row, rowIndex) => (
-              <tr key={rowIndex} className={clsx(row.isSummary && 'is-summary-row')}>
+              <tr key={rowIndex} className={clsx('xds-table__row', row.isSummary && 'is-summary-row')}>
                 {leafColumns.map((col, colIndex) => {
                   const value = col.key !== undefined ? row[col.key] : undefined;
                   const cellContent = col.render
@@ -379,10 +396,12 @@ export const Table = React.forwardRef<HTMLDivElement, TableProps>(
                     <td
                       key={colIndex}
                       className={clsx(
+                        'xds-table__td',
                         col.isMetric && col.metricStyle === 'enhanced' && 'xds-table__metric-cell',
                         colIndex < frozenColumnCount && 'is-frozen',
                         groupDividerLeafIndices.includes(colIndex) && 'is-group-divider'
                       )}
+                      style={colIndex < frozenColumnCount ? getStickyCellStyle(colIndex, frozenColumnCount) : undefined}
                     >
                       {cellContent}
                     </td>
