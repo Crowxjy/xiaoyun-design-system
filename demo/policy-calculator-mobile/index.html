@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>政策计算器 · 销运设计系统 Demo</title>
+  <link rel="stylesheet" href="../../packages/tokens/xiaoyun-ds-tokens.css">
+  <link rel="stylesheet" href="../../packages/components-web/styles/base.css">
+  <link rel="stylesheet" href="../../packages/components-web/styles/components.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+        "clsx": "https://esm.sh/clsx@2.1.1",
+        "@xiaoyun-ds/components-web": "../../packages/components-web/dist/index.mjs"
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      background: var(--bg-gray-1, #f7f8fa);
+    }
+    html,
+    body {
+      height: auto;
+      overflow: auto;
+    }
+    .policy-app {
+      display: block;
+      min-height: 100vh;
+      height: auto;
+      width: 100%;
+      overflow: visible;
+    }
+    .policy-app .app-body {
+      display: block;
+      min-height: auto;
+      height: auto;
+      overflow: visible;
+      box-shadow: none;
+      border-top-left-radius: 0;
+      margin-top: 0;
+    }
+    .policy-app .app-content {
+      flex: none;
+      overflow: visible;
+      padding: 0;
+    }
+    .policy-page {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      padding: 0 var(--spacing-lg);
+      box-sizing: border-box;
+    }
+    .policy-page__inner {
+      width: 100%;
+      max-width: 1000px;
+      padding-top: var(--spacing-xl);
+      padding-bottom: var(--spacing-xl);
+    }
+    .policy-hero {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, var(--primary-6), var(--primary-5));
+      color: var(--text-white, #fff);
+      box-shadow: var(--shadow-large);
+      margin-bottom: var(--spacing-xl);
+    }
+    .policy-hero .xds-page-header__title,
+    .policy-hero .xds-page-header__description {
+      color: var(--text-white, #fff);
+    }
+    .policy-hero__meta,
+    .policy-hero__region,
+    .policy-hero__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+    .policy-hero__region {
+      justify-content: space-between;
+      gap: var(--spacing-md);
+    }
+    .policy-hero__region-select {
+      min-width: 200px;
+      flex: 1 1 240px;
+    }
+    .policy-chip-grid,
+    .policy-stage-grid,
+    .policy-actions,
+    .policy-summary-actions,
+    .policy-copy-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+    .policy-shell-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-medium);
+    }
+    .policy-toolbar {
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-lg);
+    }
+    .policy-toolbar__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+    .policy-toolbar__sub {
+      margin-top: var(--spacing-sm);
+      color: var(--text-gray-2);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      max-width: var(--layout-content-max-width);
+    }
+    .policy-main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+      gap: var(--spacing-lg);
+      align-items: start;
+    }
+    .policy-panel {
+      padding: var(--spacing-xl);
+    }
+    .policy-panel__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    .policy-panel__sub {
+      margin-top: var(--spacing-sm);
+      color: var(--text-gray-2);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+    }
+    .policy-step-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+    }
+    .policy-field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-md);
+    }
+    .policy-field-full {
+      grid-column: 1 / -1;
+    }
+    .policy-field-card,
+    .policy-note-card,
+    .policy-summary-note,
+    .policy-rule-card {
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-l);
+      border: 1px solid var(--border-1);
+      background: var(--bg-2);
+    }
+    .policy-field-label,
+    .policy-note-title,
+    .policy-rule-title,
+    .policy-summary-title {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-gray-4);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      font-weight: var(--font-weight-medium);
+    }
+    .policy-field-tip,
+    .policy-note-copy,
+    .policy-summary-copy,
+    .policy-rule-copy {
+      margin-top: var(--spacing-sm);
+      color: var(--text-gray-2);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-sm);
+    }
+    .policy-input-suffix {
+      position: relative;
+    }
+    .policy-input-suffix .policy-input-unit {
+      position: absolute;
+      top: 50%;
+      right: var(--spacing-md);
+      transform: translateY(-50%);
+      color: var(--text-gray-2);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-sm);
+      pointer-events: none;
+    }
+    .policy-input-suffix .xds-input-wrapper {
+      padding-right: 40px;
+    }
+    .policy-stage-grid .xds-capsule-wrapper,
+    .policy-chip-grid .xds-capsule-wrapper {
+      flex: 1 1 160px;
+    }
+    .policy-quick-label {
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-gray-2);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-sm);
+    }
+    .policy-result-empty {
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-l);
+      background: var(--bg-2);
+      border: 1px dashed var(--border-2);
+      color: var(--text-gray-2);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+    }
+    .policy-summary-note {
+      margin-bottom: var(--spacing-lg);
+    }
+    .policy-summary-main {
+      font-size: var(--font-size-2xl);
+      line-height: var(--line-height-2xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--primary-6);
+      margin-bottom: var(--spacing-sm);
+    }
+    .policy-summary-meta {
+      color: var(--text-gray-3);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      margin-bottom: var(--spacing-md);
+    }
+    .policy-results-grid,
+    .policy-note-grid,
+    .policy-rules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-md);
+    }
+    .policy-board {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+    .policy-board__pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    .policy-board__note,
+    .policy-board__status {
+      color: var(--text-gray-2);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-sm);
+    }
+    .policy-board__status.is-good {
+      color: var(--success-5);
+    }
+    .policy-board__status.is-warn {
+      color: var(--orange-5);
+    }
+    .policy-board__status.is-bad {
+      color: var(--danger-5);
+    }
+    .policy-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+    .policy-diagnosis-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+    .policy-rule-top {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    .policy-footer-note {
+      margin-top: var(--spacing-xl);
+      color: var(--text-gray-2);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-sm);
+      text-align: center;
+    }
+    .policy-link-inline {
+      color: var(--primary-5);
+      text-decoration: none;
+    }
+    .policy-link-inline:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 960px) {
+      .policy-main-grid,
+      .policy-results-grid,
+      .policy-note-grid,
+      .policy-rules-grid,
+      .policy-rule-top {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 768px) {
+      .policy-page__inner {
+        padding-top: var(--spacing-lg);
+      }
+      .policy-hero,
+      .policy-toolbar,
+      .policy-panel {
+        padding: var(--spacing-lg);
+      }
+      .policy-toolbar__head,
+      .policy-panel__head,
+      .policy-hero__region {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .policy-main-grid,
+      .policy-field-grid,
+      .policy-results-grid,
+      .policy-note-grid,
+      .policy-rules-grid,
+      .policy-rule-top,
+      .policy-metric-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .policy-hero__region-select,
+      .policy-stage-grid .xds-capsule-wrapper,
+      .policy-chip-grid .xds-capsule-wrapper {
+        flex-basis: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="../../packages/icons/index.js"></script>
+  <script type="text/babel" data-type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import {
+      Button,
+      Capsule,
+      Checkbox,
+      Diagnosis,
+      Input,
+      MetricCard,
+      PageHeader,
+      Select,
+      Tab,
+      Tabs,
+      Tag,
+      Tags,
+    } from '@xiaoyun-ds/components-web';
+
+    const REGIONS = [
+      { value: 'south', label: '南方区域', message: '全量已开放，统一按南方区域底板规则执行' },
+      { value: 'guangfo', label: '广佛区域', message: '全量已开放，统一按南方区域底板规则执行' },
+      { value: 'hubei_hunan', label: '鄂湘区域', message: '全量已开放，统一按南方区域底板规则执行' },
+      { value: 'sz_dgh', label: '深莞惠区域', message: '全量已开放，统一按南方区域底板规则执行' },
+      { value: 'sichuan', label: '四川区域', message: '全量已开放，统一按南方区域底板规则执行' },
+      { value: 'yugui', label: '渝贵区域', message: '全量已开放，统一按南方区域底板规则执行' },
+    ];
+
+    const STAGES = [
+      { value: 'new', label: '当月新开', banner: '首月新开先看扫码门槛，灵活佣金按新开档位推导。' },
+      { value: 'carry_unreported', label: '顺延新开', banner: '上月新开未提报，仍按新开口径测算，可叠加本地推 +10%。' },
+      { value: 'carry_reported', label: '次月续约', banner: '已提报场景默认扫码返佣已提报，灵活佣金需锁定上月档位。' },
+      { value: 'stock', label: '存量商家', banner: '重点看上月结算 GMV 和本月增量，先冲过 1 万增量门槛。' },
+    ];
+
+    const CATEGORY_OPTIONS = [
+      { value: 'food_hotpot', label: '美食/餐饮 / 正餐 / 火锅', leaf: '火锅', group: 'food', route: 'rebate', rate: 0.025 },
+      { value: 'food_local', label: '美食/餐饮 / 正餐 / 地方菜', leaf: '地方菜', group: 'food', route: 'rebate', rate: 0.025 },
+      { value: 'food_fast', label: '美食/餐饮 / 正餐 / 快餐', leaf: '快餐', group: 'food', route: 'rebate', rate: 0.022 },
+      { value: 'food_buffet', label: '美食/餐饮 / 正餐 / 自助餐', leaf: '自助餐', group: 'food', route: 'rebate', rate: 0.023 },
+      { value: 'food_western', label: '美食/餐饮 / 正餐 / 西餐', leaf: '西餐', group: 'food', route: 'rebate', rate: 0.026 },
+      { value: 'food_barbecue', label: '美食/餐饮 / 正餐 / 烧烤', leaf: '烧烤', group: 'food', route: 'rebate', rate: 0.025 },
+      { value: 'food_foreign', label: '美食/餐饮 / 轻餐饮 / 异国料理', leaf: '异国料理', group: 'food', route: 'rebate', rate: 0.026 },
+      { value: 'food_snack', label: '美食/餐饮 / 轻餐饮 / 小吃甜品', leaf: '小吃甜品', group: 'food', route: 'rebate', rate: 0.022 },
+      { value: 'food_bakery', label: '美食/餐饮 / 轻餐饮 / 面包烘焙', leaf: '面包烘焙', group: 'food', route: 'rebate', rate: 0.022 },
+      { value: 'food_coffee', label: '美食/餐饮 / 轻餐饮 / 咖啡/茶饮', leaf: '咖啡/茶饮', group: 'food', route: 'rebate', rate: 0.024 },
+      { value: 'beauty_hair', label: '丽人 / 丽人基础类 / 美发', leaf: '美发', group: 'beauty_basic', route: 'exempt', rate: 0.03 },
+      { value: 'beauty_haircare', label: '丽人 / 丽人基础类 / 养发', leaf: '养发', group: 'beauty_basic', route: 'exempt', rate: 0.03 },
+      { value: 'beauty_nail', label: '丽人 / 丽人基础类 / 美甲', leaf: '美甲', group: 'beauty_basic', route: 'exempt', rate: 0.03 },
+      { value: 'beauty_lashes', label: '丽人 / 丽人基础类 / 美睫', leaf: '美睫', group: 'beauty_basic', route: 'exempt', rate: 0.03 },
+      { value: 'beauty_skin', label: '丽人 / 丽人基础类 / 美容', leaf: '美容', group: 'beauty_basic', route: 'exempt', rate: 0.03 },
+      { value: 'beauty_body', label: '丽人 / 丽人基础类 / 美体', leaf: '美体', group: 'beauty_basic', route: 'exempt', rate: 0.03 },
+      { value: 'beauty_maternity', label: '丽人 / 丽人基础类 / 孕产服务', leaf: '孕产服务', group: 'beauty_basic', route: 'exempt', rate: 0.028 },
+      { value: 'beauty_custom', label: '丽人 / 丽人基础类 / 定制/加工', leaf: '定制/加工', group: 'beauty_basic', route: 'exempt', rate: 0.028 },
+      { value: 'medical_beauty', label: '丽人 / 医美 / 医疗美容', leaf: '医疗美容', group: 'medical_beauty', route: 'rebate', rate: 0.04 },
+      { value: 'foot_reflexology', label: '休闲娱乐 / 足疗按摩 / 足疗', leaf: '足疗', group: 'entertainment', route: 'rebate', rate: 0.025 },
+      { value: 'body_massage', label: '休闲娱乐 / 足疗按摩 / 按摩', leaf: '按摩', group: 'entertainment', route: 'rebate', rate: 0.025 },
+      { value: 'ktv', label: '休闲娱乐 / 娱乐互动 / KTV', leaf: 'KTV', group: 'entertainment', route: 'rebate', rate: 0.025 },
+      { value: 'ent_bar', label: '休闲娱乐 / 娱乐互动 / 酒吧', leaf: '酒吧', group: 'entertainment', route: 'rebate', rate: 0.026 },
+      { value: 'ent_novelty', label: '休闲娱乐 / 娱乐互动 / 新奇体验', leaf: '新奇体验', group: 'entertainment', route: 'rebate', rate: 0.025 },
+      { value: 'ent_arcade', label: '休闲娱乐 / 娱乐互动 / 游戏厅', leaf: '游戏厅', group: 'entertainment', route: 'rebate', rate: 0.025 },
+      { value: 'ent_party', label: '休闲娱乐 / 娱乐互动 / 轰趴馆', leaf: '轰趴馆', group: 'entertainment', route: 'rebate', rate: 0.025 },
+      { value: 'ent_chess', label: '休闲娱乐 / 娱乐互动 / 棋牌室/棋牌馆', leaf: '棋牌室/棋牌馆', group: 'entertainment', route: 'rebate', rate: 0.024 },
+      { value: 'ent_movie', label: '休闲娱乐 / 电影/演出 / 电影', leaf: '电影', group: 'entertainment', route: 'rebate', rate: 0.022 },
+      { value: 'ent_show', label: '休闲娱乐 / 电影/演出 / 演出', leaf: '演出', group: 'entertainment', route: 'rebate', rate: 0.022 },
+      { value: 'education', label: '教育/运动/亲子 / 教育培训 / 教育培训', leaf: '教育培训', group: 'education', route: 'exempt', rate: 0.028 },
+      { value: 'education_vocational', label: '教育/运动/亲子 / 教育培训 / 职业培训', leaf: '职业培训', group: 'education', route: 'exempt', rate: 0.028 },
+      { value: 'education_interest', label: '教育/运动/亲子 / 教育培训 / 兴趣课', leaf: '兴趣课', group: 'education', route: 'exempt', rate: 0.028 },
+      { value: 'fitness', label: '教育/运动/亲子 / 运动健身 / 运动健身', leaf: '运动健身', group: 'fitness', route: 'exempt', rate: 0.028 },
+      { value: 'fitness_swimming', label: '教育/运动/亲子 / 运动健身 / 游泳', leaf: '游泳', group: 'fitness', route: 'exempt', rate: 0.028 },
+      { value: 'fitness_yoga', label: '教育/运动/亲子 / 运动健身 / 瑜伽/舞蹈', leaf: '瑜伽/舞蹈', group: 'fitness', route: 'exempt', rate: 0.028 },
+      { value: 'parenting', label: '教育/运动/亲子 / 亲子 / 亲子', leaf: '亲子', group: 'parenting', route: 'exempt', rate: 0.028 },
+      { value: 'parenting_park', label: '教育/运动/亲子 / 亲子 / 亲子乐园', leaf: '亲子乐园', group: 'parenting', route: 'exempt', rate: 0.028 },
+      { value: 'parenting_hall', label: '教育/运动/亲子 / 亲子 / 亲子互动馆', leaf: '亲子互动馆', group: 'parenting', route: 'exempt', rate: 0.028 },
+      { value: 'local_service_general', label: '本地服务/零售/汽车 / 本地服务 / 本地服务综合', leaf: '本地服务综合', group: 'local_service', route: 'rebate', rate: 0.03 },
+      { value: 'bathing', label: '本地服务/零售/汽车 / 本地服务 / 洗浴/汗蒸', leaf: '洗浴/汗蒸', group: 'local_service', route: 'rebate', rate: 0.03 },
+      { value: 'housekeeping', label: '本地服务/零售/汽车 / 本地服务 / 家政服务', leaf: '家政服务', group: 'local_service', route: 'rebate', rate: 0.03 },
+      { value: 'pet_service', label: '本地服务/零售/汽车 / 本地服务 / 宠物服务', leaf: '宠物服务', group: 'local_service', route: 'rebate', rate: 0.03 },
+      { value: 'auto_service', label: '本地服务/零售/汽车 / 汽车服务 / 汽车维保', leaf: '汽车维保', group: 'auto_service', route: 'rebate', rate: 0.032 },
+      { value: 'auto_beauty', label: '本地服务/零售/汽车 / 汽车服务 / 汽车美容', leaf: '汽车美容', group: 'auto_service', route: 'rebate', rate: 0.032 },
+      { value: 'auto_modification', label: '本地服务/零售/汽车 / 汽车服务 / 汽车改装', leaf: '汽车改装', group: 'auto_service', route: 'rebate', rate: 0.032 },
+      { value: 'brand_retail', label: '本地服务/零售/汽车 / 零售商超 / 品牌零售', leaf: '品牌零售', group: 'brand_retail', route: 'rebate', rate: 0.03 },
+      { value: 'daily_convenience', label: '本地服务/零售/汽车 / 零售商超 / 便利店', leaf: '便利店', group: 'daily_supermarket', route: 'rebate', rate: 0.02 },
+      { value: 'daily_supermarket', label: '本地服务/零售/汽车 / 零售商超 / 超市', leaf: '超市', group: 'daily_supermarket', route: 'rebate', rate: 0.02 },
+      { value: 'commercial_complex', label: '本地服务/零售/汽车 / 零售商超 / 商业综合体', leaf: '商业综合体', group: 'commercial_complex', route: 'rebate', rate: 0.02 },
+      { value: 'vehicle_retail', label: '本地服务/零售/汽车 / 零售商超 / 交通工具专卖', leaf: '交通工具专卖', group: 'vehicle_retail', route: 'rebate', rate: 0.035 },
+      { value: 'wedding', label: '本地服务/零售/汽车 / 婚礼/摄影 / 结婚（婚宴除外）', leaf: '结婚（婚宴除外）', group: 'wedding_photo', route: 'exempt', rate: 0.03 },
+      { value: 'photography', label: '本地服务/零售/汽车 / 婚礼/摄影 / 印刷摄影', leaf: '印刷摄影', group: 'wedding_photo', route: 'exempt', rate: 0.03 },
+      { value: 'gas_station', label: '本地服务/零售/汽车 / 能源/免税 / 加油站', leaf: '加油站', group: 'unsupported', route: 'unsupported', rate: 0.02 },
+      { value: 'gas_service', label: '本地服务/零售/汽车 / 能源/免税 / 加气站', leaf: '加气站', group: 'unsupported', route: 'unsupported', rate: 0.02 },
+      { value: 'duty_free', label: '本地服务/零售/汽车 / 能源/免税 / 免税店', leaf: '免税店', group: 'unsupported', route: 'unsupported', rate: 0.02 },
+    ];
+
+    const THRESHOLD_MAP = {
+      food: { monthMin: 2000, growth: '主流类目门槛 2000 元' },
+      entertainment: { monthMin: 1000, growth: '休闲娱乐门槛 1000 元' },
+      medical_beauty: { monthMin: 2000, growth: '医美门槛 2000 元' },
+      local_service: { monthMin: 2000, growth: '本地服务门槛 2000 元' },
+      auto_service: { monthMin: 2000, growth: '汽车服务门槛 2000 元' },
+      brand_retail: { monthMin: 7000, growth: '品牌零售门槛 7000 元' },
+      daily_supermarket: { monthMin: 10000, growth: '便利店/超市门槛 10000 元' },
+      commercial_complex: { monthMin: 20000, growth: '商业综合体门槛 20000 元' },
+      vehicle_retail: { monthMin: 7000, growth: '交通工具专卖门槛 7000 元' },
+    };
+
+    const FLEX_RULES = {
+      newTiers: [
+        { min: 5000, ratio: 0.4, label: '40%' },
+        { min: 20000, ratio: 0.6, label: '60%' },
+        { min: 30000, ratio: 0.8, label: '80%' },
+      ],
+      stockTiers: [
+        { min: 10000, ratio: 0.5, label: '50%' },
+        { min: 20000, ratio: 0.6, label: '60%' },
+        { min: 30000, ratio: 0.7, label: '70%' },
+      ],
+      localBoost: {
+        carry_unreported: 0.1,
+        carry_reported: 0.1,
+        stock: 0.1,
+      },
+    };
+
+    const SUBMIT_LINKS = {
+      scanRebate: 'https://life-service.bytedance.net/site/merchant-finance/p/frame-rebate-list?active_id=2',
+      flexibleCommission: 'https://life-service.bytedance.net/site/merchant-finance/p/frame-rebate-list?active_id=2',
+      guide: 'https://bytedance.larkoffice.com/wiki/ZvDfwEszMiCMC9kzGAVcVlWrnDe?from=from_copylink',
+    };
+
+    const QUICK_CATEGORIES = ['food_hotpot', 'food_coffee', 'medical_beauty', 'beauty_hair', 'local_service_general', 'daily_supermarket'];
+    const CATEGORY_OPTIONS_FOR_SELECT = CATEGORY_OPTIONS.map((item) => ({ value: item.value, label: item.label }));
+    const REGION_OPTIONS = REGIONS.map((item) => ({ value: item.value, label: item.label }));
+
+    function formatMoney(value) {
+      const amount = Number(value || 0);
+      return `¥${amount.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function formatPercent(value) {
+      return `${Math.round(Number(value || 0) * 100)}%`;
+    }
+
+    function formatRate(value) {
+      return `${(Number(value || 0) * 100).toFixed(1)}%`;
+    }
+
+    function round2(value) {
+      return Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
+    }
+
+    function parseNumber(value) {
+      const next = Number(value);
+      return Number.isFinite(next) ? next : 0;
+    }
+
+    function getCategoryMeta(categoryId) {
+      return CATEGORY_OPTIONS.find((item) => item.value === categoryId) || CATEGORY_OPTIONS[0];
+    }
+
+    function getStageMeta(stage) {
+      return STAGES.find((item) => item.value === stage) || STAGES[0];
+    }
+
+    function getCurrentTier(tiers, value) {
+      return [...tiers].reverse().find((item) => value >= item.min) || null;
+    }
+
+    function getNextTier(tiers, value) {
+      return tiers.find((item) => value < item.min) || null;
+    }
+
+    function getPillColor(type) {
+      if (type === 'good') return 'green';
+      if (type === 'warn') return 'orange';
+      if (type === 'bad') return 'red';
+      return 'blue';
+    }
+
+    function copyText(value) {
+      if (!value) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value);
+        return;
+      }
+      const textarea = document.createElement('textarea');
+      textarea.value = value;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+
+    function buildBoard(title, amount, pillText, statusType, statusText, note, canSubmit) {
+      return { title, amount: round2(amount), pillText, statusType, statusText, note, canSubmit };
+    }
+
+    function calculateResult(form) {
+      const category = getCategoryMeta(form.category);
+      const stageMeta = getStageMeta(form.stage);
+      const totalGmv = parseNumber(form.totalGmv);
+      const scanGmv = parseNumber(form.scanGmv);
+      const prevTotalGmv = parseNumber(form.prevTotalGmv);
+      const prevScanGmv = parseNumber(form.prevScanGmv);
+      const last30ScanGmv = parseNumber(form.last30ScanGmv);
+      const channelFeeRate = 0.006;
+      const netRate = Math.max(category.rate - channelFeeRate, 0);
+      const threshold = THRESHOLD_MAP[category.group] || null;
+      const effectiveScanReported = form.stage === 'carry_reported' ? true : form.scanReported === 'yes';
+      const onlineGmv = Math.max(totalGmv - scanGmv, 0);
+      const flexBaseGmv = effectiveScanReported ? onlineGmv : totalGmv;
+      const localBoostRatio = form.localBoost && form.stage !== 'new' ? FLEX_RULES.localBoost[form.stage] || 0 : 0;
+
+      let board1 = buildBoard('板块一：扫码免佣', 0, '待判断', 'info', '等待计算', '仅命中免佣类目时展示软件服务费减免空间。', false);
+      let board2 = buildBoard('板块二：扫码返佣', 0, '待判断', 'info', '等待计算', '达到类目门槛才放行提报，返佣比例固定 100%。', false);
+      let board3 = buildBoard('板块三：灵活佣金', 0, '待判断', 'info', '等待计算', '灵活佣金会结合身份、档位和本地推加成联动。', false);
+
+      if (category.route === 'unsupported') {
+        board1 = buildBoard('板块一：扫码免佣', 0, '不适用', 'bad', '当前类目不在工具支持范围', '加油站 / 加气站 / 免税店不进入当前测算，请先确认后台实际类目。', false);
+        board2 = buildBoard('板块二：扫码返佣', 0, '不适用', 'bad', '当前类目不展示提报动作', '这类类目必须强拦截，不放行 CRM 提报入口。', false);
+        board3 = buildBoard('板块三：灵活佣金', 0, '不适用', 'bad', '当前类目不继续联动灵活佣金', '避免误导 BD 对客承诺，先回到口径确认。', false);
+      } else if (category.route === 'exempt') {
+        const exemptAmount = scanGmv * netRate;
+        board1 = buildBoard('板块一：扫码免佣', exemptAmount, '免佣命中', 'good', '当前类目走扫码免佣', `仅减免软件服务费，仍保留 0.6% 通道费。当前按费率 ${formatRate(category.rate)} 估算。`, false);
+        board2 = buildBoard('板块二：扫码返佣', 0, '免佣类目', 'good', '该类目无需提报扫码返佣', '免佣类目不走扫码返佣提报，避免重复承诺。', false);
+      } else {
+        const thresholdText = threshold ? `${threshold.monthMin} 元` : '待确认';
+        const needRecentScan = form.stage === 'new' || form.stage === 'carry_unreported';
+        const thresholdPassed = Boolean(threshold) && scanGmv >= threshold.monthMin && (!needRecentScan || last30ScanGmv >= 100);
+        const thresholdReason = needRecentScan
+          ? `需同时满足近 30 天扫码核销 >= 100 元，且本月扫码 GMV >= ${thresholdText}`
+          : `需满足本月扫码 GMV >= ${thresholdText}`;
+        board2 = thresholdPassed
+          ? buildBoard('板块二：扫码返佣', scanGmv * netRate, stageMeta.label, 'good', '已达到扫码返佣门槛，可放行提报', `当前按费率 ${formatRate(category.rate)} 测算；${thresholdReason}。`, true)
+          : buildBoard('板块二：扫码返佣', 0, stageMeta.label, 'warn', '未达到扫码返佣门槛，先不要提报', `${thresholdReason}。当前线下扫码 GMV 与门槛仍有差距。`, false);
+      }
+
+      if (category.route !== 'unsupported') {
+        if (form.stage === 'new' || form.stage === 'carry_unreported') {
+          const currentTier = getCurrentTier(FLEX_RULES.newTiers, totalGmv);
+          const nextTier = getNextTier(FLEX_RULES.newTiers, totalGmv);
+          const baseRatio = currentTier ? currentTier.ratio : 0;
+          const finalRatio = baseRatio + localBoostRatio;
+          const gap = nextTier ? Math.max(nextTier.min - totalGmv, 0) : 0;
+          board3 = baseRatio > 0
+            ? buildBoard('板块三：灵活佣金', flexBaseGmv * netRate * finalRatio, form.stage === 'new' ? '新开口径' : '顺延新开口径', 'good', `当前命中 ${currentTier.label} 档${localBoostRatio ? `，含本地推 +${formatPercent(localBoostRatio)}` : ''}`, nextTier ? `下一档为 ${nextTier.label}，还差总结算 GMV ${formatMoney(gap)}。` : '已在新开口径最高档，继续放大体量即可。', true)
+            : buildBoard('板块三：灵活佣金', 0, form.stage === 'new' ? '新开口径' : '顺延新开口径', 'warn', '当前未过 40% 档位门槛', '新开 / 顺延新开按 5000 / 20000 / 30000 对应 40% / 60% / 80%。', false);
+        }
+
+        if (form.stage === 'carry_reported') {
+          const lockedTier = Number(form.lockedTier || 0);
+          const hasBaseInfo = lockedTier > 0 && form.carryParticipation && form.carryTargetReached && prevTotalGmv > 0;
+          if (!hasBaseInfo) {
+            board3 = buildBoard('板块三：灵活佣金', 0, '次月续约口径', 'warn', '请先补齐续约判断信息', '需要确认上月锁档比例、是否享受次月返佣、上月 GMV 和上月目标达成情况。', false);
+          } else if (form.carryParticipation === 'no') {
+            board3 = buildBoard('板块三：灵活佣金', 0, '次月续约口径', 'bad', '未享受次月返佣，灵活佣金为 0', '该场景不再继续推导次月续约金额。', false);
+          } else {
+            const passed = form.carryTargetReached === 'yes' && totalGmv >= prevTotalGmv;
+            const finalRatio = lockedTier + localBoostRatio;
+            board3 = passed
+              ? buildBoard('板块三：灵活佣金', flexBaseGmv * netRate * finalRatio, '次月续约口径', 'good', `按锁档 ${formatPercent(lockedTier)} 测算${localBoostRatio ? `，含本地推 +${formatPercent(localBoostRatio)}` : ''}`, '次月续约默认已提报扫码返佣，灵活佣金基数按线上 GMV 计算。', true)
+              : buildBoard('板块三：灵活佣金', 0, '次月续约口径', 'warn', '还未达到次月续约持平线', `需要本月总结算 GMV 不低于上月 ${formatMoney(prevTotalGmv)}，并确认上月目标已达成。`, false);
+          }
+        }
+
+        if (form.stage === 'stock') {
+          const increment = Math.max(totalGmv - prevTotalGmv, 0);
+          const currentTier = getCurrentTier(FLEX_RULES.stockTiers, increment);
+          const nextTier = getNextTier(FLEX_RULES.stockTiers, increment);
+          const baseRatio = currentTier ? currentTier.ratio : 0;
+          const finalRatio = baseRatio + localBoostRatio;
+          const gap = nextTier ? Math.max(nextTier.min - increment, 0) : 0;
+          board3 = prevTotalGmv <= 0
+            ? buildBoard('板块三：灵活佣金', 0, '存量口径', 'warn', '请先补充上月结算 GMV', '存量商家先反推增量，再判断当前位于 50% / 60% / 70% 哪一档。', false)
+            : baseRatio > 0
+              ? buildBoard('板块三：灵活佣金', flexBaseGmv * netRate * finalRatio, '存量口径', 'good', `当前增量命中 ${currentTier.label} 档${localBoostRatio ? `，含本地推 +${formatPercent(localBoostRatio)}` : ''}`, nextTier ? `下一档还差增量 GMV ${formatMoney(gap)}。` : '已在存量口径最高档。', true)
+              : buildBoard('板块三：灵活佣金', 0, '存量口径', 'warn', '当前未过 50% 增量门槛', '存量按增量 1w / 2w / 3w 对应 50% / 60% / 70%。', false);
+        }
+      }
+
+      const capLimit = totalGmv * netRate;
+      const combinedVariable = board2.amount + board3.amount;
+      let capHit = false;
+      if (combinedVariable > capLimit) {
+        const adjustedBoard3 = Math.max(capLimit - board2.amount, 0);
+        board3 = {
+          ...board3,
+          amount: round2(adjustedBoard3),
+          statusType: board3.canSubmit ? 'warn' : board3.statusType,
+          statusText: board3.canSubmit ? '触发平台佣金收入上限，已自动按上限收敛' : board3.statusText,
+          note: `${board3.note} 平台上限口径：扫码返佣 + 灵活佣金 <= 总 GMV × (类目抽佣率 - 0.6%)。`,
+        };
+        capHit = true;
+      }
+
+      const totalAmount = round2(board1.amount + board2.amount + board3.amount);
+      const pitchCopy = [
+        `老板，按您当前体量，这个月综合可释放约 ${formatMoney(totalAmount)}。`,
+        `扫码返佣这块目前 ${board2.canSubmit ? '已经达到门槛，可以直接走提报' : '还没过线，先别急着承诺提报'}。`,
+        `灵活佣金按当前口径约 ${formatMoney(board3.amount)}${capHit ? '，但已触发平台上限做了收敛' : ''}。`,
+      ].join('\n');
+      const submitCopy = [
+        `区域：${REGIONS.find((item) => item.value === form.region)?.label || '南方区域'}`,
+        `商家身份：${stageMeta.label}`,
+        `类目：${category.label}`,
+        `扫码返佣：${formatMoney(board2.amount)}${board2.canSubmit ? '（可提报）' : '（暂不可提报）'}`,
+        `灵活佣金：${formatMoney(board3.amount)}${board3.canSubmit ? '（可提报）' : '（暂不可提报）'}`,
+      ].join('\n');
+
+      return {
+        category,
+        stageMeta,
+        threshold,
+        netRate,
+        onlineGmv,
+        flexBaseGmv,
+        prevScanGmv,
+        totalAmount,
+        board1,
+        board2,
+        board3,
+        capHit,
+        summaryMain: formatMoney(totalAmount),
+        summaryMeta: `类目费率 ${formatRate(category.rate)}，净费率 ${formatRate(netRate)}，线上 GMV ${formatMoney(onlineGmv)}。`,
+        pitchCopy,
+        submitCopy,
+      };
+    }
+
+    function FieldCard({ label, tip, children, full }) {
+      return (
+        <div className={`policy-field-card${full ? ' policy-field-full' : ''}`}>
+          <span className="policy-field-label">{label}</span>
+          {children}
+          {tip ? <div className="policy-field-tip">{tip}</div> : null}
+        </div>
+      );
+    }
+
+    function MoneyInput({ value, onChange, placeholder }) {
+      return (
+        <div className="policy-input-suffix">
+          <Input
+            value={value}
+            type="number"
+            inputMode="decimal"
+            placeholder={placeholder}
+            onChange={(event) => onChange(event.target.value)}
+          />
+          <span className="policy-input-unit">元</span>
+        </div>
+      );
+    }
+
+    function BoardCard({ board, theme }) {
+      const metricValue = board.amount.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return (
+        <div className="policy-board">
+          <MetricCard
+            title={board.title}
+            value={metricValue}
+            currency="¥"
+            theme={theme}
+            size="small"
+            clickable={false}
+            metrics={[
+              { label: '状态', value: board.pillText },
+              { label: '是否放行', value: board.canSubmit ? '可提报' : '暂不放行' },
+            ]}
+          />
+          <div className="policy-board__pill">
+            <Tag size="small" variant="light" color={getPillColor(board.statusType)}>{board.pillText}</Tag>
+            <span className={`policy-board__status is-${board.statusType}`}>{board.statusText}</span>
+          </div>
+          <div className="policy-board__note">{board.note}</div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [activeTab, setActiveTab] = React.useState('calculator');
+      const [copyHint, setCopyHint] = React.useState('');
+      const [form, setForm] = React.useState({
+        region: 'south',
+        stage: 'new',
+        category: 'food_hotpot',
+        firstProductDate: '',
+        totalGmv: '',
+        scanGmv: '',
+        prevTotalGmv: '',
+        prevScanGmv: '',
+        last30ScanGmv: '',
+        scanReported: 'no',
+        lockedTier: '',
+        carryParticipation: '',
+        carryTargetReached: '',
+        localBoost: false,
+      });
+      const [result, setResult] = React.useState(null);
+      const [dirtySinceCalc, setDirtySinceCalc] = React.useState(false);
+
+      const selectedRegion = REGIONS.find((item) => item.value === form.region) || REGIONS[0];
+      const selectedCategory = getCategoryMeta(form.category);
+      const stageMeta = getStageMeta(form.stage);
+
+      React.useEffect(() => {
+        if (!copyHint) return;
+        const timer = window.setTimeout(() => setCopyHint(''), 1800);
+        return () => window.clearTimeout(timer);
+      }, [copyHint]);
+
+      function updateForm(key, value) {
+        setForm((current) => ({
+          ...current,
+          [key]: value,
+          ...(key === 'stage' && value === 'carry_reported' ? { scanReported: 'yes' } : {}),
+        }));
+        if (result) {
+          setDirtySinceCalc(true);
+        }
+      }
+
+      function handleCalculate() {
+        setResult(calculateResult(form));
+        setDirtySinceCalc(false);
+      }
+
+      function handleCopy(type) {
+        if (!result) return;
+        const payload = type === 'pitch' ? result.pitchCopy : result.submitCopy;
+        copyText(payload);
+        setCopyHint(type === 'pitch' ? '已复制 3 条话术' : '已复制提报备注');
+      }
+
+      const pitchDiagnosis = result
+        ? [{
+            sections: [{
+              title: '对客话术',
+              items: result.pitchCopy.split('\n').map((line) => ({ text: line })),
+            }],
+          }]
+        : [{
+            sections: [{
+              title: '对客话术',
+              items: [{ text: '点击“开始计算”后，这里会自动整理 3 条可直接对客的话术。' }],
+            }],
+          }];
+
+      const reverseDiagnosis = result
+        ? [{
+            sections: [{
+              title: '结果反推',
+              items: [
+                { text: `当前类目 ${result.category.route === 'exempt' ? '走扫码免佣，不再提报扫码返佣' : '优先看扫码返佣门槛是否达标'}。` },
+                { text: `线上 GMV 为 ${formatMoney(result.onlineGmv)}，灵活佣金基数为 ${formatMoney(result.flexBaseGmv)}。` },
+                { text: result.capHit ? '已触发平台佣金上限，结果已自动收敛。' : '当前未触发平台佣金收入上限。' },
+              ],
+            }],
+          }]
+        : [{
+            sections: [{
+              title: '结果反推',
+              items: [{ text: '计算后会自动拆出门槛差距、下一档目标和是否可提报。' }],
+            }],
+          }];
+
+      const submitDiagnosis = result
+        ? [{
+            sections: [{
+              title: '提报动作',
+              items: [
+                { text: result.board2.canSubmit ? `扫码返佣可提报，建议现场直达 ${SUBMIT_LINKS.scanRebate}。` : '扫码返佣暂不可提报，先补扫码 GMV 或近 30 天核销。 ' },
+                { text: result.board3.canSubmit ? `灵活佣金可提报，建议同步打开 ${SUBMIT_LINKS.flexibleCommission}。` : '灵活佣金暂不可提报，先把下一档门槛或补充信息补齐。' },
+                { text: `提报前先过一遍《提报指南》：${SUBMIT_LINKS.guide}` },
+              ],
+            }],
+          }]
+        : [{
+            sections: [{
+              title: '提报动作',
+              items: [{ text: '结果区会按门槛自动判断是否放行，不会在未达标时误展示提报动作。' }],
+            }],
+          }];
+
+      const rulesCards = [
+        {
+          title: 'T+5 提醒',
+          copy: '返佣按结算 GMV 算，不按当天核销算。月底核销往往顺延到下月结算。',
+        },
+        {
+          title: '类目判断顺序',
+          copy: '先判不适用类目，再判扫码免佣 / 扫码返佣，最后再看灵活佣金。',
+        },
+        {
+          title: '底线门槛',
+          copy: '扫码返佣按类目门槛硬拦截：休闲娱乐 1000 元，餐饮 / 医美 / 本地服务等主流类目 2000 元。',
+        },
+        {
+          title: '扫码返佣唯一口径',
+          copy: '返佣比例固定 100%，返的是软件服务费，0.6% 通道费不返；不达门槛不展示提报动作。',
+        },
+        {
+          title: '灵活佣金唯一口径',
+          copy: '新开按 5000 / 2w / 3w 对应 40% / 60% / 80%，存量按增量 1w / 2w / 3w 对应 50% / 60% / 70%。',
+        },
+        {
+          title: '移动端改造点',
+          copy: '表单和结果区在窄屏会自动单列，顶部区域与页签改成可换行布局，避免标题和选择器错位。',
+        },
+      ];
+
+      return (
+        <div className="app-container policy-app">
+          <div className="app-body">
+            <main className="app-content policy-page">
+              <div className="policy-page__inner">
+                <section className="policy-hero">
+                  <PageHeader
+                    title="政策计算器 V12.9.22"
+                    description="本版聚焦门槛硬拦截、提报动作补齐与结果区移动端提质。输入信息后点击“开始计算”，统一输出扫码免佣、扫码返佣和灵活佣金三块结果。"
+                  />
+                  <div className="policy-hero__tags">
+                    <Tags>
+                      <Tag color="green" variant="light">全量已开放</Tag>
+                      <Tag color="blue" variant="light">点击触发</Tag>
+                      <Tag color="orange" variant="light">门槛硬保护</Tag>
+                      <Tag color="gray" variant="light">移动端兼容</Tag>
+                    </Tags>
+                  </div>
+                  <div className="policy-hero__region">
+                    <div className="policy-hero__meta">
+                      <Tag color="blue" variant="fill">{selectedRegion.label}</Tag>
+                      <span>{selectedRegion.message}</span>
+                    </div>
+                    <div className="policy-hero__region-select">
+                      <Select
+                        label="区域"
+                        value={form.region}
+                        options={REGION_OPTIONS}
+                        onChange={(value) => updateForm('region', value)}
+                      />
+                    </div>
+                  </div>
+                </section>
+
+                <section className="policy-shell-card policy-toolbar">
+                  <div className="policy-toolbar__head">
+                    <div>
+                      <h2 className="section-title">页面板块</h2>
+                      <div className="policy-toolbar__sub">保留“计算器”和“规则说明”两个页签；结果区严格按点击触发，不随输入自动重算。</div>
+                    </div>
+                    <Tabs value={activeTab} onChange={setActiveTab} variant="capsule" size="small">
+                      <Tab value="calculator">计算器</Tab>
+                      <Tab value="rules">规则说明</Tab>
+                    </Tabs>
+                  </div>
+                </section>
+
+                {activeTab === 'calculator' ? (
+                  <section className="policy-main-grid">
+                    <div className="policy-shell-card policy-panel">
+                      <div className="policy-panel__head">
+                        <div>
+                          <h2 className="section-title">输入区</h2>
+                          <div className="policy-panel__sub">输入完再点击“开始计算”。页面不会自动出结果，只会把旧结果标记为待重算。</div>
+                        </div>
+                        <Tag color={dirtySinceCalc ? 'orange' : 'green'} variant="light">
+                          {result ? (dirtySinceCalc ? '已有修改待重算' : '结果已同步') : '待计算'}
+                        </Tag>
+                      </div>
+
+                      <div className="policy-step-tags">
+                        <Tag color="blue" variant="light">① 身份</Tag>
+                        <Tag color="blue" variant="light">② 数据</Tag>
+                        <Tag color="blue" variant="light">③ 结论</Tag>
+                      </div>
+
+                      <div className="policy-note-card">
+                        <span className="policy-note-title">当前身份</span>
+                        <div className="policy-note-copy">{stageMeta.banner}</div>
+                      </div>
+
+                      <div className="policy-field-grid" style={{ marginTop: 'var(--spacing-lg)' }}>
+                        <FieldCard label="商家身份" tip="身份矩阵已内置：首月新开 / 顺延新开 / 次月续约 / 存量商家。" full>
+                          <div className="policy-stage-grid">
+                            {STAGES.map((item) => (
+                              <Capsule
+                                key={item.value}
+                                name="merchantStage"
+                                checked={form.stage === item.value}
+                                onChange={() => updateForm('stage', item.value)}
+                                label={item.label}
+                              />
+                            ))}
+                          </div>
+                        </FieldCard>
+
+                        <FieldCard label="高频类目快选" tip="用于快速切到高频场景；完整类目仍在下方下拉里可切换。" full>
+                          <div className="policy-quick-label">常用快选</div>
+                          <div className="policy-chip-grid">
+                            {CATEGORY_OPTIONS.filter((item) => QUICK_CATEGORIES.includes(item.value)).map((item) => (
+                              <Capsule
+                                key={item.value}
+                                name="quickCategory"
+                                checked={form.category === item.value}
+                                onChange={() => updateForm('category', item.value)}
+                                label={item.leaf}
+                              />
+                            ))}
+                          </div>
+                        </FieldCard>
+
+                        <FieldCard label="商家类目（扫码返佣）" tip={`当前按 ${selectedCategory.label} 判断门槛；命中免佣类目时将自动关闭扫码返佣提报。`} full>
+                          <Select
+                            value={form.category}
+                            options={CATEGORY_OPTIONS_FOR_SELECT}
+                            onChange={(value) => updateForm('category', value)}
+                          />
+                        </FieldCard>
+
+                        <FieldCard label="首次上品日期（选填）" tip="主要用于 BD 自己回看身份，不作为唯一判断依据。">
+                          <Input
+                            type="date"
+                            value={form.firstProductDate}
+                            onChange={(event) => updateForm('firstProductDate', event.target.value)}
+                          />
+                        </FieldCard>
+
+                        <FieldCard label="是否已提报扫码返佣" tip="若已提报，灵活佣金基数将剔除扫码 GMV；次月续约场景默认视为已提报。">
+                          <Select
+                            value={form.stage === 'carry_reported' ? 'yes' : form.scanReported}
+                            options={[{ value: 'no', label: '否' }, { value: 'yes', label: '是' }]}
+                            onChange={(value) => updateForm('scanReported', value)}
+                          />
+                        </FieldCard>
+
+                        <FieldCard label="本月结算 GMV" tip="统一按 T+5 结算口径填写，不是当天核销口径。">
+                          <MoneyInput value={form.totalGmv} onChange={(value) => updateForm('totalGmv', value)} placeholder="如：30000（T+5 总结算）" />
+                        </FieldCard>
+
+                        <FieldCard label="线下扫码结算 GMV" tip="扫码返佣门槛会按所选类目自动判断。">
+                          <MoneyInput value={form.scanGmv} onChange={(value) => updateForm('scanGmv', value)} placeholder="如：6000（本月扫码）" />
+                        </FieldCard>
+
+                        {(form.stage === 'new' || form.stage === 'carry_unreported') ? (
+                          <FieldCard label="近 30 天扫码核销" tip="新开 / 顺延新开需同时满足近 30 天扫码核销 >= 100 元。">
+                            <MoneyInput value={form.last30ScanGmv} onChange={(value) => updateForm('last30ScanGmv', value)} placeholder="如：1200" />
+                          </FieldCard>
+                        ) : null}
+
+                        {(form.stage === 'carry_reported' || form.stage === 'stock') ? (
+                          <FieldCard label="上月结算 GMV" tip={form.stage === 'stock' ? '存量口径用它反推增量 GMV。' : '次月续约要先确认是否达到首月持平线。'}>
+                            <MoneyInput value={form.prevTotalGmv} onChange={(value) => updateForm('prevTotalGmv', value)} placeholder="如：22000" />
+                          </FieldCard>
+                        ) : null}
+
+                        {form.stage === 'stock' ? (
+                          <FieldCard label="上月线下扫码 GMV（选填）" tip="用于 BD 对照存量口径，当前页面不把它单独并入主公式。">
+                            <MoneyInput value={form.prevScanGmv} onChange={(value) => updateForm('prevScanGmv', value)} placeholder="如：4500" />
+                          </FieldCard>
+                        ) : null}
+
+                        {form.stage === 'carry_reported' ? (
+                          <FieldCard label="上月提报档位比例" tip="次月续约必须按上月锁档比例测算。">
+                            <Select
+                              value={form.lockedTier}
+                              options={[
+                                { value: '', label: '请选择 40% / 60% / 80%' },
+                                { value: '0.4', label: '40%' },
+                                { value: '0.6', label: '60%' },
+                                { value: '0.8', label: '80%' },
+                              ]}
+                              onChange={(value) => updateForm('lockedTier', value)}
+                            />
+                          </FieldCard>
+                        ) : null}
+
+                        {form.stage === 'carry_reported' ? (
+                          <FieldCard label="是否享受次月返佣" tip="未享受则灵活佣金为 0。">
+                            <Select
+                              value={form.carryParticipation}
+                              options={[
+                                { value: '', label: '请选择是否享受次月返佣' },
+                                { value: 'yes', label: '是' },
+                                { value: 'no', label: '否' },
+                              ]}
+                              onChange={(value) => updateForm('carryParticipation', value)}
+                            />
+                          </FieldCard>
+                        ) : null}
+
+                        {form.stage === 'carry_reported' ? (
+                          <FieldCard label="上月目标达成情况" tip="续约场景要求先确认上月目标是否达成。">
+                            <Select
+                              value={form.carryTargetReached}
+                              options={[
+                                { value: '', label: '请选择上月目标达成情况' },
+                                { value: 'yes', label: '已达成' },
+                                { value: 'no', label: '未达成' },
+                              ]}
+                              onChange={(value) => updateForm('carryTargetReached', value)}
+                            />
+                          </FieldCard>
+                        ) : null}
+
+                        <FieldCard label="本地推 +10%" tip={form.stage === 'new' ? '当月新开首月不展示、不生效。' : '顺延新开 / 次月续约 / 存量可叠加本地推 +10%。'} full>
+                          <Checkbox
+                            checked={form.localBoost}
+                            onChange={(event) => updateForm('localBoost', event.target.checked)}
+                            showLabel
+                            label="已满足本地推加成条件"
+                            disabled={form.stage === 'new'}
+                          />
+                        </FieldCard>
+                      </div>
+
+                      <div className="policy-actions" style={{ marginTop: 'var(--spacing-lg)' }}>
+                        <Button variant="primary" onClick={handleCalculate}>开始计算</Button>
+                        <Button variant="secondary" onClick={() => {
+                          setForm({
+                            region: 'south',
+                            stage: 'new',
+                            category: 'food_hotpot',
+                            firstProductDate: '',
+                            totalGmv: '',
+                            scanGmv: '',
+                            prevTotalGmv: '',
+                            prevScanGmv: '',
+                            last30ScanGmv: '',
+                            scanReported: 'no',
+                            lockedTier: '',
+                            carryParticipation: '',
+                            carryTargetReached: '',
+                            localBoost: false,
+                          });
+                          setResult(null);
+                          setDirtySinceCalc(false);
+                        }}>清空重填</Button>
+                        <Button variant="text-primary" onClick={() => window.open(SUBMIT_LINKS.guide, '_blank', 'noopener,noreferrer')}>查看提报指南</Button>
+                      </div>
+                    </div>
+
+                    <div className="policy-shell-card policy-panel">
+                      <div className="policy-panel__head">
+                        <div>
+                          <h2 className="section-title">结果区</h2>
+                          <div className="policy-panel__sub">统一在点击按钮后渲染；达到门槛才展示提报动作，未达门槛只给强提醒、不放行。</div>
+                        </div>
+                        <Tag color={result ? (dirtySinceCalc ? 'orange' : 'green') : 'blue'} variant="light">
+                          {result ? (dirtySinceCalc ? '待重算' : '已计算') : '待计算'}
+                        </Tag>
+                      </div>
+
+                      {!result ? (
+                        <div className="policy-result-empty">先填信息，再点“开始计算”。这里会统一输出扫码免佣、扫码返佣、灵活佣金三个板块，以及对客话术、结果反推和提报动作。</div>
+                      ) : (
+                        <>
+                          <div className="policy-summary-note">
+                            <div className="policy-summary-title">综合权益空间</div>
+                            <div className="policy-summary-main">{result.summaryMain}</div>
+                            <div className="policy-summary-meta">{result.summaryMeta}</div>
+                            <div className="policy-summary-copy">
+                              当前类目：{result.category.label}；渠道费率已按 0.6% 扣减。{result.capHit ? ' 已触发平台佣金上限，结果已自动收敛。' : ' 当前未触发平台佣金上限。'}
+                            </div>
+                            <div className="policy-summary-actions" style={{ marginTop: 'var(--spacing-md)' }}>
+                              {result.board2.canSubmit ? <Button size="small" variant="primary" onClick={() => window.open(SUBMIT_LINKS.scanRebate, '_blank', 'noopener,noreferrer')}>去提报扫码返佣</Button> : null}
+                              {result.board3.canSubmit ? <Button size="small" variant="secondary" onClick={() => window.open(SUBMIT_LINKS.flexibleCommission, '_blank', 'noopener,noreferrer')}>去提报灵活佣金</Button> : null}
+                            </div>
+                          </div>
+
+                          <div className="policy-results-grid">
+                            <BoardCard board={result.board1} theme="light-purple" />
+                            <BoardCard board={result.board2} theme="color-2" />
+                            <BoardCard board={result.board3} theme="color-5" />
+                          </div>
+
+                          <div className="policy-metric-grid">
+                            <MetricCard title="类目费率" value={result.category.rate.toFixed(3)} unit="" theme="gray" size="small" clickable={false} metrics={[{ label: '展示口径', value: formatRate(result.category.rate) }]} />
+                            <MetricCard title="佣金测算基数" value={result.flexBaseGmv.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} currency="¥" theme="gray" size="small" clickable={false} metrics={[{ label: '线上 GMV', value: formatMoney(result.onlineGmv) }]} />
+                          </div>
+
+                          <div className="policy-diagnosis-stack">
+                            <div className="policy-copy-actions">
+                              <Button size="small" variant="secondary" onClick={() => handleCopy('pitch')}>复制 3 条话术</Button>
+                              <Button size="small" variant="secondary" onClick={() => handleCopy('submit')}>复制提报备注</Button>
+                              {copyHint ? <Tag size="small" color="green" variant="light">{copyHint}</Tag> : null}
+                            </div>
+                            <Diagnosis layout="multiple" cards={pitchDiagnosis} />
+                            <Diagnosis layout="multiple" cards={reverseDiagnosis} />
+                            <Diagnosis layout="multiple" cards={submitDiagnosis} />
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </section>
+                ) : (
+                  <section className="policy-shell-card policy-panel">
+                    <div className="policy-panel__head">
+                      <div>
+                        <h2 className="section-title">规则说明</h2>
+                        <div className="policy-panel__sub">保留原页的核心口径：T+5、类目门槛、灵活佣金档位、移动端优化和点击触发原则。</div>
+                      </div>
+                    </div>
+
+                    <div className="policy-rule-top">
+                      <div className="policy-rule-card">
+                        <div className="policy-rule-title">当前页重点提醒</div>
+                        <div className="policy-rule-copy">点击触发原则已保留：输入变化不会自动刷新结果，避免 BD 在现场误读旧结果。</div>
+                      </div>
+                      <div className="policy-rule-card">
+                        <div className="policy-rule-title">结果区联动</div>
+                        <div className="policy-rule-copy">未达门槛时只做强提醒，不展示提报动作；可提报时再放出跳转按钮。</div>
+                      </div>
+                      <div className="policy-rule-card">
+                        <div className="policy-rule-title">移动端兼容</div>
+                        <div className="policy-rule-copy">窄屏下输入区、结果卡片和规则说明自动折成单列，避免原页桌面布局在手机上挤压错位。</div>
+                      </div>
+                    </div>
+
+                    <div className="policy-rules-grid">
+                      {rulesCards.map((item) => (
+                        <div key={item.title} className="policy-rule-card">
+                          <div className="policy-rule-title">{item.title}</div>
+                          <div className="policy-rule-copy">{item.copy}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                <div className="policy-footer-note">
+                  复刻来源：本地保存页《政策计算器》；产物遵循销运标题规范与公共组件层，适配桌面与移动端浏览。
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
