@@ -1,5 +1,66 @@
 /* styles/base.css */
 
+/* ==========================================================================
+   Brand Fonts
+   说明：Douyin Number ABC 用于数字密集场景（金额、指标、倒计时），
+   Douyin Sans 用于强调中文标题。本项目将字体源文件统一放置于
+   仓库根目录的 `assets/fonts/`，与 `assets/images/`、`assets/icons/`
+   并列；这里的相对路径基于源文件位置（`packages/components-web/styles/base.css`）
+   做了三层回溯，与 `components.css` 中 shading 图片的写法保持一致。
+   业务项目通过 `npx xiaoyun-ds init` 接入时，请确保字体目录被同步
+   复制到与 `styles/base.css` 同级的 `assets/fonts/` 下，
+   否则需要在业务侧再次声明 @font-face 或调整下方相对路径。
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Douyin Number ABC';
+  src: url('../../../assets/fonts/DouyinNumberABC-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Douyin Number ABC';
+  src: url('../../../assets/fonts/DouyinNumberABC-Bold.otf') format('opentype');
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Douyin Number ABC';
+  src: url('../../../assets/fonts/DouyinNumberABC-ExtraBold.otf') format('opentype');
+  font-weight: 800 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Douyin Number ABC Condensed';
+  src: url('../../../assets/fonts/DouyinNumberABC-CondensedMedium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Douyin Number ABC Condensed';
+  src: url('../../../assets/fonts/DouyinNumberABC-ExtraCondensedMedium.otf') format('opentype');
+  font-weight: 400;
+  font-stretch: 75%;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Douyin Sans';
+  src: url('../../../assets/fonts/DouyinSansBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   margin: 0;
   padding: 0;

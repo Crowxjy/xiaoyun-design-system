@@ -111,3 +111,15 @@ import '@xiaoyun-ds/icons';
      npm run sync-icons
      ```
    - 脚本会校验 `sprite.svg`、预览页和注入脚本是否存在，并保持 `packages/icons` 作为唯一源目录。
+
+---
+
+## 5. 原始 SVG 图标源（`assets/icons/`）
+
+仓库根目录的 [`assets/icons/`](../../assets/icons) 存放了 **未打包前的单个 `.svg` 源文件**，用于：
+
+1. 设计师追加 / 删除 / 更新图标后的版本审核与 diff；
+2. 当业务方希望按需引入个别图标（不走 sprite 注入）时，可以从这里直接拷贝单个 SVG；
+3. 后续如果需要重新生成 `packages/icons/assets/sprite.svg`，请以这里为唯一原始数据源。
+
+> 业务侧请仍然优先通过 `import '@xiaoyun-ds/icons'` 注入 sprite + `<use href="#ic-xxx"></use>` 的方式渲染图标；只有在确实需要单独引用某一张原始 SVG（例如 OG 图、Open Graph 缩略图、邮件签名）时，才直接读取 `assets/icons/ic-xxx.svg`。

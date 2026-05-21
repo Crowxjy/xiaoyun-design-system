@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>政策计算器 · Tokens-Only Demo</title>
+  <link rel="stylesheet" href="../../packages/tokens/xiaoyun-ds-tokens.css">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-3);
+      color: var(--text-gray-5);
+      font-family: var(--font-family-default);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      min-height: 100vh;
+    }
+    a {
+      color: var(--primary-5);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: var(--spacing-page-padding-top) var(--spacing-page-padding-right) var(--spacing-page-padding-bottom) var(--spacing-page-padding-left);
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--primary-6), var(--primary-5));
+      color: var(--text-white);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-large);
+      margin-bottom: var(--spacing-xl);
+    }
+    .hero__title {
+      font: var(--display-medium);
+      margin: 0;
+      color: var(--text-white);
+    }
+    .hero__desc {
+      margin: var(--spacing-sm) 0 0;
+      font: var(--body-regular);
+      color: rgba(255, 255, 255, 0.85);
+      max-width: var(--layout-content-max-width);
+    }
+    .hero__row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+    .hero__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      flex: 1 1 auto;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: var(--radius-round);
+      font: var(--caption-medium);
+      background: rgba(255, 255, 255, 0.18);
+      color: var(--text-white);
+    }
+    .tag--solid-blue { background: var(--primary-1); color: var(--primary-7); }
+    .tag--solid-green { background: var(--success-1); color: var(--success-6); }
+    .tag--solid-orange { background: var(--warning-1); color: var(--warning-6); }
+    .tag--solid-red { background: var(--danger-1); color: var(--danger-6); }
+    .tag--solid-gray { background: var(--bg-5); color: var(--text-gray-4); }
+
+    .region-select {
+      flex: 1 1 240px;
+      min-width: 220px;
+    }
+    .region-select label {
+      display: block;
+      font: var(--caption-regular);
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: var(--spacing-xs);
+    }
+    select, input[type="text"], input[type="number"], input[type="date"] {
+      width: 100%;
+      height: 40px;
+      padding: 0 var(--spacing-md);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-1);
+      background: var(--bg-1);
+      color: var(--text-gray-5);
+      font-family: var(--font-family-default);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-md);
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--primary-5);
+      box-shadow: 0 0 0 3px rgba(81, 113, 255, 0.18);
+    }
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--text-gray-3) 50%),
+                        linear-gradient(135deg, var(--text-gray-3) 50%, transparent 50%);
+      background-position: calc(100% - 18px) center, calc(100% - 12px) center;
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-1);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-l);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-small);
+      margin-bottom: var(--spacing-lg);
+    }
+    .toolbar__title {
+      margin: 0;
+      font: var(--subtitle-medium);
+      color: var(--text-gray-5);
+    }
+    .toolbar__sub {
+      margin: 4px 0 0;
+      font: var(--caption-regular);
+      color: var(--text-gray-3);
+    }
+    .tabs {
+      display: inline-flex;
+      background: var(--bg-5);
+      border-radius: var(--radius-round);
+      padding: 4px;
+    }
+    .tabs button {
+      border: 0;
+      background: transparent;
+      color: var(--text-gray-3);
+      padding: 8px 16px;
+      border-radius: var(--radius-round);
+      cursor: pointer;
+      font-family: var(--font-family-default);
+      font-size: var(--font-size-md);
+      transition: background var(--transition-base), color var(--transition-base);
+    }
+    .tabs button.is-active {
+      background: var(--bg-1);
+      color: var(--primary-5);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: var(--spacing-lg);
+      align-items: start;
+    }
+    .panel {
+      background: var(--bg-1);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-small);
+    }
+    .panel__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    .panel__title {
+      margin: 0;
+      font: var(--subtitle-medium);
+      color: var(--text-gray-5);
+    }
+    .panel__sub {
+      margin: 4px 0 0;
+      font: var(--caption-regular);
+      color: var(--text-gray-3);
+    }
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-md);
+    }
+    .field {
+      background: var(--bg-2);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-l);
+      padding: var(--spacing-md);
+    }
+    .field--full { grid-column: 1 / -1; }
+    .field__label {
+      display: block;
+      font: var(--caption-medium);
+      color: var(--text-gray-4);
+      margin-bottom: var(--spacing-xs);
+    }
+    .field__tip {
+      margin-top: var(--spacing-xs);
+      font: var(--caption-regular);
+      color: var(--text-gray-3);
+    }
+    .stage-grid, .quick-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 14px;
+      border-radius: var(--radius-round);
+      border: 1px solid var(--border-1);
+      background: var(--bg-1);
+      color: var(--text-gray-4);
+      font: var(--body-regular);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+    .chip:hover {
+      border-color: var(--primary-3);
+      color: var(--primary-6);
+    }
+    .chip.is-active {
+      background: var(--primary-1);
+      color: var(--primary-7);
+      border-color: var(--primary-3);
+    }
+    .input-with-suffix {
+      position: relative;
+    }
+    .input-with-suffix .suffix {
+      position: absolute;
+      right: var(--spacing-md);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-gray-3);
+      font-size: var(--font-size-sm);
+      pointer-events: none;
+    }
+    .input-with-suffix input { padding-right: 36px; }
+
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      cursor: pointer;
+      font: var(--body-regular);
+      color: var(--text-gray-5);
+      padding: var(--spacing-xs) 0;
+    }
+    .checkbox input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-5);
+    }
+    .checkbox.is-disabled {
+      color: var(--text-gray-2);
+      cursor: not-allowed;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-lg);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      padding: 0 var(--spacing-lg);
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      font-family: var(--font-family-default);
+      font-size: var(--font-size-md);
+      cursor: pointer;
+      transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+    }
+    .btn--primary {
+      background: var(--primary-5);
+      color: var(--text-white);
+    }
+    .btn--primary:hover { background: var(--primary-4); }
+    .btn--primary:active { background: var(--primary-6); }
+    .btn--secondary {
+      background: var(--bg-1);
+      color: var(--text-gray-5);
+      border-color: var(--border-1);
+    }
+    .btn--secondary:hover {
+      color: var(--primary-5);
+      border-color: var(--primary-3);
+    }
+    .btn--text {
+      background: transparent;
+      color: var(--primary-5);
+      padding: 0 var(--spacing-md);
+    }
+    .btn--text:hover { background: var(--primary-1); }
+    .btn--small { height: 32px; padding: 0 var(--spacing-md); font-size: var(--font-size-sm); }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: var(--radius-round);
+      font: var(--caption-medium);
+    }
+    .status-pill[data-type="info"] { background: var(--primary-1); color: var(--primary-7); }
+    .status-pill[data-type="good"] { background: var(--success-1); color: var(--success-6); }
+    .status-pill[data-type="warn"] { background: var(--warning-1); color: var(--warning-6); }
+    .status-pill[data-type="bad"]  { background: var(--danger-1);  color: var(--danger-6); }
+
+    .empty-state {
+      padding: var(--spacing-xl);
+      border: 1px dashed var(--border-1);
+      border-radius: var(--radius-l);
+      background: var(--bg-2);
+      color: var(--text-gray-3);
+      font: var(--body-regular);
+      text-align: center;
+    }
+
+    .summary {
+      background: linear-gradient(135deg, var(--primary-1), var(--bg-7));
+      border: 1px solid var(--primary-2);
+      border-radius: var(--radius-l);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+    .summary__label {
+      font: var(--caption-medium);
+      color: var(--primary-7);
+      margin-bottom: var(--spacing-xs);
+    }
+    .summary__value {
+      font-family: var(--font-family-number);
+      font-size: 28px;
+      line-height: 38px;
+      font-weight: 600;
+      color: var(--primary-6);
+    }
+    .summary__meta {
+      margin-top: var(--spacing-xs);
+      font: var(--caption-regular);
+      color: var(--text-gray-4);
+    }
+    .summary__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+
+    .boards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-md);
+    }
+    .board {
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-l);
+      padding: var(--spacing-md);
+      background: var(--bg-1);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+    .board__title {
+      font: var(--caption-medium);
+      color: var(--text-gray-3);
+    }
+    .board__amount {
+      font-family: var(--font-family-number);
+      font-size: 22px;
+      line-height: 32px;
+      font-weight: 600;
+      color: var(--text-gray-5);
+    }
+    .board__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    .board__status {
+      font: var(--caption-regular);
+    }
+    .board__status[data-type="good"] { color: var(--success-5); }
+    .board__status[data-type="warn"] { color: var(--warning-5); }
+    .board__status[data-type="bad"]  { color: var(--danger-5); }
+    .board__status[data-type="info"] { color: var(--text-gray-3); }
+    .board__note {
+      font: var(--caption-regular);
+      color: var(--text-gray-3);
+    }
+
+    .insight {
+      margin-top: var(--spacing-lg);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-l);
+      background: var(--diagnosis-card-bg);
+      background-image: var(--diagnosis-bg-gradient);
+      border: 1px solid var(--diagnosis-index-border-color);
+    }
+    .insight__title {
+      font: var(--subtitle-medium);
+      color: var(--diagnosis-title-color);
+      margin: 0 0 var(--spacing-sm);
+    }
+    .insight ul {
+      margin: 0;
+      padding-left: var(--spacing-lg);
+    }
+    .insight li {
+      font: var(--body-regular);
+      color: var(--diagnosis-body-text-color);
+      margin-bottom: 6px;
+    }
+    .insight li:last-child { margin-bottom: 0; }
+
+    .copy-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+      align-items: center;
+    }
+    .copy-hint {
+      color: var(--success-6);
+      font: var(--caption-medium);
+    }
+
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+    .rule {
+      padding: var(--spacing-md);
+      border-radius: var(--radius-l);
+      border: 1px solid var(--border-1);
+      background: var(--bg-2);
+    }
+    .rule__title {
+      font: var(--subtitle-medium);
+      margin: 0 0 var(--spacing-xs);
+      color: var(--text-gray-5);
+    }
+    .rule__copy {
+      font: var(--caption-regular);
+      color: var(--text-gray-3);
+      margin: 0;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: var(--spacing-xl);
+      font: var(--caption-regular);
+      color: var(--text-gray-3);
+    }
+
+    @media (max-width: 960px) {
+      .grid, .boards, .rules {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 768px) {
+      .page {
+        padding: var(--spacing-md);
+      }
+      .hero, .panel {
+        padding: var(--spacing-lg);
+      }
+      .grid, .boards, .rules, .field-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .panel__head, .hero__row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1 class="hero__title">政策计算器（Tokens-Only Demo）</h1>
+      <p class="hero__desc">本版仅消费 <code>xiaoyun-ds-tokens.css</code> 和项目的 design.md 约定，不引入项目封装的组件库与公共样式，全部使用原生 HTML 与 token 派生。用于对照演示在仅有 token 时的还原能力。</p>
+      <div class="hero__row">
+        <div class="hero__tags">
+          <span class="tag">全量已开放</span>
+          <span class="tag">点击触发</span>
+          <span class="tag">门槛硬保护</span>
+          <span class="tag">移动端兼容</span>
+        </div>
+        <div class="region-select">
+          <label for="regionSelect">区域</label>
+          <select id="regionSelect"></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div>
+        <h2 class="toolbar__title">页面板块</h2>
+        <p class="toolbar__sub">保留“计算器”和“规则说明”两个页签；结果区只在点击按钮后才会刷新，避免现场误读旧结果。</p>
+      </div>
+      <div class="tabs" role="tablist">
+        <button data-tab="calculator" class="is-active">计算器</button>
+        <button data-tab="rules">规则说明</button>
+      </div>
+    </section>
+
+    <section class="grid" data-view="calculator">
+      <div class="panel">
+        <div class="panel__head">
+          <div>
+            <h2 class="panel__title">输入区</h2>
+            <p class="panel__sub">输入完再点击“开始计算”。结果区不会随输入自动刷新，只会标记“待重算”。</p>
+          </div>
+          <span id="formStatus" class="status-pill" data-type="info">待计算</span>
+        </div>
+
+        <div class="field-grid">
+          <div class="field field--full">
+            <span class="field__label">商家身份</span>
+            <div class="stage-grid" id="stageGroup"></div>
+            <div class="field__tip" id="stageBanner"></div>
+          </div>
+
+          <div class="field field--full">
+            <span class="field__label">高频类目快选</span>
+            <div class="quick-grid" id="quickGroup"></div>
+            <div class="field__tip">完整类目仍在下方下拉中可选。</div>
+          </div>
+
+          <div class="field field--full">
+            <span class="field__label">商家类目（扫码返佣）</span>
+            <select id="categorySelect"></select>
+            <div class="field__tip" id="categoryTip"></div>
+          </div>
+
+          <div class="field">
+            <span class="field__label">本月结算 GMV（T+5 口径）</span>
+            <div class="input-with-suffix">
+              <input id="totalGmv" type="number" inputmode="decimal" placeholder="如：30000" />
+              <span class="suffix">元</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field__label">线下扫码结算 GMV</span>
+            <div class="input-with-suffix">
+              <input id="scanGmv" type="number" inputmode="decimal" placeholder="如：6000" />
+              <span class="suffix">元</span>
+            </div>
+          </div>
+
+          <div class="field" data-show-when="new,carry_unreported">
+            <span class="field__label">近 30 天扫码核销</span>
+            <div class="input-with-suffix">
+              <input id="last30ScanGmv" type="number" inputmode="decimal" placeholder="如：1200" />
+              <span class="suffix">元</span>
+            </div>
+            <div class="field__tip">新开 / 顺延新开需 ≥ 100 元。</div>
+          </div>
+
+          <div class="field" data-show-when="carry_reported,stock">
+            <span class="field__label">上月结算 GMV</span>
+            <div class="input-with-suffix">
+              <input id="prevTotalGmv" type="number" inputmode="decimal" placeholder="如：22000" />
+              <span class="suffix">元</span>
+            </div>
+            <div class="field__tip" id="prevTotalTip">用于反推增量或判断持平线。</div>
+          </div>
+
+          <div class="field" data-show-when="carry_reported">
+            <span class="field__label">上月提报档位比例</span>
+            <select id="lockedTier">
+              <option value="">请选择 40% / 60% / 80%</option>
+              <option value="0.4">40%</option>
+              <option value="0.6">60%</option>
+              <option value="0.8">80%</option>
+            </select>
+          </div>
+
+          <div class="field" data-show-when="carry_reported">
+            <span class="field__label">是否享受次月返佣</span>
+            <select id="carryParticipation">
+              <option value="">请选择</option>
+              <option value="yes">是</option>
+              <option value="no">否</option>
+            </select>
+          </div>
+
+          <div class="field" data-show-when="carry_reported">
+            <span class="field__label">上月目标达成情况</span>
+            <select id="carryTargetReached">
+              <option value="">请选择</option>
+              <option value="yes">已达成</option>
+              <option value="no">未达成</option>
+            </select>
+          </div>
+
+          <div class="field field--full">
+            <label class="checkbox" id="localBoostWrapper">
+              <input type="checkbox" id="localBoost" />
+              <span>已满足本地推 +10% 加成条件</span>
+            </label>
+            <div class="field__tip" id="localBoostTip">当月新开首月不展示、不生效。</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn--primary" id="calcBtn">开始计算</button>
+          <button class="btn btn--secondary" id="resetBtn">清空重填</button>
+          <button class="btn btn--text" id="guideBtn">查看提报指南</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <div>
+            <h2 class="panel__title">结果区</h2>
+            <p class="panel__sub">门槛硬拦截：未达标只给提醒，达到才放行提报按钮。</p>
+          </div>
+          <span id="resultStatus" class="status-pill" data-type="info">待计算</span>
+        </div>
+
+        <div id="resultEmpty" class="empty-state">先在左侧输入信息，再点“开始计算”。这里会输出综合权益、三大板块结果以及对客话术。</div>
+
+        <div id="resultBody" hidden>
+          <div class="summary">
+            <div class="summary__label">综合权益空间</div>
+            <div class="summary__value" id="summaryValue">¥0.00</div>
+            <div class="summary__meta" id="summaryMeta">类目费率 0%，净费率 0%。</div>
+            <div class="summary__actions" id="summaryActions"></div>
+          </div>
+
+          <div class="boards">
+            <div class="board" data-board="b1">
+              <div class="board__title">板块一：扫码免佣</div>
+              <div class="board__amount" data-amount>¥0.00</div>
+              <div class="board__row">
+                <span class="status-pill" data-pill data-type="info">待判断</span>
+                <span class="board__status" data-status data-type="info">等待计算</span>
+              </div>
+              <div class="board__note" data-note>仅命中免佣类目时展示软件服务费减免空间。</div>
+            </div>
+            <div class="board" data-board="b2">
+              <div class="board__title">板块二：扫码返佣</div>
+              <div class="board__amount" data-amount>¥0.00</div>
+              <div class="board__row">
+                <span class="status-pill" data-pill data-type="info">待判断</span>
+                <span class="board__status" data-status data-type="info">等待计算</span>
+              </div>
+              <div class="board__note" data-note>达到类目门槛才放行提报，返佣比例固定 100%。</div>
+            </div>
+            <div class="board" data-board="b3">
+              <div class="board__title">板块三：灵活佣金</div>
+              <div class="board__amount" data-amount>¥0.00</div>
+              <div class="board__row">
+                <span class="status-pill" data-pill data-type="info">待判断</span>
+                <span class="board__status" data-status data-type="info">等待计算</span>
+              </div>
+              <div class="board__note" data-note>会结合身份、档位与本地推加成联动。</div>
+            </div>
+          </div>
+
+          <div class="insight">
+            <h3 class="insight__title">对客话术与提报动作</h3>
+            <ul id="insightList"></ul>
+            <div class="copy-row">
+              <button class="btn btn--secondary btn--small" id="copyPitch">复制 3 条话术</button>
+              <button class="btn btn--secondary btn--small" id="copySubmit">复制提报备注</button>
+              <span class="copy-hint" id="copyHint" hidden></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" data-view="rules" hidden>
+      <div class="panel__head">
+        <div>
+          <h2 class="panel__title">规则说明</h2>
+          <p class="panel__sub">仅基于 design.md 与 token 表达；移动端会折成单列。</p>
+        </div>
+      </div>
+      <div class="rules">
+        <div class="rule">
+          <h3 class="rule__title">T+5 提醒</h3>
+          <p class="rule__copy">返佣按结算 GMV 算，不按当天核销算；月底核销往往顺延到下月。</p>
+        </div>
+        <div class="rule">
+          <h3 class="rule__title">类目判断顺序</h3>
+          <p class="rule__copy">先判不适用类目，再判扫码免佣 / 扫码返佣，最后再看灵活佣金。</p>
+        </div>
+        <div class="rule">
+          <h3 class="rule__title">底线门槛</h3>
+          <p class="rule__copy">扫码返佣按类目硬拦截：休闲娱乐 1000 元，餐饮 / 医美 / 本地服务等主流类目 2000 元。</p>
+        </div>
+        <div class="rule">
+          <h3 class="rule__title">扫码返佣口径</h3>
+          <p class="rule__copy">返佣比例固定 100%，返的是软件服务费，0.6% 通道费不返。</p>
+        </div>
+        <div class="rule">
+          <h3 class="rule__title">灵活佣金档位</h3>
+          <p class="rule__copy">新开按 5000 / 2w / 3w 对应 40% / 60% / 80%；存量按增量 1w / 2w / 3w 对应 50% / 60% / 70%。</p>
+        </div>
+        <div class="rule">
+          <h3 class="rule__title">移动端</h3>
+          <p class="rule__copy">窄屏下输入区、结果卡片、规则卡自动折成单列；表单元素行高与按钮统一 40px。</p>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">本页仅消费项目 token 与 design.md 约定，未引入 components.css；适用于演示设计系统 token 层的独立可用性。</p>
+  </main>
+
+  <script>
+    const REGIONS = [
+      { value: 'south', label: '南方区域' },
+      { value: 'guangfo', label: '广佛区域' },
+      { value: 'hubei_hunan', label: '鄂湘区域' },
+      { value: 'sz_dgh', label: '深莞惠区域' },
+      { value: 'sichuan', label: '四川区域' },
+      { value: 'yugui', label: '渝贵区域' },
+    ];
+
+    const STAGES = [
+      { value: 'new', label: '当月新开', banner: '首月新开先看扫码门槛，灵活佣金按新开档位推导。' },
+      { value: 'carry_unreported', label: '顺延新开', banner: '上月新开未提报，仍按新开口径测算，可叠加本地推 +10%。' },
+      { value: 'carry_reported', label: '次月续约', banner: '已提报场景默认扫码返佣已提报，灵活佣金需锁定上月档位。' },
+      { value: 'stock', label: '存量商家', banner: '重点看上月结算 GMV 和本月增量，先冲过 1 万增量门槛。' },
+    ];
+
+    const CATEGORY_OPTIONS = [
+      { value: 'food_hotpot', label: '美食/餐饮 / 正餐 / 火锅', leaf: '火锅', group: 'food', route: 'rebate', rate: 0.025 },
+      { value: 'food_coffee', label: '美食/餐饮 / 轻餐饮 / 咖啡/茶饮', leaf: '咖啡/茶饮', group: 'food', route: 'rebate', rate: 0.024 },
+      { value: 'food_snack', label: '美食/餐饮 / 轻餐饮 / 小吃甜品', leaf: '小吃甜品', group: 'food', route: 'rebate', rate: 0.022 },
+      { value: 'beauty_hair', label: '丽人 / 丽人基础类 / 美发', leaf: '美发', group: 'beauty_basic', route: 'exempt', rate: 0.03 },
+      { value: 'beauty_skin', label: '丽人 / 丽人基础类 / 美容', leaf: '美容', group: 'beauty_basic', route: 'exempt', rate: 0.03 },
+      { value: 'medical_beauty', label: '丽人 / 医美 / 医疗美容', leaf: '医疗美容', group: 'medical_beauty', route: 'rebate', rate: 0.04 },
+      { value: 'foot_reflexology', label: '休闲娱乐 / 足疗按摩 / 足疗', leaf: '足疗', group: 'entertainment', route: 'rebate', rate: 0.025 },
+      { value: 'ktv', label: '休闲娱乐 / 娱乐互动 / KTV', leaf: 'KTV', group: 'entertainment', route: 'rebate', rate: 0.025 },
+      { value: 'local_service_general', label: '本地服务/零售/汽车 / 本地服务 / 本地服务综合', leaf: '本地服务综合', group: 'local_service', route: 'rebate', rate: 0.03 },
+      { value: 'auto_service', label: '本地服务/零售/汽车 / 汽车服务 / 汽车维保', leaf: '汽车维保', group: 'auto_service', route: 'rebate', rate: 0.032 },
+      { value: 'daily_supermarket', label: '本地服务/零售/汽车 / 零售商超 / 超市', leaf: '超市', group: 'daily_supermarket', route: 'rebate', rate: 0.02 },
+      { value: 'gas_station', label: '本地服务/零售/汽车 / 能源/免税 / 加油站', leaf: '加油站', group: 'unsupported', route: 'unsupported', rate: 0.02 },
+    ];
+    const QUICK_VALUES = ['food_hotpot', 'food_coffee', 'medical_beauty', 'beauty_hair', 'local_service_general', 'daily_supermarket'];
+
+    const THRESHOLD_MAP = {
+      food: 2000,
+      entertainment: 1000,
+      medical_beauty: 2000,
+      local_service: 2000,
+      auto_service: 2000,
+      daily_supermarket: 10000,
+      beauty_basic: 0,
+    };
+    const FLEX = {
+      newTiers: [
+        { min: 5000, ratio: 0.4, label: '40%' },
+        { min: 20000, ratio: 0.6, label: '60%' },
+        { min: 30000, ratio: 0.8, label: '80%' },
+      ],
+      stockTiers: [
+        { min: 10000, ratio: 0.5, label: '50%' },
+        { min: 20000, ratio: 0.6, label: '60%' },
+        { min: 30000, ratio: 0.7, label: '70%' },
+      ],
+      localBoost: { carry_unreported: 0.1, carry_reported: 0.1, stock: 0.1, new: 0 },
+    };
+    const SUBMIT_LINKS = {
+      scanRebate: 'https://life-service.bytedance.net/site/merchant-finance/p/frame-rebate-list?active_id=2',
+      flexibleCommission: 'https://life-service.bytedance.net/site/merchant-finance/p/frame-rebate-list?active_id=2',
+      guide: 'https://bytedance.larkoffice.com/wiki/ZvDfwEszMiCMC9kzGAVcVlWrnDe?from=from_copylink',
+    };
+
+    const state = {
+      region: 'south',
+      stage: 'new',
+      category: 'food_hotpot',
+      totalGmv: '',
+      scanGmv: '',
+      prevTotalGmv: '',
+      last30ScanGmv: '',
+      lockedTier: '',
+      carryParticipation: '',
+      carryTargetReached: '',
+      localBoost: false,
+      result: null,
+      dirty: false,
+    };
+
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function formatMoney(n) {
+      const v = Number(n) || 0;
+      return '¥' + v.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function formatRate(n) { return ((Number(n) || 0) * 100).toFixed(1) + '%'; }
+    function formatPercent(n) { return Math.round((Number(n) || 0) * 100) + '%'; }
+    function round2(n) { return Math.round(((Number(n) || 0) + Number.EPSILON) * 100) / 100; }
+    function getCategory(id) { return CATEGORY_OPTIONS.find((x) => x.value === id) || CATEGORY_OPTIONS[0]; }
+    function getStage(id) { return STAGES.find((x) => x.value === id) || STAGES[0]; }
+    function findTier(tiers, value) {
+      let hit = null;
+      for (const t of tiers) { if (value >= t.min) hit = t; }
+      return hit;
+    }
+    function nextTier(tiers, value) { return tiers.find((t) => value < t.min) || null; }
+
+    function renderRegions() {
+      const sel = $('#regionSelect');
+      sel.innerHTML = REGIONS.map((r) => `<option value="${r.value}">${r.label}</option>`).join('');
+      sel.value = state.region;
+      sel.addEventListener('change', () => { state.region = sel.value; markDirty(); });
+    }
+
+    function renderStages() {
+      const wrap = $('#stageGroup');
+      wrap.innerHTML = STAGES.map((s) =>
+        `<button type="button" class="chip${state.stage === s.value ? ' is-active' : ''}" data-stage="${s.value}">${s.label}</button>`
+      ).join('');
+      wrap.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-stage]');
+        if (!target) return;
+        state.stage = target.dataset.stage;
+        renderStages();
+        renderConditionalFields();
+        renderLocalBoost();
+        markDirty();
+      });
+      $('#stageBanner').textContent = getStage(state.stage).banner;
+    }
+
+    function renderQuick() {
+      const wrap = $('#quickGroup');
+      wrap.innerHTML = CATEGORY_OPTIONS
+        .filter((c) => QUICK_VALUES.includes(c.value))
+        .map((c) => `<button type="button" class="chip${state.category === c.value ? ' is-active' : ''}" data-category="${c.value}">${c.leaf}</button>`)
+        .join('');
+      wrap.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-category]');
+        if (!target) return;
+        state.category = target.dataset.category;
+        $('#categorySelect').value = state.category;
+        renderQuick();
+        renderCategoryTip();
+        markDirty();
+      });
+    }
+
+    function renderCategorySelect() {
+      const sel = $('#categorySelect');
+      sel.innerHTML = CATEGORY_OPTIONS.map((c) => `<option value="${c.value}">${c.label}</option>`).join('');
+      sel.value = state.category;
+      sel.addEventListener('change', () => {
+        state.category = sel.value;
+        renderQuick();
+        renderCategoryTip();
+        markDirty();
+      });
+      renderCategoryTip();
+    }
+
+    function renderCategoryTip() {
+      const cat = getCategory(state.category);
+      let tip = '';
+      if (cat.route === 'unsupported') tip = '当前类目不展示扫码返佣 / 灵活佣金提报动作。';
+      else if (cat.route === 'exempt') tip = '当前类目走扫码免佣，仅减免软件服务费。';
+      else tip = `当前按类目费率 ${formatRate(cat.rate)}（净费率 ${formatRate(Math.max(cat.rate - 0.006, 0))}）测算。`;
+      $('#categoryTip').textContent = tip;
+    }
+
+    function renderConditionalFields() {
+      $$('[data-show-when]').forEach((el) => {
+        const allow = el.dataset.showWhen.split(',');
+        el.hidden = !allow.includes(state.stage);
+      });
+      const tip = $('#prevTotalTip');
+      if (tip) tip.textContent = state.stage === 'stock' ? '存量口径用它反推增量 GMV。' : '次月续约要先确认是否达到首月持平线。';
+    }
+
+    function renderLocalBoost() {
+      const isNew = state.stage === 'new';
+      $('#localBoost').disabled = isNew;
+      $('#localBoostWrapper').classList.toggle('is-disabled', isNew);
+      $('#localBoostTip').textContent = isNew
+        ? '当月新开首月不展示、不生效。'
+        : '顺延新开 / 次月续约 / 存量可叠加本地推 +10%。';
+      if (isNew) {
+        state.localBoost = false;
+        $('#localBoost').checked = false;
+      }
+    }
+
+    function bindInputs() {
+      const map = {
+        '#totalGmv': 'totalGmv',
+        '#scanGmv': 'scanGmv',
+        '#prevTotalGmv': 'prevTotalGmv',
+        '#last30ScanGmv': 'last30ScanGmv',
+        '#lockedTier': 'lockedTier',
+        '#carryParticipation': 'carryParticipation',
+        '#carryTargetReached': 'carryTargetReached',
+      };
+      Object.entries(map).forEach(([sel, key]) => {
+        const el = $(sel);
+        if (!el) return;
+        el.addEventListener('input', () => { state[key] = el.value; markDirty(); });
+        el.addEventListener('change', () => { state[key] = el.value; markDirty(); });
+      });
+      $('#localBoost').addEventListener('change', (e) => {
+        state.localBoost = e.target.checked; markDirty();
+      });
+      $('#calcBtn').addEventListener('click', handleCalculate);
+      $('#resetBtn').addEventListener('click', handleReset);
+      $('#guideBtn').addEventListener('click', () => window.open(SUBMIT_LINKS.guide, '_blank', 'noopener,noreferrer'));
+      $('#copyPitch').addEventListener('click', () => copyResult('pitch'));
+      $('#copySubmit').addEventListener('click', () => copyResult('submit'));
+    }
+
+    function bindTabs() {
+      $$('.tabs button').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          $$('.tabs button').forEach((b) => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          const target = btn.dataset.tab;
+          $('section[data-view="calculator"]').hidden = target !== 'calculator';
+          $('section[data-view="rules"]').hidden = target !== 'rules';
+        });
+      });
+    }
+
+    function markDirty() {
+      if (state.result) {
+        state.dirty = true;
+        setBadge('#resultStatus', 'warn', '待重算');
+      }
+      setBadge('#formStatus', state.result ? 'warn' : 'info', state.result ? '有修改' : '待计算');
+    }
+
+    function setBadge(sel, type, text) {
+      const el = $(sel);
+      if (!el) return;
+      el.dataset.type = type;
+      el.textContent = text;
+    }
+
+    function handleReset() {
+      Object.assign(state, {
+        region: 'south', stage: 'new', category: 'food_hotpot',
+        totalGmv: '', scanGmv: '', prevTotalGmv: '', last30ScanGmv: '',
+        lockedTier: '', carryParticipation: '', carryTargetReached: '',
+        localBoost: false, result: null, dirty: false,
+      });
+      ['#totalGmv', '#scanGmv', '#prevTotalGmv', '#last30ScanGmv'].forEach((s) => { $(s).value = ''; });
+      ['#lockedTier', '#carryParticipation', '#carryTargetReached'].forEach((s) => { $(s).value = ''; });
+      $('#localBoost').checked = false;
+      $('#regionSelect').value = state.region;
+      $('#categorySelect').value = state.category;
+      renderStages(); renderQuick(); renderConditionalFields(); renderLocalBoost(); renderCategoryTip();
+      $('#resultEmpty').hidden = false;
+      $('#resultBody').hidden = true;
+      setBadge('#formStatus', 'info', '待计算');
+      setBadge('#resultStatus', 'info', '待计算');
+    }
+
+    function calculate() {
+      const cat = getCategory(state.category);
+      const stage = getStage(state.stage);
+      const total = Number(state.totalGmv) || 0;
+      const scan = Number(state.scanGmv) || 0;
+      const prevTotal = Number(state.prevTotalGmv) || 0;
+      const last30 = Number(state.last30ScanGmv) || 0;
+      const channelFee = 0.006;
+      const netRate = Math.max(cat.rate - channelFee, 0);
+      const onlineGmv = Math.max(total - scan, 0);
+      const flexBase = state.stage === 'carry_reported' || (state.stage !== 'carry_reported' && false) ? onlineGmv : total;
+      const localBoostRatio = state.localBoost ? (FLEX.localBoost[state.stage] || 0) : 0;
+      const threshold = THRESHOLD_MAP[cat.group];
+
+      let b1 = { title: '板块一：扫码免佣', amount: 0, pillText: '待判断', pillType: 'info', statusType: 'info', statusText: '等待计算', note: '仅命中免佣类目时展示软件服务费减免空间。', canSubmit: false };
+      let b2 = { title: '板块二：扫码返佣', amount: 0, pillText: '待判断', pillType: 'info', statusType: 'info', statusText: '等待计算', note: '达到类目门槛才放行提报。', canSubmit: false };
+      let b3 = { title: '板块三：灵活佣金', amount: 0, pillText: '待判断', pillType: 'info', statusType: 'info', statusText: '等待计算', note: '会结合身份、档位与本地推加成联动。', canSubmit: false };
+
+      if (cat.route === 'unsupported') {
+        b1 = { ...b1, pillText: '不适用', pillType: 'bad', statusType: 'bad', statusText: '不在工具支持范围', note: '加油站 / 加气站 / 免税店不进入测算。', canSubmit: false };
+        b2 = { ...b2, pillText: '不适用', pillType: 'bad', statusType: 'bad', statusText: '不展示提报动作', note: '该类类目必须强拦截。', canSubmit: false };
+        b3 = { ...b3, pillText: '不适用', pillType: 'bad', statusType: 'bad', statusText: '不联动灵活佣金', note: '避免误导对客承诺。', canSubmit: false };
+      } else if (cat.route === 'exempt') {
+        b1 = { ...b1, amount: round2(scan * netRate), pillText: '免佣命中', pillType: 'good', statusType: 'good', statusText: '当前类目走扫码免佣', note: `按 ${formatRate(cat.rate)} 估算，仅减免软件服务费。`, canSubmit: false };
+        b2 = { ...b2, pillText: '免佣类目', pillType: 'good', statusType: 'good', statusText: '该类目无需提报扫码返佣', note: '免佣类目不走扫码返佣提报。', canSubmit: false };
+      } else {
+        const needRecent = state.stage === 'new' || state.stage === 'carry_unreported';
+        const passed = (threshold !== undefined) && scan >= threshold && (!needRecent || last30 >= 100);
+        const reason = needRecent
+          ? `需同时满足近 30 天扫码核销 ≥ 100 元，且本月扫码 GMV ≥ ${threshold || 0} 元`
+          : `需满足本月扫码 GMV ≥ ${threshold || 0} 元`;
+        b2 = passed
+          ? { ...b2, amount: round2(scan * netRate), pillText: stage.label, pillType: 'good', statusType: 'good', statusText: '已达到扫码返佣门槛，可放行提报', note: `按费率 ${formatRate(cat.rate)} 测算；${reason}。`, canSubmit: true }
+          : { ...b2, pillText: stage.label, pillType: 'warn', statusType: 'warn', statusText: '未达到扫码返佣门槛', note: `${reason}。当前线下扫码 GMV 与门槛仍有差距。`, canSubmit: false };
+      }
+
+      if (cat.route !== 'unsupported') {
+        if (state.stage === 'new' || state.stage === 'carry_unreported') {
+          const cur = findTier(FLEX.newTiers, total);
+          const nxt = nextTier(FLEX.newTiers, total);
+          const baseRatio = cur ? cur.ratio : 0;
+          const finalRatio = baseRatio + localBoostRatio;
+          if (baseRatio > 0) {
+            b3 = { ...b3, amount: round2(total * netRate * finalRatio), pillText: state.stage === 'new' ? '新开口径' : '顺延新开口径', pillType: 'good', statusType: 'good', statusText: `命中 ${cur.label} 档${localBoostRatio ? `，含本地推 +${formatPercent(localBoostRatio)}` : ''}`, note: nxt ? `下一档为 ${nxt.label}，还差总结算 GMV ${formatMoney(nxt.min - total)}。` : '已在最高档。', canSubmit: true };
+          } else {
+            b3 = { ...b3, pillText: state.stage === 'new' ? '新开口径' : '顺延新开口径', pillType: 'warn', statusType: 'warn', statusText: '未过 40% 档位门槛', note: '新开 / 顺延新开按 5000 / 20000 / 30000 对应 40% / 60% / 80%。', canSubmit: false };
+          }
+        } else if (state.stage === 'carry_reported') {
+          const lockedTier = Number(state.lockedTier || 0);
+          const ready = lockedTier > 0 && state.carryParticipation && state.carryTargetReached && prevTotal > 0;
+          if (!ready) {
+            b3 = { ...b3, pillText: '次月续约口径', pillType: 'warn', statusType: 'warn', statusText: '请先补齐续约判断信息', note: '需要：上月锁档比例、是否享受次月返佣、上月 GMV、上月目标达成情况。', canSubmit: false };
+          } else if (state.carryParticipation === 'no') {
+            b3 = { ...b3, pillText: '次月续约口径', pillType: 'bad', statusType: 'bad', statusText: '未享受次月返佣，灵活佣金为 0', note: '该场景不再继续推导次月续约金额。', canSubmit: false };
+          } else {
+            const passed = state.carryTargetReached === 'yes' && total >= prevTotal;
+            const finalRatio = lockedTier + localBoostRatio;
+            b3 = passed
+              ? { ...b3, amount: round2(onlineGmv * netRate * finalRatio), pillText: '次月续约口径', pillType: 'good', statusType: 'good', statusText: `按锁档 ${formatPercent(lockedTier)} 测算${localBoostRatio ? `，含本地推 +${formatPercent(localBoostRatio)}` : ''}`, note: '次月续约默认已提报扫码返佣，灵活佣金基数按线上 GMV 计算。', canSubmit: true }
+              : { ...b3, pillText: '次月续约口径', pillType: 'warn', statusType: 'warn', statusText: '还未达到次月续约持平线', note: `需要本月总结算 GMV 不低于上月 ${formatMoney(prevTotal)}，并确认上月目标已达成。`, canSubmit: false };
+          }
+        } else if (state.stage === 'stock') {
+          if (prevTotal <= 0) {
+            b3 = { ...b3, pillText: '存量口径', pillType: 'warn', statusType: 'warn', statusText: '请先补充上月结算 GMV', note: '存量先反推增量，再判断 50% / 60% / 70% 档位。', canSubmit: false };
+          } else {
+            const inc = Math.max(total - prevTotal, 0);
+            const cur = findTier(FLEX.stockTiers, inc);
+            const nxt = nextTier(FLEX.stockTiers, inc);
+            const baseRatio = cur ? cur.ratio : 0;
+            const finalRatio = baseRatio + localBoostRatio;
+            if (baseRatio > 0) {
+              b3 = { ...b3, amount: round2(total * netRate * finalRatio), pillText: '存量口径', pillType: 'good', statusType: 'good', statusText: `增量命中 ${cur.label} 档${localBoostRatio ? `，含本地推 +${formatPercent(localBoostRatio)}` : ''}`, note: nxt ? `下一档还差增量 GMV ${formatMoney(nxt.min - inc)}。` : '已在存量口径最高档。', canSubmit: true };
+            } else {
+              b3 = { ...b3, pillText: '存量口径', pillType: 'warn', statusType: 'warn', statusText: '未过 50% 增量门槛', note: '存量按增量 1w / 2w / 3w 对应 50% / 60% / 70%。', canSubmit: false };
+            }
+          }
+        }
+      }
+
+      const cap = total * netRate;
+      let capHit = false;
+      if (b2.amount + b3.amount > cap) {
+        const adj = Math.max(cap - b2.amount, 0);
+        b3 = { ...b3, amount: round2(adj), pillType: b3.canSubmit ? 'warn' : b3.pillType, statusType: b3.canSubmit ? 'warn' : b3.statusType, statusText: b3.canSubmit ? '触发平台佣金上限，已自动收敛' : b3.statusText, note: `${b3.note} 平台上限：扫码返佣 + 灵活佣金 ≤ 总 GMV × (类目费率 - 0.6%)。` };
+        capHit = true;
+      }
+
+      const totalAmount = round2(b1.amount + b2.amount + b3.amount);
+      const pitch = [
+        `老板，按当前体量，本月综合可释放约 ${formatMoney(totalAmount)}。`,
+        `扫码返佣${b2.canSubmit ? '已达门槛，可走提报' : '还没过线，先别承诺提报'}。`,
+        `灵活佣金按当前口径约 ${formatMoney(b3.amount)}${capHit ? '，已触发平台上限做收敛' : ''}。`,
+      ];
+      const submit = [
+        `区域：${REGIONS.find((r) => r.value === state.region)?.label || ''}`,
+        `身份：${stage.label}`,
+        `类目：${cat.label}`,
+        `扫码返佣：${formatMoney(b2.amount)}${b2.canSubmit ? '（可提报）' : '（暂不可提报）'}`,
+        `灵活佣金：${formatMoney(b3.amount)}${b3.canSubmit ? '（可提报）' : '（暂不可提报）'}`,
+      ];
+
+      return { cat, stage, netRate, onlineGmv, totalAmount, b1, b2, b3, capHit, pitch, submit };
+    }
+
+    function handleCalculate() {
+      const result = calculate();
+      state.result = result;
+      state.dirty = false;
+      $('#resultEmpty').hidden = true;
+      $('#resultBody').hidden = false;
+      setBadge('#formStatus', 'good', '结果已同步');
+      setBadge('#resultStatus', 'good', '已计算');
+
+      $('#summaryValue').textContent = formatMoney(result.totalAmount);
+      $('#summaryMeta').textContent = `类目费率 ${formatRate(result.cat.rate)}，净费率 ${formatRate(result.netRate)}，线上 GMV ${formatMoney(result.onlineGmv)}。${result.capHit ? '已触发平台佣金上限。' : ''}`;
+
+      const actions = [];
+      if (result.b2.canSubmit) actions.push(`<button class="btn btn--primary btn--small" data-link="scanRebate">去提报扫码返佣</button>`);
+      if (result.b3.canSubmit) actions.push(`<button class="btn btn--secondary btn--small" data-link="flexibleCommission">去提报灵活佣金</button>`);
+      $('#summaryActions').innerHTML = actions.join('');
+      $$('#summaryActions [data-link]').forEach((btn) => {
+        btn.addEventListener('click', () => window.open(SUBMIT_LINKS[btn.dataset.link], '_blank', 'noopener,noreferrer'));
+      });
+
+      [['b1', result.b1], ['b2', result.b2], ['b3', result.b3]].forEach(([key, board]) => {
+        const root = $(`.board[data-board="${key}"]`);
+        root.querySelector('[data-amount]').textContent = formatMoney(board.amount);
+        const pill = root.querySelector('[data-pill]');
+        pill.textContent = board.pillText; pill.dataset.type = board.pillType;
+        const status = root.querySelector('[data-status]');
+        status.textContent = board.statusText; status.dataset.type = board.statusType;
+        root.querySelector('[data-note]').textContent = board.note;
+      });
+
+      const list = $('#insightList');
+      const items = [];
+      result.pitch.forEach((line) => items.push(line));
+      items.push(result.b2.canSubmit ? `扫码返佣可提报，建议直达：${SUBMIT_LINKS.scanRebate}` : '扫码返佣暂不可提报，先补扫码 GMV 或近 30 天核销。');
+      items.push(result.b3.canSubmit ? `灵活佣金可提报，建议同步打开：${SUBMIT_LINKS.flexibleCommission}` : '灵活佣金暂不可提报，先把下一档门槛或补充信息补齐。');
+      list.innerHTML = items.map((t) => `<li>${t}</li>`).join('');
+    }
+
+    function copyResult(type) {
+      if (!state.result) return;
+      const text = (type === 'pitch' ? state.result.pitch : state.result.submit).join('\n');
+      const fallback = () => {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(fallback);
+      else fallback();
+      const hint = $('#copyHint');
+      hint.textContent = type === 'pitch' ? '已复制 3 条话术' : '已复制提报备注';
+      hint.hidden = false;
+      window.setTimeout(() => { hint.hidden = true; }, 1800);
+    }
+
+    function init() {
+      renderRegions();
+      renderStages();
+      renderQuick();
+      renderCategorySelect();
+      renderConditionalFields();
+      renderLocalBoost();
+      bindInputs();
+      bindTabs();
+    }
+    init();
+  </script>
+</body>
+</html>

@@ -52,6 +52,22 @@ async function installMissingDependencies() {
   }
 }
 
+async function copyDir(srcDir, destDir) {
+  if (!(await fileExists(srcDir))) return false;
+  await ensureDir(destDir);
+  const entries = await fs.readdir(srcDir, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+    if (entry.isDirectory()) {
+      await copyDir(srcPath, destPath);
+    } else if (entry.isFile()) {
+      await fs.copyFile(srcPath, destPath);
+    }
+  }
+  return true;
+}
+
 async function main() {
   await installMissingDependencies();
 
@@ -69,6 +85,16 @@ async function main() {
   const baseSrc = resolvePackagePath('@xiaoyun-ds/components-web', 'styles/base.css') || path.join(__dirname, '../styles/base.css');
   const componentsSrc = resolvePackagePath('@xiaoyun-ds/components-web', 'styles/components.css') || path.join(__dirname, '../styles/components.css');
   const logoSrc = resolvePackagePath('@xiaoyun-ds/components-web', 'assets/logo-laike.svg') || path.join(__dirname, '../assets/logo-laike.svg');
+
+  // Brand assets（fonts / images / icons-source）的来源目录：仓库内位于 `assets/`，
+  // 发布到 npm 后随 `@xiaoyun-ds/components-web` 的 `assets/` 一起分发。
+  const repoAssetsDir = path.join(__dirname, '../../../assets');
+  const fontsSrcDir =
+    resolvePackagePath('@xiaoyun-ds/components-web', 'assets/fonts') ||
+    path.join(repoAssetsDir, 'fonts');
+  const imagesSrcDir =
+    resolvePackagePath('@xiaoyun-ds/components-web', 'assets/images') ||
+    path.join(repoAssetsDir, 'images');
 
   if (!(await fileExists(tokensSrc)) || !(await fileExists(iconsSrc)) || !(await fileExists(baseSrc)) || !(await fileExists(componentsSrc)) || !(await fileExists(logoSrc))) {
     console.error('❌ 无法找到所需的设计资产文件，请确保 npm 依赖已正确安装。');
@@ -115,6 +141,14 @@ async function main() {
 
     await fs.copyFile(logoSrc, path.join(assetsDestDir, 'logo-laike.svg'));
     console.log(`   ✅ 提取: ${path.relative(cwd, path.join(assetsDestDir, 'logo-laike.svg'))}`);
+
+    if (await copyDir(fontsSrcDir, path.join(assetsDestDir, 'fonts'))) {
+      console.log(`   ✅ 提取: ${path.relative(cwd, path.join(assetsDestDir, 'fonts'))}/`);
+    }
+
+    if (await copyDir(imagesSrcDir, path.join(assetsDestDir, 'images'))) {
+      console.log(`   ✅ 提取: ${path.relative(cwd, path.join(assetsDestDir, 'images'))}/`);
+    }
   }
 
   console.log('\n🎉 Xiaoyun Design System 初始化完成！');

@@ -35,10 +35,12 @@ npx xiaoyun-ds init
 - 资源文件：根据项目结构复制到 `assets/`、`src/assets/` 和/或 `public/assets/`
 - 包含的核心文件：
   - `xiaoyun-ds-tokens.css`
-  - `base.css`
-  - `components.css`
+  - `base.css`（顶部已声明 `@font-face`，引用 `../assets/fonts/*`）
+  - `components.css`（MetricCard 角标蒙版引用 `../assets/images/shading*.png`）
   - `sprite.svg`
   - `logo-laike.svg`
+  - `assets/fonts/` 整目录（`DouyinNumberABC-*.otf`、`DouyinSansBold.ttf` 等）
+  - `assets/images/` 整目录（`shading1~5.png`、`shangpin.png` 等）
 
 ### 3. 在项目中引入样式资源
 

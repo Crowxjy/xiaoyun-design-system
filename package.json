@@ -9,6 +9,7 @@
   "scripts": {
     "sync-tokens": "npm run sync-tokens --workspace=@xiaoyun-ds/tokens",
     "sync-icons": "npm run sync-icons --workspace=@xiaoyun-ds/icons",
+    "sync-assets": "rm -rf packages/components-web/assets/fonts packages/components-web/assets/images && mkdir -p packages/components-web/assets && cp -R assets/fonts packages/components-web/assets/fonts && cp -R assets/images packages/components-web/assets/images",
     "sync-skills": "mkdir -p packages/skills/content && cp -r skills/* packages/skills/content/"
   },
   "devDependencies": {

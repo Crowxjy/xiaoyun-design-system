@@ -2,7 +2,7 @@
 
 > ⚠️ **项目定位声明**
 >
-> 本项目基于 **Life-Design-System** 强行魔改而来，**仅用于内部实验测试或销运业务的规范参考**，**不作为对外发布的标准设计系统**。
+> 本项目基于 **Life-Design-System** 强行魔改而来，**仅用于内部实验测试或销运业务的规范参考**，**不作为对外发布的标准设计系统**。项目中部分组件内容尚未依据销运真实规范做调整，当前仅作为实验参考。
 >
 > - 与上游 Life-Design-System 不保持兼容，token、组件 API 与视觉细节可能随销运业务需求随时调整
 > - 不承诺向后兼容、不接受外部业务团队接入
@@ -21,6 +21,14 @@ Xiaoyun Design System 是一套面向 Web 开发的高保真设计系统，旨�
 | **[@xiaoyun-ds/components-web](./packages/components-web)** | 核心 React Web 组件库、样式资源及自动化接入工具 (CLI) | `packages/components-web` |
 | **[@xiaoyun-ds/skills](./packages/skills)** | 为 Trae/Coze 等 Agent 准备的设计规范 Prompt 与技能集 | `packages/skills` |
 
+此外，仓库根目录下的 `assets/` 目录托管了二进制设计资产，按类型分子目录：
+
+| 子目录 | 内容 | 接入方式 |
+| :--- | :--- | :--- |
+| [`assets/images`](./assets/images) | MetricCard 角标蒙版 (`shading1~5.png`)、商品占位图 (`shangpin.png`) 等 | 由 `components.css` / 业务示例直接引用 |
+| [`assets/fonts`](./assets/fonts) | 抖音数字字体 `DouyinNumberABC-*.otf` 与 `DouyinSansBold.ttf` | 由 `base.css` 顶部 `@font-face` 加载，`xiaoyun-ds init` 会一并复制到业务项目的 `assets/fonts/` |
+| [`assets/icons`](./assets/icons) | 单个原始 `.svg` 图标源文件 | 优先通过 `@xiaoyun-ds/icons` 雪碧图使用；按需单独引用时再走该目录 |
+
 ---
 
 ## 🚀 接入指南
@@ -33,7 +41,7 @@ Xiaoyun Design System 是一套面向 Web 开发的高保真设计系统，旨�
 # 1. 安装组件库包
 npm install @xiaoyun-ds/components-web
 
-# 2. 运行初始化工具，提取资产到您的项目目录（如 `styles/`、`src/styles/`、`assets/`、`src/assets/` 或 `public/assets/`）
+# 2. 运行初始化工具，提取资产到您的项目目录（如 `styles/`、`src/styles/`、`assets/`、`src/assets/` 或 `public/assets/`，包含 `assets/fonts/`、`assets/images/`）
 npx xiaoyun-ds init
 ```
 
@@ -102,6 +110,13 @@ npm run sync-tokens
 npm run sync-icons
 ```
 
+### 同步品牌资产 (Fonts / Images)
+```bash
+# 将仓库根目录 assets/fonts 与 assets/images 镜像到 packages/components-web/assets
+# 仅在准备发布 components-web 之前执行；目的是让 npm tarball 携带最新的字体与图片
+npm run sync-assets
+```
+
 ### 同步 AI 技能 (Skills)
 根目录的 `skills/` 目录为技能源码，发布前需同步到分发包：
 ```bash
@@ -121,6 +136,9 @@ npm run sync-tokens
 
 # 如果 skills 有更新，先同步分发内容
 npm run sync-skills
+
+# 如果根目录 assets/fonts 或 assets/images 有更新，先镜像到 components-web 包
+npm run sync-assets
 
 # 如果 components-web 有源码更新，先重新构建 dist
 npm run build --workspace=@xiaoyun-ds/components-web

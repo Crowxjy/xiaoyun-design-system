@@ -96,7 +96,7 @@ const App = () => {
                 </Thead>
                 <Tbody>
                   <Tr>
-                    <Td><TableCellProduct img="../../assets/shangpin.png" title="【节假日通用】资生堂烫染护理" tag="团购" tagVariant="default" id="23468723648223" /></Td>
+                    <Td><TableCellProduct img="../../assets/images/shangpin.png" title="【节假日通用】资生堂烫染护理" tag="团购" tagVariant="default" id="23468723648223" /></Td>
                     <Td><TableCellAmount>￥508.00</TableCellAmount></Td>
                     <Td>2023.08.01 12:00</Td>
                     <Td>10,000</Td>
@@ -109,7 +109,7 @@ const App = () => {
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td><TableCellProduct img="../../assets/shangpin.png" title="【工作日可用】高级洗剪吹套餐" tag="热销" tagVariant="orange" id="89345723648224" /></Td>
+                    <Td><TableCellProduct img="../../assets/images/shangpin.png" title="【工作日可用】高级洗剪吹套餐" tag="热销" tagVariant="orange" id="89345723648224" /></Td>
                     <Td><TableCellAmount>￥128.00</TableCellAmount></Td>
                     <Td>2023.08.02 14:30</Td>
                     <Td>8,500</Td>

@@ -1,7 +1,7 @@
 ***
 
 name: xiaoyun-design-system
-description: 使用 @xiaoyun-ds 构建或优化 抖音来客原生风格的 React Web 界面。当需要根据截图、设计稿、文本提示或现有代码实现抖音来客风格 UI 时（尤其是期望在 Web 端高度还原原生来客页面模式时）使用。
+description: 使用 @xiaoyun-ds 构建或优化 销运风格的 React Web 界面。当需要根据截图、设计稿、文本提示或现有代码实现销运风格 UI 时（尤其是期望在 Web 端高度还原销运页面模式时）使用。
 ----------------------------------------------------------------------------------------------------------------------
 
 > ⚠️ **项目定位声明**：本设计系统基于 **Life-Design-System** 强行魔改而来，**仅用于内部实验测试或销运业务的规范参考**。token、组件 API 与视觉细节会随销运业务需求随时调整，与上游不保证兼容。当你为外部业务团队/通用场景生成代码时，请改用上游官方 Life-Design-System；本 Skill 仅在销运/实验上下文中启用。
@@ -34,7 +34,9 @@ description: 使用 @xiaoyun-ds 构建或优化 抖音来客原生风格的 Reac
 ### 1.1 检查方法
 
 1. **检查** **`package.json`**：查看 `dependencies` 或 `devDependencies` 中是否包含 `@xiaoyun-ds/components-web`。
-2. **检查本地资产**：查看项目中是否存在 `styles/xiaoyun-ds-tokens.css`、`styles/components.css` 以及 `assets/sprite.svg` 等文件。
+2. **检查本地资产**：查看项目中是否存在 `styles/xiaoyun-ds-tokens.css`、`styles/components.css`、`styles/base.css`，以及 `assets/sprite.svg`、`assets/logo-laike.svg`、`assets/fonts/` 目录（抖音数字字体）、`assets/images/` 目录（MetricCard 蒙版与示例图片）等文件。
+
+> 资产目录布局规范：所有图片资源置于 `assets/images/`，所有字体源文件置于 `assets/fonts/`，原始 SVG 图标源置于 `assets/icons/`（业务侧通常通过 `@xiaoyun-ds/icons` 雪碧图注入即可，无需直接读取该目录）。`base.css` 顶部声明的 `@font-face` 假定字体位于与 `styles/` 同级的 `assets/fonts/`，禁止把字体散落到根目录或与图片混放。
 
 <br />
 

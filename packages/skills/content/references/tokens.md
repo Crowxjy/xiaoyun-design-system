@@ -17,6 +17,8 @@
 | `--font-normal` | `-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei UI,Microsoft YaHei,Source Han Sans CN,noto sans，sans-serif，"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`                     | 全局默认字体，用于正文、标题、标签等所有常规文本    |
 | `--font-number` | `"Douyin Number ABC",-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei UI,Microsoft YaHei,Source Han Sans CN,noto sans，sans-serif，"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"` | 仅用于数据展示类文本，如数字统计、金额、倒计时、编号等 |
 
+> 字体源文件统一存放在仓库根目录的 `assets/fonts/`（`DouyinNumberABC-*.otf`、`DouyinSansBold.ttf`），并在 [`base.css`](../../packages/components-web/styles/base.css) 顶部通过 `@font-face` 声明加载。业务项目通过 `npx xiaoyun-ds init` 接入时，CLI 会把字体目录一并复制到 `assets/fonts/`、`src/assets/fonts/` 或 `public/assets/fonts/`，无需手动配置。
+
 ### 与 `designsystem` 的兼容别名
 
 为了兼容 `~/Documents/trae_projects/designsystem` 的规范命名，当前 `xiaoyun-ds-tokens.css` 也同步暴露了一组可直接复用的别名 token，包括但不限于：

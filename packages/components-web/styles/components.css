@@ -2912,23 +2912,23 @@ button.xds-filter {
 }
 
 .xds-metric-card--theme-color-1:not(.is-clickable)::after {
-  background-image: url('../../../assets/shading1.png');
+  background-image: url('../../../assets/images/shading1.png');
 }
 
 .xds-metric-card--theme-color-2:not(.is-clickable)::after {
-  background-image: url('../../../assets/shading2.png');
+  background-image: url('../../../assets/images/shading2.png');
 }
 
 .xds-metric-card--theme-color-3:not(.is-clickable)::after {
-  background-image: url('../../../assets/shading3.png');
+  background-image: url('../../../assets/images/shading3.png');
 }
 
 .xds-metric-card--theme-color-4:not(.is-clickable)::after {
-  background-image: url('../../../assets/shading4.png');
+  background-image: url('../../../assets/images/shading4.png');
 }
 
 .xds-metric-card--theme-color-5:not(.is-clickable)::after {
-  background-image: url('../../../assets/shading5.png');
+  background-image: url('../../../assets/images/shading5.png');
 }
 
 /* ---- 主题底色 ---- */
